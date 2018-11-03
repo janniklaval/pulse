@@ -17,6 +17,12 @@ RMQRole >> initialize [
 ]
 
 { #category : #accessing }
+RMQRole >> name [
+	<MSEProperty: #name type: #String>
+	^ self tag
+]
+
+{ #category : #accessing }
 RMQRole >> settingDate [
 		<MSEProperty: #settingDate type: #Number>
 	^ settingDate

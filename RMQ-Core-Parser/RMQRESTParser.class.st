@@ -28,16 +28,14 @@ RMQRESTParser class >> populate: aModel withExchanges: anArray [
 		| exchangeName element |
 		
 		exchangeName := (anExchange at: 'name').
-		aModel allRMQExchanges
-			detect: [ :el | el exchangeString = exchangeName ]
-			ifFound: [ :elementFound |
-				element := elementFound. ]
-			ifNone: [ 
+		
+		element := aModel entityNamed: exchangeName withType: RMQExchange
+			ifAbsent:[ 
 				|newExchange |
 				newExchange := RMQExchange new
 					exchangeString: (anExchange at: 'name').
 				aModel add: newExchange.
-				element := newExchange ].
+				newExchange ].
 		element type: (anExchange at: 'type').
 		element internal: (anExchange at: 'internal').
 		element autoDelete: (anExchange at: 'auto_delete').
@@ -123,16 +121,14 @@ RMQRESTParser class >> populate: aModel withQueues: anArray [
 		| queueName element |
 		
 		queueName := (aQueue at: 'name').
-		aModel allRMQQueues
-			detect: [ :el | el queueString = queueName ]
-			ifFound: [ :elementFound |
-				element := elementFound. ]
-			ifNone: [ 
+		
+		element := aModel entityNamed: queueName withType: RMQQueue
+			ifAbsent:[  
 				|newQueue |
 				newQueue := RMQQueue new
 					queueString: (aQueue at: 'name').
 				aModel add: newQueue.
-				element := newQueue ].
+				newQueue ].
 		element autoDelete: (aQueue at: 'auto_delete').
 		element vhost: (aQueue at: 'vhost').
 		element durability:(aQueue at: 'durable').
@@ -155,30 +151,25 @@ RMQRESTParser class >> populate: aModel withUsers: anArray [
 		| userName element role|
 		
 		userName := (aUser at: 'name').
-		aModel allRMQUsers
-			detect: [ :el | el userString = userName ]
-			ifFound: [ :elementFound |
-				element := elementFound. ]
-			ifNone: [ 
+		
+		element := aModel entityNamed: userName withType: RMQUser
+			ifAbsent:[   
 				|newUser |
 				newUser := RMQUser new
 					userString: (aUser at: 'name').
 				aModel add: newUser.
-				element := newUser ].
+				newUser ].
 		element passwordHash: (aUser at: 'password_hash').
 		element hashingAlgorithm: (aUser at: 'hashing_algorithm').
 		
 		
-		aModel allRMQRoles
-			detect: [ :el | el tag = (aUser at: 'tags') ]
-			ifFound: [ :elementFound |
-				role := elementFound. ]
-			ifNone: [ 
+		element := aModel entityNamed: (aUser at: 'tags') withType: RMQRole
+			ifAbsent:[   
 				|newRole |
 				newRole := RMQRole new
 					tag: (aUser at: 'tags').
 				aModel add: newRole.
-				role := newRole ].
+				newRole ].
 		
 		element roles add: role.
 		role users add: element.
@@ -191,15 +182,13 @@ RMQRESTParser class >> populate: aModel withVhosts: anArray [
 		| vhostName element |
 		
 		vhostName := (aVhost at: 'name').
-		aModel allRMQUsers
-			detect: [ :el | el userString = vhostName ]
-			ifFound: [ :elementFound |
-				element := elementFound. ]
-			ifNone: [ 
+		
+		element := aModel entityNamed: vhostName withType: RMQVHost
+			ifAbsent:[  
 				|newVhost |
 				newVhost := RMQVHost new
 					vhostString: (aVhost at: 'name').
 				aModel add: newVhost.
-				element := newVhost ].
+				newVhost ].
 	].
 ]
