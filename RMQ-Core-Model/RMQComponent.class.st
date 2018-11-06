@@ -19,8 +19,8 @@ Class {
 		'ackRequired',
 		'deletionDate',
 		'creationDate',
-		'tenantId',
-		'exchanges'
+		'exchanges',
+		'tenants'
 	],
 	#category : #'RMQ-Core-Model'
 }
@@ -154,6 +154,7 @@ RMQComponent >> initialize [
 	senderMessages := OrderedCollection new.
 	subscribedChannels := OrderedCollection new.
 	exchanges := OrderedCollection new.
+	tenants := OrderedCollection new.
 ]
 
 { #category : #printing }
@@ -231,14 +232,13 @@ RMQComponent >> symbolicName: anObject [
 ]
 
 { #category : #accessing }
-RMQComponent >> tenantId [
-<MSEProperty: #tenantId type: #String>
-	^ tenantId
+RMQComponent >> tenants [
+	^ tenants
 ]
 
 { #category : #accessing }
-RMQComponent >> tenantId: anObject [
-	tenantId := anObject
+RMQComponent >> tenants: anObject [
+	tenants := anObject
 ]
 
 { #category : #accessing }

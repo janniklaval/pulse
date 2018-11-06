@@ -10,7 +10,7 @@ Class {
 	#category : #'RMQ-Core-Parser'
 }
 
-{ #category : #parsing }
+{ #category : #'to finish' }
 RMQRESTParser class >> populate: aModel withBindings: anArray [
 	
 		anArray do: [ :aBinding|
@@ -21,7 +21,7 @@ RMQRESTParser class >> populate: aModel withBindings: anArray [
 	].
 ]
 
-{ #category : #parsing }
+{ #category : #'to finish' }
 RMQRESTParser class >> populate: aModel withExchanges: anArray [
 	
 		anArray do: [ :anExchange|
@@ -48,12 +48,12 @@ RMQRESTParser class >> populate: aModel withExchanges: anArray [
 	].
 ]
 
-{ #category : #parsing }
+{ #category : #'to finish' }
 RMQRESTParser class >> populate: aModel withGlobalParameters: anArray [
 		self flag: 'to be finished'.
 ]
 
-{ #category : #parsing }
+{ #category : #'to finish' }
 RMQRESTParser class >> populate: aModel withJson: aString [
 	| parser rmqObjects   |
 	parser := PPParserResource current parserAt: PPJsonParser.
@@ -74,13 +74,13 @@ RMQRESTParser class >> populate: aModel withJson: aString [
 	(rmqObjects at: 'rabbit_version')
 ]
 
-{ #category : #parsing }
+{ #category : #'to finish' }
 RMQRESTParser class >> populate: aModel withParameters: anArray [
 	self notYetImplemented.
 	
 ]
 
-{ #category : #parsing }
+{ #category : #'to finish' }
 RMQRESTParser class >> populate: aModel withPermissions: anArray [
 	
 	"a Dictionary('configure'->'.*' 'read'->'.*' 'user'->'guest' 'vhost'->'/' 'write'->'.*' )"
@@ -107,13 +107,13 @@ RMQRESTParser class >> populate: aModel withPermissions: anArray [
 	].
 ]
 
-{ #category : #parsing }
+{ #category : #'to finish' }
 RMQRESTParser class >> populate: aModel withPolicies: anArray [
 	self notYetImplemented.
 	
 ]
 
-{ #category : #parsing }
+{ #category : #'to finish' }
 RMQRESTParser class >> populate: aModel withQueues: anArray [
 	"a Dictionary('arguments'->a Dictionary() 'auto_delete'->false 'durable'->true 'name'->'testQueue' 'vhost'->'/' )"
 
@@ -139,7 +139,7 @@ RMQRESTParser class >> populate: aModel withQueues: anArray [
 	].
 ]
 
-{ #category : #parsing }
+{ #category : #'to finish' }
 RMQRESTParser class >> populate: aModel withTopicPermissions: anArray [
 	self notYetImplemented.
 	
@@ -148,7 +148,7 @@ RMQRESTParser class >> populate: aModel withTopicPermissions: anArray [
 { #category : #parsing }
 RMQRESTParser class >> populate: aModel withUsers: anArray [
 	anArray do: [ :aUser|
-		| userName element role|
+		| userName element |
 		
 		userName := (aUser at: 'name').
 		
@@ -163,16 +163,23 @@ RMQRESTParser class >> populate: aModel withUsers: anArray [
 		element hashingAlgorithm: (aUser at: 'hashing_algorithm').
 		
 		
-		element := aModel entityNamed: (aUser at: 'tags') withType: RMQRole
+		
+		((aUser at: 'tags') substrings: ',') do:[:aRoleString |
+			|role|			
+			role := aModel entityNamed: aRoleString withType: RMQRole
 			ifAbsent:[   
 				|newRole |
 				newRole := RMQRole new
 					tag: (aUser at: 'tags').
 				aModel add: newRole.
 				newRole ].
-		
-		element roles add: role.
-		role users add: element.
+			
+			(element roles anySatisfy: [ :e | e = role ]) ifFalse: [
+			element roles add: role.
+				role users add: element
+			].
+			
+		].
 	].
 ]
 

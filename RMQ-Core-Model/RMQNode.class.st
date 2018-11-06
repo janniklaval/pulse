@@ -6,7 +6,11 @@ Class {
 		'type',
 		'running',
 		'cluster',
-		'vhosts'
+		'vhosts',
+		'host',
+		'port',
+		'creationDate',
+		'deletionDate'
 	],
 	#category : #'RMQ-Core-Model'
 }
@@ -20,6 +24,36 @@ RMQNode >> cluster [
 { #category : #accessing }
 RMQNode >> cluster: anObject [
 	cluster := anObject
+]
+
+{ #category : #accessing }
+RMQNode >> creationDate [
+	^ creationDate
+]
+
+{ #category : #accessing }
+RMQNode >> creationDate: anObject [
+	creationDate := anObject
+]
+
+{ #category : #accessing }
+RMQNode >> deletionDate [
+	^ deletionDate
+]
+
+{ #category : #accessing }
+RMQNode >> deletionDate: anObject [
+	deletionDate := anObject
+]
+
+{ #category : #accessing }
+RMQNode >> host [
+	^ host
+]
+
+{ #category : #accessing }
+RMQNode >> host: anObject [
+	host := anObject
 ]
 
 { #category : #initialization }
@@ -44,6 +78,16 @@ RMQNode >> nodeString [
 { #category : #accessing }
 RMQNode >> nodeString: anObject [
 	nodeString := anObject
+]
+
+{ #category : #accessing }
+RMQNode >> port [
+	^ port
+]
+
+{ #category : #accessing }
+RMQNode >> port: anObject [
+	port := anObject
 ]
 
 { #category : #accessing }
