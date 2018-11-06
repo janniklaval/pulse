@@ -5,11 +5,11 @@ Class {
 		'destinationType',
 		'vhost',
 		'sourceExchange',
-		'destinationExchanges',
 		'creationDate',
 		'deletionDate',
 		'routingKey',
-		'destinationQueue'
+		'destinationQueue',
+		'destinationExchange'
 	],
 	#category : #'RMQ-Core-Model'
 }
@@ -37,15 +37,14 @@ RMQBinding >> deletionDate: anObject [
 ]
 
 { #category : #accessing }
-RMQBinding >> destinationExchanges [
-	<MSEProperty: #destinationExchanges type: #RMQExchange opposite:#destinationBindings>
-		<multivalued>
+RMQBinding >> destinationExchange [
+	<MSEProperty: #destinationExchange type: #RMQExchange opposite:#destinationBindings>
 	^ destinationExchanges
 ]
 
 { #category : #accessing }
-RMQBinding >> destinationExchanges: anObject [
-	destinationExchanges := anObject
+RMQBinding >> destinationExchange: anObject [
+	destinationExchange := anObject
 ]
 
 { #category : #accessing }
@@ -74,13 +73,18 @@ RMQBinding >> destinationType: anObject [
 RMQBinding >> initialize [
 	
 	super initialize.
-	routingKeys := OrderedCollection new
 ]
 
 { #category : #accessing }
 RMQBinding >> name [
 	<MSEProperty: #name type: #String>
-	^ self sourceExchange asString, '>>', destinationQueues asString
+	
+	^destinationType = 'exchange' ifTrue: [ 
+		sourceExchange asString, '>', destinationExchange asString
+		 ]
+	ifFalse: [ 
+		sourceExchange asString, '>', destinationQueue asString
+		 ]
 ]
 
 { #category : #accessing }
@@ -104,4 +108,16 @@ RMQBinding >> sourceExchange [
 { #category : #accessing }
 RMQBinding >> sourceExchange: anObject [
 	sourceExchange := anObject
+]
+
+{ #category : #accessing }
+RMQBinding >> vhost [
+
+	<MSEProperty: #vhost type: #RMQVHost opposite:#bindings>
+	^ vhost
+]
+
+{ #category : #accessing }
+RMQBinding >> vhost: anObject [
+	vhost := anObject
 ]

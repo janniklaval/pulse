@@ -80,7 +80,7 @@ RMQExchange >> deletionDate: anObject [
 
 { #category : #accessing }
 RMQExchange >> destinationBindings [
-	<MSEProperty: #destinationBindings type: #RMQBinding opposite:#destinationExchanges>
+	<MSEProperty: #destinationBindings type: #RMQBinding opposite:#destinationExchange>
 	<multivalued>
 	^ destinationBindings
 ]
@@ -119,6 +119,8 @@ RMQExchange >> initialize [
 	sourceBindings := OrderedCollection new.
 	components := OrderedCollection new.
 	messages := OrderedCollection new.
+	queues_for_dead_letter := OrderedCollection new.
+	alternate_exchange_for := OrderedCollection new.
 ]
 
 { #category : #accessing }

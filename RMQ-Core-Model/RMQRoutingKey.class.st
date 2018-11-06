@@ -23,6 +23,7 @@ RMQRoutingKey >> binding: anObject [
 { #category : #accessing }
 RMQRoutingKey >> initialize [
 	super initialize.
+	queues_for_dead_letter := OrderedCollection new.
 ]
 
 { #category : #accessing }

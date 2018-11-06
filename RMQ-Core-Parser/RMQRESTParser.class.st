@@ -2,7 +2,7 @@
 model := MooseModel new.
 model name: 'test'.
 MooseModel root add: model.
-RMQRESTParser populate: model withJson: '{""rabbit_version"":""3.7.8"",""users"":[{""name"":""guest"",""password_hash"":""RgD5L5W9tmsqQBlVt+VciTra/o4TlfiZALWegc0vH8zVb4PI"",""hashing_algorithm"":""rabbit_password_hashing_sha256"",""tags"":""administrator""}],""vhosts"":[{""name"":""/""}],""permissions"":[{""user"":""guest"",""vhost"":""/"",""configure"":"".*"",""write"":"".*"",""read"":"".*""}],""topic_permissions"":[],""parameters"":[],""global_parameters"":[{""name"":""cluster_name"",""value"":""rabbit@a12b253c30bd""}],""policies"":[],""queues"":[{""name"":""testQueue"",""vhost"":""/"",""durable"":true,""auto_delete"":false,""arguments"":{}},{""name"":""testQueue2"",""vhost"":""/"",""durable"":true,""auto_delete"":false,""arguments"":{""x-dead-letter-exchange"":""testExchange"",""x-dead-letter-routing-key"":""dead-letter-routing-key"",""x-expires"":10000000000,""x-max-length"":255,""x-max-length-bytes"":256,""x-max-priority"":1,""x-message-ttl"":9,""x-queue-mode"":""lazy""}}],""exchanges"":[{""name"":""testExchange"",""vhost"":""/"",""type"":""direct"",""durable"":true,""auto_delete"":false,""internal"":false,""arguments"":{}}],""bindings"":[{""source"":""testExchange"",""vhost"":""/"",""destination"":""testQueue"",""destination_type"":""queue"",""routing_key"":""testRoutingKey"",""arguments"":{}}]}'.
+RMQRESTParser populate: model withJson: '{""rabbit_version"":""3.7.8"",""users"":[{""name"":""userMonitoring"",""password_hash"":""tY9o+KU/Qns8Mccyplrw7oEDt8r8SmkARQhrJ3KC5OD635Eb"",""hashing_algorithm"":""rabbit_password_hashing_sha256"",""tags"":""monitoring""},{""name"":""guest2"",""password_hash"":""jaEzGO38CAFeJdYm8c4JqVYOi9iGfkjFpNOp1ffta+qgRcYZ"",""hashing_algorithm"":""rabbit_password_hashing_sha256"",""tags"":""administrator""},{""name"":""newUser"",""password_hash"":""YBXeQ+KOyQLe8gciHkQdO+lwN1lnh9G5BnFWp+BnAGLM2I70"",""hashing_algorithm"":""rabbit_password_hashing_sha256"",""tags"":""management""},{""name"":""guest"",""password_hash"":""RgD5L5W9tmsqQBlVt+VciTra/o4TlfiZALWegc0vH8zVb4PI"",""hashing_algorithm"":""rabbit_password_hashing_sha256"",""tags"":""administrator""}],""vhosts"":[{""name"":""/""},{""name"":""/2""}],""permissions"":[{""user"":""guest"",""vhost"":""/2"",""configure"":"".*"",""write"":"".*"",""read"":"".*""},{""user"":""guest"",""vhost"":""/"",""configure"":"".*"",""write"":"".*"",""read"":"".*""}],""topic_permissions"":[],""parameters"":[{""value"":{""max-connections"":1000},""vhost"":""/"",""component"":""vhost-limits"",""name"":""limits""},{""value"":{""max-queues"":200},""vhost"":""/2"",""component"":""vhost-limits"",""name"":""limits""},{""value"":{""pattern"":""patt1"",""definition"":{""expires"":10000000000,""max-length"":244,""max-length-bytes"":245,""message-ttl"":45},""priority"":5,""apply-to"":""queues""},""vhost"":""/"",""component"":""operator_policy"",""name"":""policy1""}],""global_parameters"":[{""name"":""cluster_name"",""value"":""rabbit@a12b253c30bd""}],""policies"":[],""queues"":[{""name"":""testQueue"",""vhost"":""/"",""durable"":true,""auto_delete"":false,""arguments"":{}},{""name"":""testQueue2"",""vhost"":""/"",""durable"":true,""auto_delete"":false,""arguments"":{""x-dead-letter-exchange"":""testExchange"",""x-dead-letter-routing-key"":""dead-letter-routing-key"",""x-expires"":10000000000,""x-max-length"":255,""x-max-length-bytes"":256,""x-max-priority"":1,""x-message-ttl"":9,""x-queue-mode"":""lazy""}}],""exchanges"":[{""name"":""testExchange"",""vhost"":""/"",""type"":""direct"",""durable"":true,""auto_delete"":false,""internal"":false,""arguments"":{}},{""name"":""testExchange2"",""vhost"":""/"",""type"":""topic"",""durable"":false,""auto_delete"":false,""internal"":true,""arguments"":{""alternate-exchange"":""testExchange""}}],""bindings"":[{""source"":""testExchange"",""vhost"":""/"",""destination"":""testQueue"",""destination_type"":""queue"",""routing_key"":""testRoutingKey"",""arguments"":{}},{""source"":""testExchange"",""vhost"":""/"",""destination"":""testQueue2"",""destination_type"":""queue"",""routing_key"":""testRoutingKeyBinding"",""arguments"":{}}]}'.
 "
 Class {
 	#name : #RMQRESTParser,
@@ -13,18 +13,94 @@ Class {
 { #category : #'to finish' }
 RMQRESTParser class >> populate: aModel withBindings: anArray [
 	
-		anArray do: [ :aBinding|
+	| source destination vhostName vhost rkName rk |
+	anArray do: [ :aBinding|
+	|destType sourceName destinationName element|
 		
-		self flag: 'to be finished'.
-		"(anExchange at: 'arguments')."
+	destType := (aBinding at: 'destination_type').
+	sourceName := (aBinding at: 'source').
+	destinationName := (aBinding at: 'destination').
+	
+	element := aModel entityNamed: (sourceName, '>', destinationName)  withType: RMQBinding
+			ifAbsent:[  
+				|newBinding |
+				source:= aModel entityNamed: sourceName withType: RMQExchange
+				ifAbsent:[
+					|newExch |
+					newExch := RMQExchange new
+						exchangeString: sourceName.
+					aModel add: newExch.
+					newExch
+				].
+			
+				newBinding := RMQBinding new
+					destinationType: destType;
+					sourceExchange: source.
+				source sourceBindings add: newBinding.
+				
+				newBinding destinationType = 'exchange' ifTrue: [ 
+					destination:= aModel entityNamed: destinationName withType: RMQExchange
+						ifAbsent:[
+							|newExch |
+							newExch := RMQExchange new
+								exchangeString: destinationName.
+							aModel add: newExch.
+							newExch
+						].
+					newBinding destinationQueue: nil.
+					newBinding destinationExchange: destination.
+					destination destinationBindings add: newBinding.
+		 		] ifFalse: [ 
+					destination:= aModel entityNamed: destinationName withType: RMQQueue
+						ifAbsent:[
+							|newQ|
+							newQ := RMQQueue new
+								queueString: destinationName.
+							aModel add: newQ.
+							newQ
+						].
+					newBinding destinationQueue: destination.
+					newBinding destinationExchange: nil.
+					destination destinationBindings add: newBinding.
+		 		].	
+				aModel add: newBinding.
+				newBinding ].
+			
+			
+		vhostName := (aBinding at: 'vhost').
+		vhost := aModel entityNamed: vhostName withType: RMQVHost
+			ifAbsent:[
+				|newVhost |
+				newVhost := RMQVHost new
+					vhostString: vhostName.
+				aModel add: newVhost.
+				newVhost
+			].
+		element vhost: vhost.
+		vhost bindings add: element.
+
+
+
 		
+		rkName := (aBinding at: 'routing_key').
+		rk := aModel entityNamed: rkName withType: RMQRoutingKey
+			ifAbsent:[
+				|newRK |
+				newRK := RMQRoutingKey new
+					routingKeyString: rkName.
+				aModel add: newRK.
+				newRK
+			].
+		element routingKey: rk.
+		rk binding: element.
 	].
 ]
 
-{ #category : #'to finish' }
+{ #category : #parsing }
 RMQRESTParser class >> populate: aModel withExchanges: anArray [
 	
-		anArray do: [ :anExchange|
+		| vhostName vhost arg altExchName altExch |
+	anArray do: [ :anExchange|
 		| exchangeName element |
 		
 		exchangeName := (anExchange at: 'name').
@@ -39,12 +115,37 @@ RMQRESTParser class >> populate: aModel withExchanges: anArray [
 		element type: (anExchange at: 'type').
 		element internal: (anExchange at: 'internal').
 		element autoDelete: (anExchange at: 'auto_delete').
-		element vhost: (anExchange at: 'vhost').
+		
+		vhostName := (anExchange at: 'vhost').
+		vhost := aModel entityNamed: vhostName withType: RMQVHost
+			ifAbsent:[
+				|newVhost |
+				newVhost := RMQVHost new
+					vhostString: vhostName.
+				aModel add: newVhost.
+				newVhost
+			].
+		element vhost: vhost.
+		vhost exchanges add: element.
+		
+		
 		element durability:(anExchange at: 'durable').
 		
-		self flag: 'to be finished'.
-		"(anExchange at: 'arguments')."
+		arg := (anExchange at: 'arguments').
 		
+		altExchName := (arg at: 'alternate-exchange' ifAbsent:[nil]).
+		altExchName ifNotNil:[
+			altExch := aModel entityNamed: altExchName withType: RMQExchange
+				ifAbsent:[
+					|newExch |
+					newExch := RMQExchange new
+						exchangeString: altExchName.
+					aModel add: newExch.
+					newExch
+				].
+			element my_alternate_exchange: altExch.
+			altExch alternate_exchange_for add: element.
+		].
 	].
 ]
 
@@ -142,6 +243,7 @@ RMQRESTParser class >> populate: aModel withQueues: anArray [
 				newVhost
 			].
 		element vhost: vhost.
+		vhost queues add: element.
 		
 		arg := (aQueue at: 'arguments').
 		element expiresAfter: (arg at: 'x-expires' ifAbsent:[nil]);
@@ -161,6 +263,7 @@ RMQRESTParser class >> populate: aModel withQueues: anArray [
 					newRK
 				].
 			element dead_letter_routing_key: deadRK.
+			deadRK queues_for_dead_letter add: element.
 		].
 	
 		deadExchName := (arg at: 'x-dead-letter-exchange' ifAbsent:[nil]).
@@ -174,6 +277,7 @@ RMQRESTParser class >> populate: aModel withQueues: anArray [
 					newExch
 				].
 			element dead_letter_exchange: deadExch.
+			deadExch queues_for_dead_letter add: element.
 		].
 	].
 ]

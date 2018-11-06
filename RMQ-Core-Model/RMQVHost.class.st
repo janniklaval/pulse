@@ -30,6 +30,18 @@ RMQVHost >> attachedPermissions: anObject [
 ]
 
 { #category : #accessing }
+RMQVHost >> bindings [
+	<MSEProperty: #bindings type: #RMQBinding opposite:#vhost>
+	<multivalued>
+	^ bindings
+]
+
+{ #category : #accessing }
+RMQVHost >> bindings: anObject [
+	bindings := anObject
+]
+
+{ #category : #accessing }
 RMQVHost >> channels [
 	<MSEProperty: #channels type: #RMQChannel opposite:#vhost>
 	<multivalued>
@@ -96,6 +108,7 @@ RMQVHost >> initialize [
 	queues := OrderedCollection new.
 	exchanges := OrderedCollection new.
 	channels := OrderedCollection new.
+	bindings := OrderedCollection new.
 ]
 
 { #category : #accessing }
