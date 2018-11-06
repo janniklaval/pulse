@@ -18,6 +18,9 @@ BaselineOfRMQ >> baseline: spec [
 		spec package: 'Amqp'
 			"with: [ spec
 						repository: 'http://www.squeaksource.com/AMQP' ]".
+		
+		spec
+ 			group: 'default' with: #( 'RMQ-Core-Enum' 'RMQ-Core-Model' 'RMQ-Core-Parser' 'RMQ-Core-Visualization' 'Amqp' ).
 	].
 
 ]

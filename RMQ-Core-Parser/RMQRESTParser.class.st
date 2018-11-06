@@ -2,7 +2,7 @@
 model := MooseModel new.
 model name: 'test'.
 MooseModel root add: model.
-RMQRESTParser populate: model withJson: '{""rabbit_version"":""3.7.8"",""users"":[{""name"":""guest"",""password_hash"":""RgD5L5W9tmsqQBlVt+VciTra/o4TlfiZALWegc0vH8zVb4PI"",""hashing_algorithm"":""rabbit_password_hashing_sha256"",""tags"":""administrator""}],""vhosts"":[{""name"":""/""}],""permissions"":[{""user"":""guest"",""vhost"":""/"",""configure"":"".*"",""write"":"".*"",""read"":"".*""}],""topic_permissions"":[],""parameters"":[],""global_parameters"":[{""name"":""cluster_name"",""value"":""rabbit@a12b253c30bd""}],""policies"":[],""queues"":[{""name"":""testQueue"",""vhost"":""/"",""durable"":true,""auto_delete"":false,""arguments"":{}}],""exchanges"":[{""name"":""testExchange"",""vhost"":""/"",""type"":""direct"",""durable"":true,""auto_delete"":false,""internal"":false,""arguments"":{}}],""bindings"":[{""source"":""testExchange"",""vhost"":""/"",""destination"":""testQueue"",""destination_type"":""queue"",""routing_key"":""testRoutingKey"",""arguments"":{}}]}'.
+RMQRESTParser populate: model withJson: '{""rabbit_version"":""3.7.8"",""users"":[{""name"":""guest"",""password_hash"":""RgD5L5W9tmsqQBlVt+VciTra/o4TlfiZALWegc0vH8zVb4PI"",""hashing_algorithm"":""rabbit_password_hashing_sha256"",""tags"":""administrator""}],""vhosts"":[{""name"":""/""}],""permissions"":[{""user"":""guest"",""vhost"":""/"",""configure"":"".*"",""write"":"".*"",""read"":"".*""}],""topic_permissions"":[],""parameters"":[],""global_parameters"":[{""name"":""cluster_name"",""value"":""rabbit@a12b253c30bd""}],""policies"":[],""queues"":[{""name"":""testQueue"",""vhost"":""/"",""durable"":true,""auto_delete"":false,""arguments"":{}},{""name"":""testQueue2"",""vhost"":""/"",""durable"":true,""auto_delete"":false,""arguments"":{""x-dead-letter-exchange"":""testExchange"",""x-dead-letter-routing-key"":""dead-letter-routing-key"",""x-expires"":10000000000,""x-max-length"":255,""x-max-length-bytes"":256,""x-max-priority"":1,""x-message-ttl"":9,""x-queue-mode"":""lazy""}}],""exchanges"":[{""name"":""testExchange"",""vhost"":""/"",""type"":""direct"",""durable"":true,""auto_delete"":false,""internal"":false,""arguments"":{}}],""bindings"":[{""source"":""testExchange"",""vhost"":""/"",""destination"":""testQueue"",""destination_type"":""queue"",""routing_key"":""testRoutingKey"",""arguments"":{}}]}'.
 "
 Class {
 	#name : #RMQRESTParser,
@@ -113,12 +113,12 @@ RMQRESTParser class >> populate: aModel withPolicies: anArray [
 	
 ]
 
-{ #category : #'to finish' }
+{ #category : #parsing }
 RMQRESTParser class >> populate: aModel withQueues: anArray [
 	"a Dictionary('arguments'->a Dictionary() 'auto_delete'->false 'durable'->true 'name'->'testQueue' 'vhost'->'/' )"
 
-		anArray do: [ :aQueue|
-		| queueName element |
+	anArray do: [ :aQueue|
+		| queueName element vhostName vhost arg deadRKName deadRK deadExchName deadExch|
 		
 		queueName := (aQueue at: 'name').
 		
@@ -130,12 +130,51 @@ RMQRESTParser class >> populate: aModel withQueues: anArray [
 				aModel add: newQueue.
 				newQueue ].
 		element autoDelete: (aQueue at: 'auto_delete').
-		element vhost: (aQueue at: 'vhost').
 		element durability:(aQueue at: 'durable').
 		
-		self flag: 'to be finished'.
-		"(aQueue at: 'arguments')."
+		vhostName := (aQueue at: 'vhost').
+		vhost := aModel entityNamed: vhostName withType: RMQVHost
+			ifAbsent:[
+				|newVhost |
+				newVhost := RMQVHost new
+					vhostString: vhostName.
+				aModel add: newVhost.
+				newVhost
+			].
+		element vhost: vhost.
 		
+		arg := (aQueue at: 'arguments').
+		element expiresAfter: (arg at: 'x-expires' ifAbsent:[nil]);
+			maxLength: (arg at: 'x-max-length' ifAbsent:[nil]);
+			maxLengthBytes: (arg at: 'x-max-length-bytes' ifAbsent:[nil]);
+			maxPriority: (arg at: 'x-max-priority' ifAbsent:[nil]);
+			messageTTL: (arg at: 'x-message-ttl' ifAbsent:[nil]).
+			
+		deadRKName := (arg at: 'x-dead-letter-routing-key' ifAbsent:[nil]).
+		deadRKName ifNotNil:[
+			deadRK := aModel entityNamed: deadRKName withType: RMQRoutingKey
+				ifAbsent:[
+					|newRK |
+					newRK := RMQRoutingKey new
+						routingKeyString: deadRKName.
+					aModel add: newRK.
+					newRK
+				].
+			element dead_letter_routing_key: deadRK.
+		].
+	
+		deadExchName := (arg at: 'x-dead-letter-exchange' ifAbsent:[nil]).
+		deadExchName ifNotNil: [
+			deadExch := aModel entityNamed: deadExchName withType: RMQExchange
+				ifAbsent:[
+					|newExch |
+					newExch := RMQExchange new
+						exchangeString: deadExchName.
+					aModel add: newExch.
+					newExch
+				].
+			element dead_letter_exchange: deadExch.
+		].
 	].
 ]
 
