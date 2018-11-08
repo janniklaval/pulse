@@ -117,6 +117,7 @@ RMQExchange >> initialize [
 
 	super initialize.
 	sourceBindings := OrderedCollection new.
+	destinationBindings := OrderedCollection new.
 	components := OrderedCollection new.
 	messages := OrderedCollection new.
 	queues_for_dead_letter := OrderedCollection new.

@@ -75,6 +75,7 @@ RMQUser >> initialize [
 	vhosts :=OrderedCollection new.
 	usedChannels :=OrderedCollection new.
 	roles :=OrderedCollection new.
+	permissions :=OrderedCollection new.
 ]
 
 { #category : #accessing }
@@ -153,7 +154,7 @@ RMQUser >> passwordHash: anObject [
 
 { #category : #accessing }
 RMQUser >> permissions [
-	<MSEProperty: #permissions type: #RMQPermission opposite:#users>
+	<MSEProperty: #permissions type: #RMQPermission opposite:#user>
 	<multivalued>
 	^ permissions
 ]

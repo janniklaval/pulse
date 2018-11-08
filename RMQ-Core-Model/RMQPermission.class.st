@@ -4,25 +4,13 @@ Class {
 	#instVars : [
 		'type',
 		'value',
-		'users',
-		'attachedVHost',
+		'user',
 		'creationDate',
-		'deletionDate'
+		'deletionDate',
+		'vhost'
 	],
 	#category : #'RMQ-Core-Model'
 }
-
-{ #category : #accessing }
-RMQPermission >> attachedVHost [
-	<MSEProperty: #attachedVHost type: #RMQVHost opposite:#attachedPermissions>
-	<multivalued>
-	^ attachedVHost
-]
-
-{ #category : #accessing }
-RMQPermission >> attachedVHost: anObject [
-	attachedVHost := anObject
-]
 
 { #category : #accessing }
 RMQPermission >> creationDate [
@@ -47,6 +35,12 @@ RMQPermission >> deletionDate: anObject [
 ]
 
 { #category : #accessing }
+RMQPermission >> name [
+	<MSEProperty: #name type: #String>
+	^ attachedVHost mooseName, '.', user mooseName, '>', type mooseName
+]
+
+{ #category : #accessing }
 RMQPermission >> type [
 	<MSEProperty: #type type: #PermissionType opposite:#permissions>
 	^ type
@@ -58,15 +52,14 @@ RMQPermission >> type: anObject [
 ]
 
 { #category : #accessing }
-RMQPermission >> users [
-	<MSEProperty: #users type: #RMQUser opposite:#permissions>
-	<multivalued>
-	^ users
+RMQPermission >> user [
+	<MSEProperty: #user type: #RMQUser opposite:#permissions>
+	^ user
 ]
 
 { #category : #accessing }
-RMQPermission >> users: anObject [
-	users := anObject
+RMQPermission >> user: anObject [
+	user := anObject
 ]
 
 { #category : #accessing }
@@ -78,4 +71,15 @@ RMQPermission >> value1 [
 { #category : #accessing }
 RMQPermission >> value: anObject [
 	value := anObject
+]
+
+{ #category : #accessing }
+RMQPermission >> vhost [
+	<MSEProperty: #vhost type: #RMQVHost opposite:#permissions>
+	^ vhost
+]
+
+{ #category : #accessing }
+RMQPermission >> vhost: anObject [
+	vhost := anObject
 ]

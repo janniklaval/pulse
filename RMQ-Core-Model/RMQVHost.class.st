@@ -9,25 +9,14 @@ Class {
 		'queues',
 		'exchanges',
 		'bindings',
-		'attachedPermissions',
 		'channels',
 		'tracing',
 		'creationDate',
-		'deletionDate'
+		'deletionDate',
+		'permissions'
 	],
 	#category : #'RMQ-Core-Model'
 }
-
-{ #category : #accessing }
-RMQVHost >> attachedPermissions [
-	<MSEProperty: #attachedPermissions type: #RMQPermission opposite:#attachedVHost>
-	^ attachedPermissions
-]
-
-{ #category : #accessing }
-RMQVHost >> attachedPermissions: anObject [
-	attachedPermissions := anObject
-]
 
 { #category : #accessing }
 RMQVHost >> bindings [
@@ -109,6 +98,7 @@ RMQVHost >> initialize [
 	exchanges := OrderedCollection new.
 	channels := OrderedCollection new.
 	bindings := OrderedCollection new.
+	permissions := OrderedCollection new.
 ]
 
 { #category : #accessing }
@@ -126,6 +116,18 @@ RMQVHost >> node [
 { #category : #accessing }
 RMQVHost >> node: anObject [
 	node := anObject
+]
+
+{ #category : #accessing }
+RMQVHost >> permissions [
+		<MSEProperty: #permissions type: #RMQPermission opposite:#vhost>
+	<multivalued>
+	^ permissions
+]
+
+{ #category : #accessing }
+RMQVHost >> permissions: anObject [
+	permissions := anObject
 ]
 
 { #category : #accessing }

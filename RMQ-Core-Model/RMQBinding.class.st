@@ -39,7 +39,7 @@ RMQBinding >> deletionDate: anObject [
 { #category : #accessing }
 RMQBinding >> destinationExchange [
 	<MSEProperty: #destinationExchange type: #RMQExchange opposite:#destinationBindings>
-	^ destinationExchanges
+	^ destinationExchange
 ]
 
 { #category : #accessing }
@@ -80,10 +80,10 @@ RMQBinding >> name [
 	<MSEProperty: #name type: #String>
 	
 	^destinationType = 'exchange' ifTrue: [ 
-		sourceExchange asString, '>', destinationExchange asString
+		sourceExchange name, '>', destinationExchange name
 		 ]
 	ifFalse: [ 
-		sourceExchange asString, '>', destinationQueue asString
+		sourceExchange name, '>', destinationQueue name
 		 ]
 ]
 
