@@ -4,8 +4,6 @@ Class {
 	#instVars : [
 		'channelString',
 		'connection',
-		'peerHost',
-		'peerPort',
 		'prefetchCount',
 		'globalPrefetchCount',
 		'idleSince',
@@ -13,8 +11,8 @@ Class {
 		'rmqState',
 		'subscribedComponents',
 		'vhost',
-		'initializer',
 		'users',
+		'user_who_performed_connection',
 		'creationDate',
 		'closingDate',
 		'consumedQueues'
@@ -118,45 +116,17 @@ RMQChannel >> initialize [
 	users := OrderedCollection new.
 	consumedQueues := OrderedCollection new.
 	subscribedComponents := OrderedCollection new.
-]
-
-{ #category : #accessing }
-RMQChannel >> initializer [
-	<MSEProperty: #initializer type: #RMQUser opposite:#initializedChannels>
-	^ initializer
-]
-
-{ #category : #accessing }
-RMQChannel >> initializer: anObject [
-	initializer := anObject
+	guaranteeMode := GuaranteeMode none.
+	guaranteeMode channels add: self.
+	
+	state := State idle.
+	state channels add: self.
 ]
 
 { #category : #accessing }
 RMQChannel >> name [
 	<MSEProperty: #name type: #String>
 	^ self channel asString
-]
-
-{ #category : #accessing }
-RMQChannel >> peerHost [
-	<MSEProperty: #peerHost type: #String>
-	^ peerHost
-]
-
-{ #category : #accessing }
-RMQChannel >> peerHost: anObject [
-	peerHost := anObject
-]
-
-{ #category : #accessing }
-RMQChannel >> peerPort [
-	<MSEProperty: #peerPort type: #String>
-	^ peerPort
-]
-
-{ #category : #accessing }
-RMQChannel >> peerPort: anObject [
-	peerPort := anObject
 ]
 
 { #category : #accessing }
@@ -196,6 +166,17 @@ RMQChannel >> subscribedComponents [
 { #category : #accessing }
 RMQChannel >> subscribedComponents: anObject [
 	subscribedComponents := anObject
+]
+
+{ #category : #accessing }
+RMQChannel >> user_who_performed_connection [
+	<MSEProperty: #user_who_performed_connection type: #RMQUser opposite:#usedChannels>
+	^ user_who_performed_connection
+]
+
+{ #category : #accessing }
+RMQChannel >> user_who_performed_connection: anObject [
+	user_who_performed_connection := anObject
 ]
 
 { #category : #accessing }

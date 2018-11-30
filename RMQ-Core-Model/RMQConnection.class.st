@@ -11,10 +11,15 @@ Class {
 		'port',
 		'vhost',
 		'channels',
-		'initializer',
 		'users',
 		'creationDate',
-		'closingDate'
+		'closingDate',
+		'user_who_performed_connection',
+		'peerHost',
+		'peerPort',
+		'sslProtocol',
+		'ssl',
+		'sslHash'
 	],
 	#category : #'RMQ-Core-Model'
 }
@@ -105,20 +110,31 @@ RMQConnection >> initialize [
 ]
 
 { #category : #accessing }
-RMQConnection >> initializer [
-	<MSEProperty: #initializer type: #RMQUser opposite:#initializedConnections>
-	^ initializer
-]
-
-{ #category : #accessing }
-RMQConnection >> initializer: anObject [
-	initializer := anObject
-]
-
-{ #category : #accessing }
 RMQConnection >> name [
 <MSEProperty: #name type: #String>
 	^self connectionString
+]
+
+{ #category : #accessing }
+RMQConnection >> peerHost [
+	<MSEProperty: #peerHost type: #String>
+	^ peerHost
+]
+
+{ #category : #accessing }
+RMQConnection >> peerHost: anObject [
+	peerHost := anObject
+]
+
+{ #category : #accessing }
+RMQConnection >> peerPort [
+	<MSEProperty: #peerPort type: #String>
+	^ peerPort
+]
+
+{ #category : #accessing }
+RMQConnection >> peerPort: anObject [
+	peerPort := anObject
 ]
 
 { #category : #accessing }
@@ -152,6 +168,50 @@ RMQConnection >> rmqState [
 { #category : #accessing }
 RMQConnection >> rmqState: anObject [
 	rmqState := anObject
+]
+
+{ #category : #accessing }
+RMQConnection >> ssl [
+	<MSEProperty: #ssl type: #Boolean>
+	^ ssl
+]
+
+{ #category : #accessing }
+RMQConnection >> ssl: anObject [
+	ssl := anObject
+]
+
+{ #category : #accessing }
+RMQConnection >> sslHash [
+	<MSEProperty: #sslHash type: #String>
+	^ sslHash
+]
+
+{ #category : #accessing }
+RMQConnection >> sslHash: anObject [
+	sslHash := anObject
+]
+
+{ #category : #accessing }
+RMQConnection >> sslProtocol [
+	<MSEProperty: #sslProtocol type: #String>
+	^ sslProtocol
+]
+
+{ #category : #accessing }
+RMQConnection >> sslProtocol: anObject [
+	sslProtocol := anObject
+]
+
+{ #category : #accessing }
+RMQConnection >> user_who_performed_connection [
+	<MSEProperty: #user_who_performed_connection type: #RMQUser opposite:#initializedConnections>
+	^ user_who_performed_connection
+]
+
+{ #category : #accessing }
+RMQConnection >> user_who_performed_connection: anObject [
+	user_who_performed_connection := anObject
 ]
 
 { #category : #accessing }
