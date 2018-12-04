@@ -31,7 +31,7 @@ RMQEventParser >> populate: aModel withBindingCreated: aDictionnary at: timestam
 	bindingObject := aModel entityNamed: (sourceName, '>', destinationName)  withType: RMQBinding
 			ifAbsent:[  
 				|newBinding |
-				source:= aModel entityNamed: sourceName withType: RMQExchange
+				source:= aModel entityNamed: sourceName withType: RMQBinding
 				ifAbsent:[
 					|newExch |
 					newExch := RMQExchange new
@@ -176,45 +176,7 @@ RMQEventParser >> populate: aModel withBindingDeleted: aDictionnary at: timestam
 RMQEventParser >> populate: aModel withChannelCreated: aDictionnary at: timestamp [
    "a Dictionary( 'durable'->true 'vhost'->'/' 'auto_delete'->false  'name'->'Queue' 'exclusive'->false 'arguments'->a Dictionary() 'owner_pid'->string )"
 
-      |queueName queueObject vhostName vhost arguments|
-
-		queueName := (aDictionnary at: 'name').
-		
-		"if the queue does not exist, create it"
-		queueObject := aModel entityNamed: queueName withType: RMQQueue "ici on peut avoir une liste ! à revoir dans ex: populate:withQueues: dans RMQRestParser. ++ est ce que cette méthode est définie de façon à rendre une liste ? sinon le nom de la resources dans rabbitmq ne doit pas être l'identifiant de l'objet dans le modèle "
-			ifAbsent:[  
-				|newQueue |
-				newQueue := RMQQueue new queueString: queueName .
-				aModel add: newQueue.
-				newQueue ]. "ask Jannik : why this line"
-			
-		"queueObjects do: [ :queueObject| |vhostName vhost arguments| "
-			
-		queueObject creationDate: timestamp. 
-		
-		queueObject autoDelete: (aDictionnary at: 'auto_delete').
-		queueObject durability:(aDictionnary at: 'durable').
-		queueObject exclusive:(aDictionnary at: 'exclusive').
-		
-	   "create the Vhost if it does not exist and link it to the queue"
-		vhostName := (aDictionnary at: 'vhost').
-		vhost := aModel entityNamed: vhostName withType: RMQVHost
-			ifAbsent:[
-				|newVhost |
-				newVhost := RMQVHost new
-					vhostString: vhostName.
-				aModel add: newVhost.
-				newVhost
-			].
-		queueObject vhost: vhost.
-		vhost queues add: queueObject.
-		
-		arguments := (aDictionnary at: 'arguments').
-		queueObject expiresAfter: (arguments at: 'x-expires' ifAbsent:[nil]);
-			     maxLength: (arguments at: 'x-max-length' ifAbsent:[nil]);
-			maxLengthBytes: (arguments at: 'x-max-length-bytes' ifAbsent:[nil]);
-			maxPriority: (arguments at: 'x-max-priority' ifAbsent:[nil]);
-			messageTTL: (arguments at: 'x-message-ttl' ifAbsent:[nil]).
+      self notYetImplemented. 
 		
 	
 			
@@ -227,46 +189,7 @@ RMQEventParser >> populate: aModel withChannelCreated: aDictionnary at: timestam
 RMQEventParser >> populate: aModel withChanneldeleted: aDictionnary at: timestamp [
    "a Dictionary( 'durable'->true 'vhost'->'/' 'auto_delete'->false  'name'->'Queue' 'exclusive'->false 'arguments'->a Dictionary() 'owner_pid'->string )"
 
-      |queueName queueObject vhostName vhost arguments|
-
-		queueName := (aDictionnary at: 'name').
-		
-		"if the queue does not exist, create it"
-		queueObject := aModel entityNamed: queueName withType: RMQQueue "ici on peut avoir une liste ! à revoir dans ex: populate:withQueues: dans RMQRestParser. ++ est ce que cette méthode est définie de façon à rendre une liste ? sinon le nom de la resources dans rabbitmq ne doit pas être l'identifiant de l'objet dans le modèle "
-			ifAbsent:[  
-				|newQueue |
-				newQueue := RMQQueue new queueString: queueName .
-				aModel add: newQueue.
-				newQueue ]. "ask Jannik : why this line"
-			
-		"queueObjects do: [ :queueObject| |vhostName vhost arguments| "
-			
-		queueObject creationDate: timestamp. 
-		
-		queueObject autoDelete: (aDictionnary at: 'auto_delete').
-		queueObject durability:(aDictionnary at: 'durable').
-		queueObject exclusive:(aDictionnary at: 'exclusive').
-		
-	   "create the Vhost if it does not exist and link it to the queue"
-		vhostName := (aDictionnary at: 'vhost').
-		vhost := aModel entityNamed: vhostName withType: RMQVHost
-			ifAbsent:[
-				|newVhost |
-				newVhost := RMQVHost new
-					vhostString: vhostName.
-				aModel add: newVhost.
-				newVhost
-			].
-		queueObject vhost: vhost.
-		vhost queues add: queueObject.
-		
-		arguments := (aDictionnary at: 'arguments').
-		queueObject expiresAfter: (arguments at: 'x-expires' ifAbsent:[nil]);
-			     maxLength: (arguments at: 'x-max-length' ifAbsent:[nil]);
-			maxLengthBytes: (arguments at: 'x-max-length-bytes' ifAbsent:[nil]);
-			maxPriority: (arguments at: 'x-max-priority' ifAbsent:[nil]);
-			messageTTL: (arguments at: 'x-message-ttl' ifAbsent:[nil]).
-		
+     self notYetImplemented.
 	
 			
 
@@ -278,46 +201,7 @@ RMQEventParser >> populate: aModel withChanneldeleted: aDictionnary at: timestam
 RMQEventParser >> populate: aModel withConnectionCreated: aDictionnary at: timestamp [
    "a Dictionary( 'durable'->true 'vhost'->'/' 'auto_delete'->false  'name'->'Queue' 'exclusive'->false 'arguments'->a Dictionary() 'owner_pid'->string )"
 
-      |queueName queueObject vhostName vhost arguments|
-
-		queueName := (aDictionnary at: 'name').
-		
-		"if the queue does not exist, create it"
-		queueObject := aModel entityNamed: queueName withType: RMQQueue "ici on peut avoir une liste ! à revoir dans ex: populate:withQueues: dans RMQRestParser. ++ est ce que cette méthode est définie de façon à rendre une liste ? sinon le nom de la resources dans rabbitmq ne doit pas être l'identifiant de l'objet dans le modèle "
-			ifAbsent:[  
-				|newQueue |
-				newQueue := RMQQueue new queueString: queueName .
-				aModel add: newQueue.
-				newQueue ]. "ask Jannik : why this line"
-			
-		"queueObjects do: [ :queueObject| |vhostName vhost arguments| "
-			
-		queueObject creationDate: timestamp. 
-		
-		queueObject autoDelete: (aDictionnary at: 'auto_delete').
-		queueObject durability:(aDictionnary at: 'durable').
-		queueObject exclusive:(aDictionnary at: 'exclusive').
-		
-	   "create the Vhost if it does not exist and link it to the queue"
-		vhostName := (aDictionnary at: 'vhost').
-		vhost := aModel entityNamed: vhostName withType: RMQVHost
-			ifAbsent:[
-				|newVhost |
-				newVhost := RMQVHost new
-					vhostString: vhostName.
-				aModel add: newVhost.
-				newVhost
-			].
-		queueObject vhost: vhost.
-		vhost queues add: queueObject.
-		
-		arguments := (aDictionnary at: 'arguments').
-		queueObject expiresAfter: (arguments at: 'x-expires' ifAbsent:[nil]);
-			     maxLength: (arguments at: 'x-max-length' ifAbsent:[nil]);
-			maxLengthBytes: (arguments at: 'x-max-length-bytes' ifAbsent:[nil]);
-			maxPriority: (arguments at: 'x-max-priority' ifAbsent:[nil]);
-			messageTTL: (arguments at: 'x-message-ttl' ifAbsent:[nil]).
-		
+     self notYetImplemented. 
 	
 			
 
@@ -329,45 +213,7 @@ RMQEventParser >> populate: aModel withConnectionCreated: aDictionnary at: times
 RMQEventParser >> populate: aModel withConnectionDeleted: aDictionnary at: timestamp [
    "a Dictionary( 'durable'->true 'vhost'->'/' 'auto_delete'->false  'name'->'Queue' 'exclusive'->false 'arguments'->a Dictionary() 'owner_pid'->string )"
 
-      |queueName queueObject vhostName vhost arguments|
-
-		queueName := (aDictionnary at: 'name').
-		
-		"if the queue does not exist, create it"
-		queueObject := aModel entityNamed: queueName withType: RMQQueue "ici on peut avoir une liste ! à revoir dans ex: populate:withQueues: dans RMQRestParser. ++ est ce que cette méthode est définie de façon à rendre une liste ? sinon le nom de la resources dans rabbitmq ne doit pas être l'identifiant de l'objet dans le modèle "
-			ifAbsent:[  
-				|newQueue |
-				newQueue := RMQQueue new queueString: queueName .
-				aModel add: newQueue.
-				newQueue ]. "ask Jannik : why this line"
-			
-		"queueObjects do: [ :queueObject| |vhostName vhost arguments| "
-			
-		queueObject creationDate: timestamp. 
-		
-		queueObject autoDelete: (aDictionnary at: 'auto_delete').
-		queueObject durability:(aDictionnary at: 'durable').
-		queueObject exclusive:(aDictionnary at: 'exclusive').
-		
-	   "create the Vhost if it does not exist and link it to the queue"
-		vhostName := (aDictionnary at: 'vhost').
-		vhost := aModel entityNamed: vhostName withType: RMQVHost
-			ifAbsent:[
-				|newVhost |
-				newVhost := RMQVHost new
-					vhostString: vhostName.
-				aModel add: newVhost.
-				newVhost
-			].
-		queueObject vhost: vhost.
-		vhost queues add: queueObject.
-		
-		arguments := (aDictionnary at: 'arguments').
-		queueObject expiresAfter: (arguments at: 'x-expires' ifAbsent:[nil]);
-			     maxLength: (arguments at: 'x-max-length' ifAbsent:[nil]);
-			maxLengthBytes: (arguments at: 'x-max-length-bytes' ifAbsent:[nil]);
-			maxPriority: (arguments at: 'x-max-priority' ifAbsent:[nil]);
-			messageTTL: (arguments at: 'x-message-ttl' ifAbsent:[nil]).
+      self notYetImplemented. 
 		
 	
 			
@@ -516,14 +362,13 @@ RMQEventParser >> populate: aModel withQueueCreated: aDictionnary at: timestamp 
 		queueName := (aDictionnary at: 'name').
 		
 		"if the queue does not exist, create it"
-		queueObject := aModel entityNamed: queueName withType: RMQQueue "ici on peut avoir une liste ! à revoir dans ex: populate:withQueues: dans RMQRestParser. ++ est ce que cette méthode est définie de façon à rendre une liste ? sinon le nom de la resources dans rabbitmq ne doit pas être l'identifiant de l'objet dans le modèle "
+		queueObject := aModel entityNamed: queueName withType: RMQQueue "ici on peut avoir une liste ! à revoir dans ex: populate:withQueues: dans RMQRestParser. ++ est ce que cette méthode est définie de façon à rendre une liste ? non juste une entité.  sinon le nom de la resources dans rabbitmq ne doit pas être l'identifiant de l'objet dans le modèle, oui à voir "
 			ifAbsent:[  
 				|newQueue |
 				newQueue := RMQQueue new queueString: queueName .
 				aModel add: newQueue.
-				newQueue ]. "ask Jannik : why this line"
+				newQueue ]. "ask Jannik : why this line" "cest le return du bloc car c'est une affectation à queueObject"
 			
-		"queueObjects do: [ :queueObject| |vhostName vhost arguments| "
 			
 		queueObject creationDate: timestamp. 
 		
