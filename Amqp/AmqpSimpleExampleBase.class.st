@@ -16,7 +16,7 @@ AmqpSimpleExampleBase >> close [
 
 { #category : #'as yet unclassified' }
 AmqpSimpleExampleBase >> exampleExchange [
-	^ 'smalltalk-test'
+	^ 'smalltalk-test' "amq.rabbitmq.event"
 ]
 
 { #category : #'as yet unclassified' }
@@ -24,13 +24,13 @@ AmqpSimpleExampleBase >> exampleHost [
 	^ 'localhost'
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #initialization }
 AmqpSimpleExampleBase >> initialize [
 	super initialize.
 
 	conn := AmqpConnection new.
 	conn protocolClass: Amqp091.
-	conn host: self exampleHost.
+	conn host: self exampleHost port: 5672.
 	conn open.
 
 	ch := conn newChannel.
