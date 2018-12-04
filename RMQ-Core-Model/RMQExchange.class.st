@@ -16,7 +16,8 @@ Class {
 		'creationDate',
 		'deletionDate',
 		'messages',
-		'components'
+		'components',
+		'user_who_performed_action'
 	],
 	#category : #'RMQ-Core-Model'
 }
@@ -197,6 +198,18 @@ RMQExchange >> type [
 { #category : #accessing }
 RMQExchange >> type: anObject [
 	type := anObject
+]
+
+{ #category : #accessing }
+RMQExchange >> user_who_performed_action [
+	<MSEProperty: #user_who_performed_action type: #RMQUser opposite:#initializedExchanges>
+
+	^ user_who_performed_action
+]
+
+{ #category : #accessing }
+RMQExchange >> user_who_performed_action: anObject [
+	user_who_performed_action := anObject
 ]
 
 { #category : #accessing }

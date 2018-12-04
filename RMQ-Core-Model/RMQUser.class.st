@@ -17,7 +17,8 @@ Class {
 		'deletionDate',
 		'passwordCreationDate',
 		'passwordChangingDate',
-		'authentification'
+		'authentification',
+		'initializedExchanges'
 	],
 	#category : #'RMQ-Core-Model'
 }
@@ -80,7 +81,7 @@ RMQUser >> initialize [
 
 { #category : #accessing }
 RMQUser >> initializedChannels [
-	<MSEProperty: #initializedChannels type: #RMQChannel opposite:#initializer>
+	<MSEProperty: #initializedChannels type: #RMQChannel opposite:#user_who_performed_connection>
 	<multivalued>
 	^ initializedChannels
 ]
@@ -92,7 +93,7 @@ RMQUser >> initializedChannels: anObject [
 
 { #category : #accessing }
 RMQUser >> initializedConnections [
-	<MSEProperty: #initializedConnections type: #RMQConnection opposite:#initializer>
+	<MSEProperty: #initializedConnections type: #RMQConnection opposite:#user_who_performed_connection>
 	<multivalued>
 	^ initializedConnections
 ]
@@ -100,6 +101,18 @@ RMQUser >> initializedConnections [
 { #category : #accessing }
 RMQUser >> initializedConnections: anObject [
 	initializedConnections := anObject
+]
+
+{ #category : #accessing }
+RMQUser >> initializedExchanges [
+	<MSEProperty: #initializedExchanges type: #RMQExchange opposite:#user_who_performed_action>
+	<multivalued>
+	^ initializedExchanges
+]
+
+{ #category : #accessing }
+RMQUser >> initializedExchanges: anObject [
+	initializedExchanges := anObject
 ]
 
 { #category : #accessing }
