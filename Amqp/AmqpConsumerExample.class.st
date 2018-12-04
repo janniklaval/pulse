@@ -8,18 +8,18 @@ Class {
 	#category : #'Amqp-Examples'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #amqp }
 AmqpConsumerExample >> handleDelivery: delivery [
 	| str |
-	str := [ delivery body utf8Decoded ] on: InvalidUTF8 do: [ delivery body printString ].
+	str := delivery properties headers printString "[ delivery body utf8Decoded ] on: ZnInvalidUTF8 do: [ delivery body printString ]".
 	Transcript cr; nextPutAll: 'Received delivery: ', str; flush.
 	ch basicAck: delivery method deliveryTag.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #initialization }
 AmqpConsumerExample >> initialize [
 	super initialize.
-	ch exchangeDeclare: self exampleExchange type: 'fanout'.
+	"ch exchangeDeclare: self exampleExchange type: 'fanout'.
 	queueName := (ch
 		queueDeclare: ''
 		durable: false
@@ -28,7 +28,8 @@ AmqpConsumerExample >> initialize [
 		passive: false
 		arguments: nil) method queue.
 	ch queueBind: queueName exchange: self exampleExchange routingKey: ''.
-	consumerTag := ch consumeFrom: queueName callback: self selector: #handleDelivery:.
+	consumerTag := ch consumeFrom: queueName callback: self selector: #handleDelivery:."
+	consumerTag := ch consumeFrom: 'events.queue.created' callback: self selector: #handleDelivery:.
 ]
 
 { #category : #'as yet unclassified' }

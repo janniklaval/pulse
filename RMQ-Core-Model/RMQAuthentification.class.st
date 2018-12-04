@@ -2,12 +2,24 @@ Class {
 	#name : #RMQAuthentification,
 	#superclass : #MooseEntity,
 	#instVars : [
+		'authentificationString',
 		'success',
 		'timestamp',
 		'user'
 	],
 	#category : #'RMQ-Core-Model'
 }
+
+{ #category : #accessing }
+RMQAuthentification >> authentificationString [
+	<MSEProperty: #authentification type: #String>
+	^ authentificationString
+]
+
+{ #category : #accessing }
+RMQAuthentification >> authentificationString: anObject [
+	authentificationString := anObject
+]
 
 { #category : #accessing }
 RMQAuthentification >> success [
