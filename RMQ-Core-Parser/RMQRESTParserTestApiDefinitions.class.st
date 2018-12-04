@@ -1,5 +1,5 @@
 Class {
-	#name : #RMQRESTParserTest,
+	#name : #RMQRESTParserTestApiDefinitions,
 	#superclass : #TestCase,
 	#instVars : [
 		'objects',
@@ -9,17 +9,17 @@ Class {
 }
 
 { #category : #accessing }
-RMQRESTParserTest >> data [
+RMQRESTParserTestApiDefinitions >> data [
 	^ '{"rabbit_version":"3.7.8","users":[{"name":"userMonitoring","password_hash":"tY9o+KU/Qns8Mccyplrw7oEDt8r8SmkARQhrJ3KC5OD635Eb","hashing_algorithm":"rabbit_password_hashing_sha256","tags":"monitoring"},{"name":"guest2","password_hash":"jaEzGO38CAFeJdYm8c4JqVYOi9iGfkjFpNOp1ffta+qgRcYZ","hashing_algorithm":"rabbit_password_hashing_sha256","tags":"administrator"},{"name":"newUser","password_hash":"YBXeQ+KOyQLe8gciHkQdO+lwN1lnh9G5BnFWp+BnAGLM2I70","hashing_algorithm":"rabbit_password_hashing_sha256","tags":"management"},{"name":"guest","password_hash":"RgD5L5W9tmsqQBlVt+VciTra/o4TlfiZALWegc0vH8zVb4PI","hashing_algorithm":"rabbit_password_hashing_sha256","tags":"administrator"}],"vhosts":[{"name":"/"},{"name":"/2"}],"permissions":[{"user":"guest","vhost":"/2","configure":".*","write":".*","read":".*"},{"user":"guest","vhost":"/","configure":".*","write":".*","read":".*"}],"topic_permissions":[],"parameters":[{"value":{"max-connections":1000},"vhost":"/","component":"vhost-limits","name":"limits"},{"value":{"max-queues":200},"vhost":"/2","component":"vhost-limits","name":"limits"},{"value":{"pattern":"patt1","definition":{"expires":10000000000,"max-length":244,"max-length-bytes":245,"message-ttl":45},"priority":5,"apply-to":"queues"},"vhost":"/","component":"operator_policy","name":"policy1"}],"global_parameters":[{"name":"cluster_name","value":"rabbit@a12b253c30bd"}],"policies":[],"queues":[{"name":"testQueue","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},{"name":"testQueue2","vhost":"/","durable":true,"auto_delete":false,"arguments":{"x-dead-letter-exchange":"testExchange","x-dead-letter-routing-key":"dead-letter-routing-key","x-expires":10000000000,"x-max-length":255,"x-max-length-bytes":256,"x-max-priority":1,"x-message-ttl":9,"x-queue-mode":"lazy"}}],"exchanges":[{"name":"testExchange","vhost":"/","type":"direct","durable":true,"auto_delete":false,"internal":false,"arguments":{}},{"name":"testExchange2","vhost":"/","type":"topic","durable":false,"auto_delete":false,"internal":true,"arguments":{"alternate-exchange":"testExchange"}}],"bindings":[{"source":"testExchange","vhost":"/","destination":"testExchange2","destination_type":"exchange","routing_key":"rkExchange","arguments":{}},{"source":"testExchange","vhost":"/","destination":"testQueue","destination_type":"queue","routing_key":"testRoutingKey","arguments":{}},{"source":"testExchange","vhost":"/","destination":"testQueue2","destination_type":"queue","routing_key":"testRoutingKeyBinding","arguments":{}}]}'.
 ]
 
 { #category : #accessing }
-RMQRESTParserTest >> dataFirst [
+RMQRESTParserTestApiDefinitions >> dataFirst [
 	^ '{"rabbit_version":"3.7.8","users":[{"name":"guest","password_hash":"RgD5L5W9tmsqQBlVt+VciTra/o4TlfiZALWegc0vH8zVb4PI","hashing_algorithm":"rabbit_password_hashing_sha256","tags":"administrator"}],"vhosts":[{"name":"/"}],"permissions":[{"user":"guest","vhost":"/","configure":".*","write":".*","read":".*"}],"topic_permissions":[],"parameters":[],"global_parameters":[{"name":"cluster_name","value":"rabbit@a12b253c30bd"}],"policies":[],"queues":[{"name":"testQueue","vhost":"/","durable":true,"auto_delete":false,"arguments":{}}],"exchanges":[{"name":"testExchange","vhost":"/","type":"direct","durable":true,"auto_delete":false,"internal":false,"arguments":{}}],"bindings":[{"source":"testExchange","vhost":"/","destination":"testQueue","destination_type":"queue","routing_key":"testRoutingKey","arguments":{}}]}'.
 ]
 
 { #category : #initialization }
-RMQRESTParserTest >> setUp [
+RMQRESTParserTestApiDefinitions >> setUp [
 
 	| parser |
 	parser := PPParserResource current parserAt: PPJsonParser.
@@ -29,8 +29,8 @@ RMQRESTParserTest >> setUp [
 	model name: 'test'.
 ]
 
-{ #category : #initialization }
-RMQRESTParserTest >> testNOTWORKINGPopulateUser [
+{ #category : #'as yet unclassified' }
+RMQRESTParserTestApiDefinitions >> testNOTWORKINGPopulateUser [
 	"I have not the information for now"
 	| user vh |
 	"self assert: user vhosts size = 2.	
@@ -40,10 +40,10 @@ RMQRESTParserTest >> testNOTWORKINGPopulateUser [
 ]
 
 { #category : #'testing - simple' }
-RMQRESTParserTest >> testPopulateBindings [
+RMQRESTParserTestApiDefinitions >> testPopulateBindings [
 
 	| b1 b2 b3 |
-	RMQRESTParser populate: model withBindings: (objects at: 'bindings').
+	RMQRESTParserApiDefinitions populate: model withBindings: (objects at: 'bindings').
 	
 	self assert: model allRMQBindings size = 3.
 	
@@ -83,10 +83,10 @@ RMQRESTParserTest >> testPopulateBindings [
 ]
 
 { #category : #'testing - simple' }
-RMQRESTParserTest >> testPopulateExchange [
+RMQRESTParserTestApiDefinitions >> testPopulateExchange [
 
 	| t1 t2 |
-	RMQRESTParser populate: model withExchanges: (objects at: 'exchanges').
+	RMQRESTParserApiDefinitions populate: model withExchanges: (objects at: 'exchanges').
 	
 	self assert: model allRMQExchanges size = 2.
 	self assert: (model allRMQExchanges anySatisfy: [:e | e name = 'testExchange']).
@@ -111,11 +111,11 @@ RMQRESTParserTest >> testPopulateExchange [
 ]
 
 { #category : #'testing-double-insert' }
-RMQRESTParserTest >> testPopulateExistingBindings [
+RMQRESTParserTestApiDefinitions >> testPopulateExistingBindings [
 
 	| b1 b2 b3 |
-	RMQRESTParser populate: model withBindings: (objects at: 'bindings').
-	RMQRESTParser populate: model withBindings: (objects at: 'bindings').
+	RMQRESTParserApiDefinitions populate: model withBindings: (objects at: 'bindings').
+	RMQRESTParserApiDefinitions populate: model withBindings: (objects at: 'bindings').
 	
 	self assert: model allRMQBindings size = 3.
 	
@@ -155,11 +155,11 @@ RMQRESTParserTest >> testPopulateExistingBindings [
 ]
 
 { #category : #'testing-double-insert' }
-RMQRESTParserTest >> testPopulateExistingExchange [
+RMQRESTParserTestApiDefinitions >> testPopulateExistingExchange [
 
 	| t1 t2 |
-	RMQRESTParser populate: model withExchanges: (objects at: 'exchanges').
-	RMQRESTParser populate: model withExchanges: (objects at: 'exchanges').
+	RMQRESTParserApiDefinitions populate: model withExchanges: (objects at: 'exchanges').
+	RMQRESTParserApiDefinitions populate: model withExchanges: (objects at: 'exchanges').
 	
 	self assert: model allRMQExchanges size = 2.
 	self assert: (model allRMQExchanges anySatisfy: [:e | e name = 'testExchange']).
@@ -184,19 +184,19 @@ RMQRESTParserTest >> testPopulateExistingExchange [
 ]
 
 { #category : #'testing-double-insert' }
-RMQRESTParserTest >> testPopulateExistingGlobalParameters [
-	RMQRESTParser populate: model withGlobalParameters: (objects at: 'global_parameters').
-	RMQRESTParser populate: model withGlobalParameters: (objects at: 'global_parameters').
+RMQRESTParserTestApiDefinitions >> testPopulateExistingGlobalParameters [
+	RMQRESTParserApiDefinitions populate: model withGlobalParameters: (objects at: 'global_parameters').
+	RMQRESTParserApiDefinitions populate: model withGlobalParameters: (objects at: 'global_parameters').
 	self assert: model allRMQClusters size = 1.
 	self assert: model allRMQClusters first name = 'rabbit@a12b253c30bd'
 ]
 
 { #category : #'testing-double-insert' }
-RMQRESTParserTest >> testPopulateExistingPermission [
+RMQRESTParserTestApiDefinitions >> testPopulateExistingPermission [
 
 	| p1 p2 vh1 vh2 user |
-	RMQRESTParser populate: model withPermissions: (objects at: 'permissions').
-	RMQRESTParser populate: model withPermissions: (objects at: 'permissions').
+	RMQRESTParserApiDefinitions populate: model withPermissions: (objects at: 'permissions').
+	RMQRESTParserApiDefinitions populate: model withPermissions: (objects at: 'permissions').
 	
 	self assert: model allRMQPermissions size = 6.
 	
@@ -223,12 +223,12 @@ RMQRESTParserTest >> testPopulateExistingPermission [
 ]
 
 { #category : #'testing-double-insert' }
-RMQRESTParserTest >> testPopulateExistingQueue [
+RMQRESTParserTestApiDefinitions >> testPopulateExistingQueue [
 
 	| t1 t2 exch vh rtK |
-	RMQRESTParser populate: model withQueues: (objects at: 'queues').
+	RMQRESTParserApiDefinitions populate: model withQueues: (objects at: 'queues').
 	
-RMQRESTParser populate: model withQueues: (objects at: 'queues').
+RMQRESTParserApiDefinitions populate: model withQueues: (objects at: 'queues').
 	
 	self assert: model allRMQQueues size = 2.
 	self assert: (model allRMQQueues anySatisfy: [:e | e name = 'testQueue']).
@@ -271,11 +271,11 @@ RMQRESTParser populate: model withQueues: (objects at: 'queues').
 ]
 
 { #category : #'testing-double-insert' }
-RMQRESTParserTest >> testPopulateExistingUser [
+RMQRESTParserTestApiDefinitions >> testPopulateExistingUser [
 
 	| user |
-	RMQRESTParser populate: model withUsers: (objects at: 'users').
-	RMQRESTParser populate: model withUsers: (objects at: 'users').
+	RMQRESTParserApiDefinitions populate: model withUsers: (objects at: 'users').
+	RMQRESTParserApiDefinitions populate: model withUsers: (objects at: 'users').
 	
 	self assert: model allRMQUsers size = 4.
 	
@@ -296,10 +296,10 @@ RMQRESTParserTest >> testPopulateExistingUser [
 ]
 
 { #category : #'testing-double-insert' }
-RMQRESTParserTest >> testPopulateExistingVHost [
+RMQRESTParserTestApiDefinitions >> testPopulateExistingVHost [
 
-	RMQRESTParser populate: model withVhosts: (objects at: 'vhosts').
-	RMQRESTParser populate: model withVhosts: (objects at: 'vhosts').
+	RMQRESTParserApiDefinitions populate: model withVhosts: (objects at: 'vhosts').
+	RMQRESTParserApiDefinitions populate: model withVhosts: (objects at: 'vhosts').
 	
 	self assert: model allRMQVHosts size = 2.
 	self assert: (model allRMQVHosts anySatisfy: [:e | e name = '/']).
@@ -307,17 +307,17 @@ RMQRESTParserTest >> testPopulateExistingVHost [
 ]
 
 { #category : #'testing - simple' }
-RMQRESTParserTest >> testPopulateGlobalParameters [
-	RMQRESTParser populate: model withGlobalParameters: (objects at: 'global_parameters').
+RMQRESTParserTestApiDefinitions >> testPopulateGlobalParameters [
+	RMQRESTParserApiDefinitions populate: model withGlobalParameters: (objects at: 'global_parameters').
 	self assert: model allRMQClusters size = 1.
 	self assert: model allRMQClusters first name = 'rabbit@a12b253c30bd'.
 ]
 
 { #category : #'testing - simple' }
-RMQRESTParserTest >> testPopulatePermission [
+RMQRESTParserTestApiDefinitions >> testPopulatePermission [
 
 	| p1 p2 vh1 vh2 user |
-	RMQRESTParser populate: model withPermissions: (objects at: 'permissions').
+	RMQRESTParserApiDefinitions populate: model withPermissions: (objects at: 'permissions').
 	
 	self assert: model allRMQPermissions size = 6.
 	
@@ -344,10 +344,10 @@ RMQRESTParserTest >> testPopulatePermission [
 ]
 
 { #category : #'testing - simple' }
-RMQRESTParserTest >> testPopulateQueue [
+RMQRESTParserTestApiDefinitions >> testPopulateQueue [
 
 	| t1 t2 vh exch rtK |
-	RMQRESTParser populate: model withQueues: (objects at: 'queues').
+	RMQRESTParserApiDefinitions populate: model withQueues: (objects at: 'queues').
 	
 	self assert: model allRMQQueues size = 2.
 	self assert: (model allRMQQueues anySatisfy: [:e | e name = 'testQueue']).
@@ -390,10 +390,10 @@ RMQRESTParserTest >> testPopulateQueue [
 ]
 
 { #category : #'testing - simple' }
-RMQRESTParserTest >> testPopulateUser [
+RMQRESTParserTestApiDefinitions >> testPopulateUser [
 
 	| user vh |
-	RMQRESTParser populate: model withUsers: (objects at: 'users').
+	RMQRESTParserApiDefinitions populate: model withUsers: (objects at: 'users').
 	
 	self assert: model allRMQUsers size = 4.
 	
@@ -413,9 +413,9 @@ RMQRESTParserTest >> testPopulateUser [
 ]
 
 { #category : #'testing - simple' }
-RMQRESTParserTest >> testPopulateVHost [
+RMQRESTParserTestApiDefinitions >> testPopulateVHost [
 
-	RMQRESTParser populate: model withVhosts: (objects at: 'vhosts').
+	RMQRESTParserApiDefinitions populate: model withVhosts: (objects at: 'vhosts').
 	
 	self assert: model allRMQVHosts size = 2.
 	self assert: (model allRMQVHosts anySatisfy: [:e | e name = '/']).
