@@ -1,15 +1,13 @@
 Class {
 	#name : #RMQBinding,
-	#superclass : #MooseEntity,
+	#superclass : #PulseEntity,
 	#instVars : [
-		'destinationType',
 		'vhost',
-		'sourceExchange',
+		'source',
 		'creationDate',
 		'deletionDate',
 		'routingKey',
-		'destinationQueue',
-		'destinationExchange'
+		'destination'
 	],
 	#category : #'RMQ-Core-Model'
 }
@@ -37,36 +35,8 @@ RMQBinding >> deletionDate: anObject [
 ]
 
 { #category : #accessing }
-RMQBinding >> destinationExchange [
-	<MSEProperty: #destinationExchange type: #RMQExchange opposite:#destinationBindings>
-	^ destinationExchange
-]
-
-{ #category : #accessing }
-RMQBinding >> destinationExchange: anObject [
-	destinationExchange := anObject
-]
-
-{ #category : #accessing }
-RMQBinding >> destinationQueue [
-<MSEProperty: #destinationQueue type: #RMQQueue opposite:#destinationBindings>
-	^ destinationQueue
-]
-
-{ #category : #accessing }
-RMQBinding >> destinationQueue: anObject [
-	destinationQueue := anObject
-]
-
-{ #category : #accessing }
-RMQBinding >> destinationType [
-	<MSEProperty: #destinationType type: #DestinationType opposite:#bindings>
-	^ destinationType
-]
-
-{ #category : #accessing }
-RMQBinding >> destinationType: anObject [
-	destinationType := anObject
+RMQBinding >> destination: anObject [
+	destination := anObject
 ]
 
 { #category : #initialization }
@@ -76,15 +46,11 @@ RMQBinding >> initialize [
 ]
 
 { #category : #accessing }
-RMQBinding >> name [
-	<MSEProperty: #name type: #String>
-	
-	^destinationType = 'exchange' ifTrue: [ 
-		sourceExchange name, '>', destinationExchange name
-		 ]
-	ifFalse: [ 
-		sourceExchange name, '>', destinationQueue name
-		 ]
+RMQBinding >> pulseName [
+
+	pulseName ifNil: [ 
+		(self source isNil or: [ self destination isNil ]) ifFalse: [ self pulseName: (self source name, '>', self destination name) ]  ].
+	^ pulseName
 ]
 
 { #category : #accessing }
@@ -100,14 +66,14 @@ RMQBinding >> routingKey: anObject [
 ]
 
 { #category : #accessing }
-RMQBinding >> sourceExchange [
-<MSEProperty: #sourceExchange type: #RMQExchange opposite:#sourceBindings>
-	^ sourceExchange
+RMQBinding >> source [
+<MSEProperty: #source type: #RMQExchange opposite:#sourceBindings>
+	^ source
 ]
 
 { #category : #accessing }
-RMQBinding >> sourceExchange: anObject [
-	sourceExchange := anObject
+RMQBinding >> source: anObject [
+	source := anObject
 ]
 
 { #category : #accessing }

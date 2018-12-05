@@ -25,7 +25,7 @@ RMQRESTParserTestApiDefinitions >> setUp [
 	parser := PPParserResource current parserAt: PPJsonParser.
 	objects := parser parse: self data.
 	
-	model := MooseModel new.
+	model := PulseModel new.
 	model name: 'test'.
 ]
 
@@ -47,31 +47,27 @@ RMQRESTParserTestApiDefinitions >> testPopulateBindings [
 	
 	self assert: model allRMQBindings size = 3.
 	
-	b1 := model allRMQBindings first.
-	b2 := model allRMQBindings second.
-	b3 := model allRMQBindings third.
-	
-	self assert: b1 destinationType = 'exchange'.
-	self assert: b2 destinationType = 'queue'.
-	self assert: b3 destinationType = 'queue'.
-	
+	b2 := model allRMQBindingWithQueues first.
+	b3 := model allRMQBindingWithQueues second.
+	b1 := model allRMQBindingWithExchanges first.
+		
 	self assert: b1 vhost = (model allRMQVHosts detect: [:e | e name = '/']).
 	self assert: ((model allRMQVHosts detect: [:e | e name = '/']) bindings anySatisfy: [ :e | e =b1 ]).
 	self assert: b2 vhost = (model allRMQVHosts detect: [:e | e name = '/']).
 	self assert: ((model allRMQVHosts detect: [:e | e name = '/']) bindings anySatisfy: [ :e | e =b2 ]).
 	
-	self assert: b1 sourceExchange = (model allRMQExchanges detect: [:e | e name = 'testExchange']).
+	self assert: b1 source = (model allRMQExchanges detect: [:e | e name = 'testExchange']).
 	self assert: ((model allRMQExchanges detect: [:e | e name = 'testExchange']) sourceBindings anySatisfy: [ :e | e = b1 ]).
-	self assert: b2 sourceExchange = (model allRMQExchanges detect: [:e | e name = 'testExchange']).
+	self assert: b2 source = (model allRMQExchanges detect: [:e | e name = 'testExchange']).
 	self assert: ((model allRMQExchanges detect: [:e | e name = 'testExchange']) sourceBindings anySatisfy: [ :e | e = b2 ]).
-	self assert: b3 sourceExchange = (model allRMQExchanges detect: [:e | e name = 'testExchange']).
+	self assert: b3 source = (model allRMQExchanges detect: [:e | e name = 'testExchange']).
 	self assert: ((model allRMQExchanges detect: [:e | e name = 'testExchange']) sourceBindings anySatisfy: [ :e | e = b3 ]).
 	
-	self assert: b1 destinationExchange = (model allRMQExchanges detect: [:e | e name = 'testExchange2']).
+	self assert: b1 destination = (model allRMQExchanges detect: [:e | e name = 'testExchange2']).
 	self assert: ((model allRMQExchanges detect: [:e | e name = 'testExchange2']) destinationBindings anySatisfy: [ :e | e = b1 ]).
-	self assert: b2 destinationQueue = (model allRMQQueues detect: [:e | e name = 'testQueue']).
+	self assert: b2 destination = (model allRMQQueues detect: [:e | e name = 'testQueue']).
 	self assert: ((model allRMQQueues detect: [:e | e name = 'testQueue']) destinationBindings anySatisfy: [ :e | e = b2 ]).
-	self assert: b3 destinationQueue = (model allRMQQueues detect: [:e | e name = 'testQueue2']).
+	self assert: b3 destination = (model allRMQQueues detect: [:e | e name = 'testQueue2']).
 	self assert: ((model allRMQQueues detect: [:e | e name = 'testQueue2']) destinationBindings anySatisfy: [ :e | e = b3 ]).
 	
 	self assert: b1 routingKey  = (model allRMQRoutingKeys detect: [:e | e name = 'rkExchange']).
@@ -119,31 +115,28 @@ RMQRESTParserTestApiDefinitions >> testPopulateExistingBindings [
 	
 	self assert: model allRMQBindings size = 3.
 	
-	b1 := model allRMQBindings first.
-	b2 := model allRMQBindings second.
-	b3 := model allRMQBindings third.
+	b2 := model allRMQBindingWithQueues first.
+	b3 := model allRMQBindingWithQueues second.
+	b1 := model allRMQBindingWithExchanges first.
 	
-	self assert: b1 destinationType = 'exchange'.
-	self assert: b2 destinationType = 'queue'.
-	self assert: b3 destinationType = 'queue'.
 	
 	self assert: b1 vhost = (model allRMQVHosts detect: [:e | e name = '/']).
 	self assert: ((model allRMQVHosts detect: [:e | e name = '/']) bindings anySatisfy: [ :e | e =b1 ]).
 	self assert: b2 vhost = (model allRMQVHosts detect: [:e | e name = '/']).
 	self assert: ((model allRMQVHosts detect: [:e | e name = '/']) bindings anySatisfy: [ :e | e =b2 ]).
 	
-	self assert: b1 sourceExchange = (model allRMQExchanges detect: [:e | e name = 'testExchange']).
+	self assert: b1 source = (model allRMQExchanges detect: [:e | e name = 'testExchange']).
 	self assert: ((model allRMQExchanges detect: [:e | e name = 'testExchange']) sourceBindings anySatisfy: [ :e | e = b1 ]).
-	self assert: b2 sourceExchange = (model allRMQExchanges detect: [:e | e name = 'testExchange']).
+	self assert: b2 source = (model allRMQExchanges detect: [:e | e name = 'testExchange']).
 	self assert: ((model allRMQExchanges detect: [:e | e name = 'testExchange']) sourceBindings anySatisfy: [ :e | e = b2 ]).
-	self assert: b3 sourceExchange = (model allRMQExchanges detect: [:e | e name = 'testExchange']).
+	self assert: b3 source = (model allRMQExchanges detect: [:e | e name = 'testExchange']).
 	self assert: ((model allRMQExchanges detect: [:e | e name = 'testExchange']) sourceBindings anySatisfy: [ :e | e = b3 ]).
 	
-	self assert: b1 destinationExchange = (model allRMQExchanges detect: [:e | e name = 'testExchange2']).
+	self assert: b1 destination = (model allRMQExchanges detect: [:e | e name = 'testExchange2']).
 	self assert: ((model allRMQExchanges detect: [:e | e name = 'testExchange2']) destinationBindings anySatisfy: [ :e | e = b1 ]).
-	self assert: b2 destinationQueue = (model allRMQQueues detect: [:e | e name = 'testQueue']).
+	self assert: b2 destination = (model allRMQQueues detect: [:e | e name = 'testQueue']).
 	self assert: ((model allRMQQueues detect: [:e | e name = 'testQueue']) destinationBindings anySatisfy: [ :e | e = b2 ]).
-	self assert: b3 destinationQueue = (model allRMQQueues detect: [:e | e name = 'testQueue2']).
+	self assert: b3 destination = (model allRMQQueues detect: [:e | e name = 'testQueue2']).
 	self assert: ((model allRMQQueues detect: [:e | e name = 'testQueue2']) destinationBindings anySatisfy: [ :e | e = b3 ]).
 	
 	self assert: b1 routingKey  = (model allRMQRoutingKeys detect: [:e | e name = 'rkExchange']).

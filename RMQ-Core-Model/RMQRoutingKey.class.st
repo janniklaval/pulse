@@ -1,8 +1,7 @@
 Class {
 	#name : #RMQRoutingKey,
-	#superclass : #MooseEntity,
+	#superclass : #PulseEntity,
 	#instVars : [
-		'routingKeyString',
 		'binding',
 		'queues_for_dead_letter'
 	],
@@ -27,12 +26,6 @@ RMQRoutingKey >> initialize [
 ]
 
 { #category : #accessing }
-RMQRoutingKey >> name [
-	<MSEProperty: #name type: #String>
-	^ self routingKeyString
-]
-
-{ #category : #accessing }
 RMQRoutingKey >> queues_for_dead_letter [
 	<MSEProperty: #queues_for_dead_letter type: #RMQQueue opposite:#dead_letter_routing_key>
 	<multivalued>
@@ -42,15 +35,4 @@ RMQRoutingKey >> queues_for_dead_letter [
 { #category : #accessing }
 RMQRoutingKey >> queues_for_dead_letter: anObject [
 	queues_for_dead_letter := anObject
-]
-
-{ #category : #accessing }
-RMQRoutingKey >> routingKeyString [
-	<MSEProperty: #routingKey type: #String>
-	^ routingKeyString
-]
-
-{ #category : #accessing }
-RMQRoutingKey >> routingKeyString: anObject [
-	routingKeyString := anObject
 ]

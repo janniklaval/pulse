@@ -1,6 +1,6 @@
 Class {
 	#name : #RMQRole,
-	#superclass : #MooseEntity,
+	#superclass : #PulseEntity,
 	#instVars : [
 		'users',
 		'tag',
@@ -17,12 +17,6 @@ RMQRole >> initialize [
 ]
 
 { #category : #accessing }
-RMQRole >> name [
-	<MSEProperty: #name type: #String>
-	^ self tag
-]
-
-{ #category : #accessing }
 RMQRole >> settingDate [
 		<MSEProperty: #settingDate type: #Number>
 	^ settingDate
@@ -36,12 +30,12 @@ RMQRole >> settingDate: anObject [
 { #category : #accessing }
 RMQRole >> tag [
 	<MSEProperty: #tag type: #Tag>
-	^ tag
+	^ self pulseName
 ]
 
 { #category : #accessing }
 RMQRole >> tag: anObject [
-	tag := anObject
+	self pulseName: anObject
 ]
 
 { #category : #accessing }

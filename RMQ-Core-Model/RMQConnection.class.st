@@ -1,8 +1,7 @@
 Class {
 	#name : #RMQConnection,
-	#superclass : #MooseEntity,
+	#superclass : #PulseEntity,
 	#instVars : [
-		'connectionString',
 		'rmqState',
 		'protocol',
 		'connectedAt',
@@ -70,16 +69,6 @@ RMQConnection >> connectedAt: anObject [
 ]
 
 { #category : #accessing }
-RMQConnection >> connectionString [
-	^ connectionString
-]
-
-{ #category : #accessing }
-RMQConnection >> connectionString: anObject [
-	connectionString := anObject
-]
-
-{ #category : #accessing }
 RMQConnection >> creationDate [
 	<MSEProperty: #creationDate type: #Number>
 	^ creationDate
@@ -107,12 +96,6 @@ RMQConnection >> initialize [
 	super initialize.
 	users := OrderedCollection new.
 	channels := OrderedCollection new.
-]
-
-{ #category : #accessing }
-RMQConnection >> name [
-<MSEProperty: #name type: #String>
-	^self connectionString
 ]
 
 { #category : #accessing }

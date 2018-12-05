@@ -1,8 +1,7 @@
 Class {
 	#name : #RMQPayload,
-	#superclass : #MooseEntity,
+	#superclass : #PulseEntity,
 	#instVars : [
-		'payloadString',
 		'messages',
 		'size_byte',
 		'encoding'
@@ -37,23 +36,6 @@ RMQPayload >> messages [
 { #category : #accessing }
 RMQPayload >> messages: anObject [
 	messages := anObject
-]
-
-{ #category : #accessing }
-RMQPayload >> name [
-	<MSEProperty: #name type: #String>
-	^ self payloadString asString
-]
-
-{ #category : #accessing }
-RMQPayload >> payloadString [
-<MSEProperty: #payload type: #String>
-	^ payloadString
-]
-
-{ #category : #accessing }
-RMQPayload >> payloadString: anObject [
-	payloadString := anObject
 ]
 
 { #category : #accessing }

@@ -1,8 +1,7 @@
 Class {
 	#name : #RMQChannel,
-	#superclass : #MooseEntity,
+	#superclass : #PulseEntity,
 	#instVars : [
-		'channelString',
 		'connection',
 		'prefetchCount',
 		'globalPrefetchCount',
@@ -19,17 +18,6 @@ Class {
 	],
 	#category : #'RMQ-Core-Model'
 }
-
-{ #category : #accessing }
-RMQChannel >> channel [
-	<MSEProperty: #channel type: #String>
-	^ channelString
-]
-
-{ #category : #accessing }
-RMQChannel >> channel: anObject [
-	channelString := anObject
-]
 
 { #category : #accessing }
 RMQChannel >> closingDate [
@@ -124,12 +112,6 @@ RMQChannel >> initialize [
 ]
 
 { #category : #accessing }
-RMQChannel >> name [
-	<MSEProperty: #name type: #String>
-	^ self channel asString
-]
-
-{ #category : #accessing }
 RMQChannel >> prefetchCount [
 	<MSEProperty: #prefetchCount type: #Number>
 	^ prefetchCount
@@ -170,7 +152,7 @@ RMQChannel >> subscribedComponents: anObject [
 
 { #category : #accessing }
 RMQChannel >> user_who_performed_connection [
-	<MSEProperty: #user_who_performed_connection type: #RMQUser opposite:#usedChannels>
+	<MSEProperty: #user_who_performed_connection type: #RMQUser opposite:#initializedChannels>
 	^ user_who_performed_connection
 ]
 

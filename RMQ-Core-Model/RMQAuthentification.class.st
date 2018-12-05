@@ -1,6 +1,6 @@
 Class {
 	#name : #RMQAuthentification,
-	#superclass : #MooseEntity,
+	#superclass : #PulseEntity,
 	#instVars : [
 		'success',
 		'timestamp',

@@ -1,18 +1,15 @@
 Class {
 	#name : #RMQTenant,
-	#superclass : #MooseEntity,
-	#instVars : [
-		'tenantId'
-	],
+	#superclass : #PulseEntity,
 	#category : #'RMQ-Core-Model'
 }
 
 { #category : #accessing }
 RMQTenant >> tenantId [
-	^ tenantId
+	^ self pulseName
 ]
 
 { #category : #accessing }
 RMQTenant >> tenantId: anObject [
-	tenantId := anObject
+	self pulseName: anObject
 ]

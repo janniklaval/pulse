@@ -1,6 +1,6 @@
 Class {
 	#name : #RMQExchangeFormat,
-	#superclass : #MooseEntity,
+	#superclass : #PulseEntity,
 	#instVars : [
 		'exchangeFormatType',
 		'exchangeFormatSchema',

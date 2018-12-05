@@ -18,7 +18,7 @@ es := (RTShapeBuilder new box; withText: #asString height: 40)
 RTNest new for: es add: [ :group :localModel |
 			
 		(localModel = 'Producers') ifTrue: [
-			producers := (RTShapeBuilder new box width: 300; height: 110; color: Color orange trans; borderColor: [ :e | ((model allRMQQueues reject:[:i | i name = 'none'] )contains:[:q | ((q name substrings:'.') at: 4) = e symbolicName ]) ifTrue:[ Color black ] ] ;borderWidth: [ :e | ((model allRMQQueues reject:[:i | i name = 'none'] )contains:[:q | ((q name substrings:'.') at: 4) = e symbolicName ]) ifTrue:[ 4 ] ]; withText: [:e | e symbolicName, String cr, 'last at: ', String cr, (e senderMessages sort:[:l :m | l timestamp < m timestamp ]) last timestamp] height: 20 color: Color black) elementsOn: (model allRMQComponents).
+			producers := (RTShapeBuilder new box width: 300; height: 110; color: Color orange trans; borderColor: [ :e | ((model allRMQQueues reject:[:i | i name = 'none'] )contains:[:q | ((q name substrings:'.') at: 4) = e pulseName ]) ifTrue:[ Color black ] ] ;borderWidth: [ :e | ((model allRMQQueues reject:[:i | i name = 'none'] )contains:[:q | ((q name substrings:'.') at: 4) = e pulseName ]) ifTrue:[ 4 ] ]; withText: [:e | e pulseName, String cr, 'last at: ', String cr, (e senderMessages sort:[:l :m | l timestamp < m timestamp ]) last timestamp] height: 20 color: Color black) elementsOn: (model allRMQComponents).
 			producers := producers sort: [ :e :f | e model name < f model name ].
 			
 			group addAll: producers.
@@ -45,7 +45,7 @@ RTNest new for: es add: [ :group :localModel |
 	
 		(localModel = 'Consumers') ifTrue: [
 			|list temp|
-			consumers := (RTShapeBuilder new box width: 300; height: 110; color: Color red trans; borderColor: [ :e | ((model allRMQComponents) contains:[:q | ((e name substrings:'.') at: 4) asString = q symbolicName ]) ifTrue:[ Color black ] ] ;borderWidth: [ :e | ((model allRMQComponents) contains:[:q | ((e name substrings:'.') at: 4) asString = q symbolicName ]) ifTrue:[ 4 ] ifFalse:[1] ]; withText: [:e | ((e name substrings:'.') at: 4) asString , String cr, 'last at: ', String cr, (e messages ifEmpty:['--'] ifNotEmpty:[:r | r last timestamp asString]) ] height: 20 color: Color black) elementsOn: (model allRMQQueues reject:[:e | e name = 'none']) asSet.
+			consumers := (RTShapeBuilder new box width: 300; height: 110; color: Color red trans; borderColor: [ :e | ((model allRMQComponents) contains:[:q | ((e name substrings:'.') at: 4) asString = q pulseName ]) ifTrue:[ Color black ] ] ;borderWidth: [ :e | ((model allRMQComponents) contains:[:q | ((e name substrings:'.') at: 4) asString = q pulseName ]) ifTrue:[ 4 ] ifFalse:[1] ]; withText: [:e | ((e name substrings:'.') at: 4) asString , String cr, 'last at: ', String cr, (e messages ifEmpty:['--'] ifNotEmpty:[:r | r last timestamp asString]) ] height: 20 color: Color black) elementsOn: (model allRMQQueues reject:[:e | e name = 'none']) asSet.
 			list := Set new.
 			temp := consumers class new.
 			consumers do: [ :c |
@@ -77,13 +77,13 @@ RTNest new for: es add: [ :group :localModel |
 					fromElements: exchanges;
 					toElements: queues;
 					shape: lineShape;
-					connectFrom: #yourself toAll: [:obj | (model allRMQBindings select:[:e | e sourceExchange = obj]) collect:[:e | e destinationQueue ]  ].
+					connectFrom: #yourself toAll: [:obj | (model allRMQBindings select:[:e | e source = obj]) collect:[:e | e destination ]  ].
 	edges1 := RTEdgeBuilder new
 					view: v;
 					fromElements: producers;
 					toElements: exchanges;
 					shape: lineShape;
-					connectFrom: #yourself toAll: [:obj | ((model allRMQComponents select:[:e | (e symbolicName = obj symbolicName)]) flatCollect:[:e | e exchanges])asSet].
+					connectFrom: #yourself toAll: [:obj | ((model allRMQComponents select:[:e | (e pulseName = obj pulseName)]) flatCollect:[:e | e exchanges])asSet].
 
 	edges3 := RTEdgeBuilder new
 					view: v;

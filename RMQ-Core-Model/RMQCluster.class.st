@@ -1,29 +1,11 @@
 Class {
 	#name : #RMQCluster,
-	#superclass : #MooseEntity,
+	#superclass : #PulseEntity,
 	#instVars : [
-		'nodes',
-		'clusterString'
+		'nodes'
 	],
 	#category : #'RMQ-Core-Model'
 }
-
-{ #category : #accessing }
-RMQCluster >> clusterString [
-	<MSEProperty: #clusterString type: #String>
-	^ clusterString
-]
-
-{ #category : #accessing }
-RMQCluster >> clusterString: anObject [
-	clusterString := anObject
-]
-
-{ #category : #accessing }
-RMQCluster >> name [
-	<MSEProperty: #name type: #String>
-	^ self clusterString
-]
 
 { #category : #accessing }
 RMQCluster >> nodes [

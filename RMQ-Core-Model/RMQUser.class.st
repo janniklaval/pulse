@@ -1,8 +1,7 @@
 Class {
 	#name : #RMQUser,
-	#superclass : #MooseEntity,
+	#superclass : #PulseEntity,
 	#instVars : [
-		'userString',
 		'vhosts',
 		'password',
 		'passwordHash',
@@ -116,12 +115,6 @@ RMQUser >> initializedExchanges: anObject [
 ]
 
 { #category : #accessing }
-RMQUser >> name [
-	<MSEProperty: #name type: #String>
-	^ self userString
-]
-
-{ #category : #accessing }
 RMQUser >> password [
 	<MSEProperty: #password type: #String>
 	^ password
@@ -211,17 +204,6 @@ RMQUser >> usedConnections [
 { #category : #accessing }
 RMQUser >> usedConnections: anObject [
 	usedConnections := anObject
-]
-
-{ #category : #accessing }
-RMQUser >> userString [
-	<MSEProperty: #user type: #String>
-	^ userString
-]
-
-{ #category : #accessing }
-RMQUser >> userString: anObject [
-	userString := anObject
 ]
 
 { #category : #accessing }

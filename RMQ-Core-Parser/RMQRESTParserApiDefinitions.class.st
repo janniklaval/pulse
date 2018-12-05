@@ -15,67 +15,38 @@ RMQRESTParserApiDefinitions class >> populate: aModel withBindings: anArray [
 	
 	| source destination vhostName vhost rkName rk |
 	anArray do: [ :aBinding|
-	|destType sourceName destinationName element|
+	|destType sourceName destinationName element newBinding|
 		
 	destType := (aBinding at: 'destination_type').
 	sourceName := (aBinding at: 'source').
 	destinationName := (aBinding at: 'destination').
 	
-	element := aModel entityNamed: (sourceName, '>', destinationName)  withType: RMQBinding
-			ifAbsent:[  
-				|newBinding |
-				source:= aModel entityNamed: sourceName withType: RMQExchange
-				ifAbsent:[
-					|newExch |
-					newExch := RMQExchange new
-						exchangeString: sourceName.
-					aModel add: newExch.
-					newExch
-				].
-			
-				newBinding := RMQBinding new
-					destinationType: destType;
-					sourceExchange: source.
+	source:= aModel selectOrAddEntityNamed: sourceName withType: RMQExchange.
+		
+	destType = 'exchange' ifTrue: [ 
+		newBinding := RMQBindingWithExchange new.
+		destination:= aModel selectOrAddEntityNamed: destinationName withType: RMQExchange.
+	] ifFalse: [ 
+		newBinding := RMQBindingWithQueue new.
+		destination:= aModel selectOrAddEntityNamed: destinationName withType: RMQQueue.
+	].
+	newBinding 
+		source: source;
+		destination: destination.
+	
+	element := aModel allRMQBindings
+		detect: [ :el | el source = source and: [ el destination = destination ] ]
+		ifFound: [ :elementFound | 
+			elementFound ]
+		ifNone: [  
+				destination destinationBindings add: newBinding.
 				source sourceBindings add: newBinding.
-				
-				newBinding destinationType = 'exchange' ifTrue: [ 
-					destination:= aModel entityNamed: destinationName withType: RMQExchange
-						ifAbsent:[
-							|newExch |
-							newExch := RMQExchange new
-								exchangeString: destinationName.
-							aModel add: newExch.
-							newExch
-						].
-					newBinding destinationQueue: nil.
-					newBinding destinationExchange: destination.
-					destination destinationBindings add: newBinding.
-		 		] ifFalse: [ 
-					destination:= aModel entityNamed: destinationName withType: RMQQueue
-						ifAbsent:[
-							|newQ|
-							newQ := RMQQueue new
-								queueString: destinationName.
-							aModel add: newQ.
-							newQ
-						].
-					newBinding destinationQueue: destination.
-					newBinding destinationExchange: nil.
-					destination destinationBindings add: newBinding.
-		 		].	
 				aModel add: newBinding.
 				newBinding ].
 			
 			
 		vhostName := (aBinding at: 'vhost').
-		vhost := aModel entityNamed: vhostName withType: RMQVHost
-			ifAbsent:[
-				|newVhost |
-				newVhost := RMQVHost new
-					vhostString: vhostName.
-				aModel add: newVhost.
-				newVhost
-			].
+		vhost := aModel selectOrAddEntityNamed: vhostName withType: RMQVHost.
 		element vhost: vhost.
 		vhost bindings add: element.
 
@@ -83,14 +54,7 @@ RMQRESTParserApiDefinitions class >> populate: aModel withBindings: anArray [
 
 		
 		rkName := (aBinding at: 'routing_key').
-		rk := aModel entityNamed: rkName withType: RMQRoutingKey
-			ifAbsent:[
-				|newRK |
-				newRK := RMQRoutingKey new
-					routingKeyString: rkName.
-				aModel add: newRK.
-				newRK
-			].
+		rk := aModel selectOrAddEntityNamed: rkName withType: RMQRoutingKey.
 		element routingKey: rk.
 		rk binding: element.
 	].
@@ -109,7 +73,7 @@ RMQRESTParserApiDefinitions class >> populate: aModel withExchanges: anArray [
 			ifAbsent:[ 
 				|newExchange |
 				newExchange := RMQExchange new
-					exchangeString: (anExchange at: 'name').
+					pulseName: (anExchange at: 'name').
 				aModel add: newExchange.
 				newExchange ].
 		element type: (anExchange at: 'type').
@@ -121,7 +85,7 @@ RMQRESTParserApiDefinitions class >> populate: aModel withExchanges: anArray [
 			ifAbsent:[
 				|newVhost |
 				newVhost := RMQVHost new
-					vhostString: vhostName.
+					pulseName: vhostName.
 				aModel add: newVhost.
 				newVhost
 			].
@@ -139,7 +103,7 @@ RMQRESTParserApiDefinitions class >> populate: aModel withExchanges: anArray [
 				ifAbsent:[
 					|newExch |
 					newExch := RMQExchange new
-						exchangeString: altExchName.
+						pulseName: altExchName.
 					aModel add: newExch.
 					newExch
 				].
@@ -160,7 +124,7 @@ RMQRESTParserApiDefinitions class >> populate: aModel withGlobalParameters: anAr
 						entityNamed: clusterName
 						withType: RMQCluster
 						ifAbsent: [ | newCluster |
-							newCluster := RMQCluster new clusterString: clusterName.
+							newCluster := RMQCluster new pulseName: clusterName.
 							aModel add: newCluster.
 							newCluster ] ] ]
 ]
@@ -212,12 +176,12 @@ RMQRESTParserApiDefinitions class >> populate: aModel withPermissions: anArray [
 						ifNone: [ | newPermission |
 							newPermission := RMQPermission new
 								type: permissionType key;
-								value: permissionType value.
+								rmqValue: permissionType value.
 							user := aModel
 								entityNamed: permissionUserName
 								withType: RMQUser 
 								ifAbsent: [ | newUser |
-									newUser := RMQUser new userString: permissionUserName.
+									newUser := RMQUser new pulseName: permissionUserName.
 									aModel add: newUser.
 									newUser ].
 							newPermission user: user.
@@ -226,7 +190,7 @@ RMQRESTParserApiDefinitions class >> populate: aModel withPermissions: anArray [
 								entityNamed: permissionVhostName
 								withType: RMQVHost
 								ifAbsent: [ | newVhost |
-									newVhost := RMQVHost new vhostString: permissionVhostName.
+									newVhost := RMQVHost new pulseName: permissionVhostName.
 									aModel add: newVhost.
 									newVhost ].
 							newPermission vhost: vhost.
@@ -255,7 +219,7 @@ RMQRESTParserApiDefinitions class >> populate: aModel withQueues: anArray [
 			ifAbsent:[  
 				|newQueue |
 				newQueue := RMQQueue new
-					queueString: (aQueue at: 'name').
+					pulseName: (aQueue at: 'name').
 				aModel add: newQueue.
 				newQueue ].
 		element autoDelete: (aQueue at: 'auto_delete').
@@ -266,7 +230,7 @@ RMQRESTParserApiDefinitions class >> populate: aModel withQueues: anArray [
 			ifAbsent:[
 				|newVhost |
 				newVhost := RMQVHost new
-					vhostString: vhostName.
+					pulseName: vhostName.
 				aModel add: newVhost.
 				newVhost
 			].
@@ -286,7 +250,7 @@ RMQRESTParserApiDefinitions class >> populate: aModel withQueues: anArray [
 				ifAbsent:[
 					|newRK |
 					newRK := RMQRoutingKey new
-						routingKeyString: deadRKName.
+						pulseName: deadRKName.
 					aModel add: newRK.
 					newRK
 				].
@@ -300,7 +264,7 @@ RMQRESTParserApiDefinitions class >> populate: aModel withQueues: anArray [
 				ifAbsent:[
 					|newExch |
 					newExch := RMQExchange new
-						exchangeString: deadExchName.
+						pulseName: deadExchName.
 					aModel add: newExch.
 					newExch
 				].
@@ -327,7 +291,7 @@ RMQRESTParserApiDefinitions class >> populate: aModel withUsers: anArray [
 			ifAbsent:[   
 				|newUser |
 				newUser := RMQUser new
-					userString: (aUser at: 'name').
+					pulseName: (aUser at: 'name').
 				aModel add: newUser.
 				newUser ].
 		element passwordHash: (aUser at: 'password_hash').
@@ -365,7 +329,7 @@ RMQRESTParserApiDefinitions class >> populate: aModel withVhosts: anArray [
 			ifAbsent:[  
 				|newVhost |
 				newVhost := RMQVHost new
-					vhostString: (aVhost at: 'name').
+					pulseName: (aVhost at: 'name').
 				aModel add: newVhost.
 				newVhost ].
 	].

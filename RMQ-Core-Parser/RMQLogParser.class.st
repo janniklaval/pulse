@@ -126,14 +126,12 @@ RMQLogParser class >> parse: aJSonFilePath [
 				
 				"add the bindings"
 				routingKeys do:[:aRoutingKey |
-					binding := self populateBinding: aRMQObject.
+					binding := RMQBindingWithQueue new.
 					
-					binding destinationQueue: aQueue.
+					binding destination: aQueue.
 					aQueue destinationBindings add: binding.
 					
-					"binding destinationType: DestinationType queue."
-					
-					binding sourceExchange: exchange.
+					binding source: exchange.
 					exchange sourceBindings add: binding.
 					
 					binding routingKey: aRoutingKey.	
@@ -141,7 +139,7 @@ RMQLogParser class >> parse: aJSonFilePath [
 					
 					
 					model allRMQBindings
-						detect: [ :el | (el sourceExchange = binding sourceExchange) and:[(el destinationQueue = binding destinationQueue) and:[el routingKey = binding routingKey]] ]
+						detect: [ :el | (el source = binding source) and:[(el destination = binding destination) and:[el routingKey = binding routingKey]] ]
 							ifFound: [ :elementFound | 
 								]
 							ifNone: [ model add: binding.
@@ -187,20 +185,12 @@ RMQLogParser class >> parse: aJSonFilePath [
 ]
 
 { #category : #parsing }
-RMQLogParser class >> populateBinding: aRMQObject [
-	| newBinding |
-	newBinding := RMQBinding new.
-
-	^newBinding
-]
-
-{ #category : #parsing }
 RMQLogParser class >> populateChannel: aRMQObject [
 	| newChannel |
 	newChannel := RMQChannel new
-		channel: (aRMQObject at: 'channel').
+		pulseName: (aRMQObject at: 'channel').
 	model allRMQChannels
-		detect: [ :el | el channel = newChannel channel ]
+		detect: [ :el | el pulseName = newChannel pulseName ]
 		ifFound: [ :elementFound | 
 			^elementFound ]
 		ifNone: [ model add: newChannel.
@@ -211,9 +201,9 @@ RMQLogParser class >> populateChannel: aRMQObject [
 RMQLogParser class >> populateComponent: aRMQObject [
 	| newComponent |
 	newComponent := RMQComponent new
-		symbolicName: ((aRMQObject at: 'properties') at: 'app_id').
+		pulseName: ((aRMQObject at: 'properties') at: 'app_id').
 	model allRMQComponents 
-		detect: [ :el | el symbolicName = newComponent symbolicName ]
+		detect: [ :el | el pulseName = newComponent pulseName ]
 		ifFound: [ :elementFound |  
 			^elementFound.]
 		ifNone: [ model add: newComponent.
@@ -226,10 +216,10 @@ RMQLogParser class >> populateComponent: aRMQObject [
 RMQLogParser class >> populateConnection: aRMQObject [
 	| connection |
 	connection := RMQConnection new
-				connectionString: (aRMQObject at: 'connection').
+				pulseName: (aRMQObject at: 'connection').
 	
 	model allRMQConnections
-		detect: [ :el | el connectionString = connection connectionString ]
+		detect: [ :el | el pulseName = connection pulseName ]
 		ifFound: [ :elementFound | 
 			^elementFound. ]
 		ifNone: [ model add: connection.
@@ -252,9 +242,9 @@ RMQLogParser class >> populateDeliveryMode: aRMQObject [
 RMQLogParser class >> populateExchange: aRMQObject [
 	| newExchange |
 	newExchange := RMQExchange new
-		exchangeString: (aRMQObject at: 'exchange').
+		pulseName: (aRMQObject at: 'exchange').
 	model allRMQExchanges
-		detect: [ :el | el exchangeString = newExchange exchangeString ]
+		detect: [ :el | el pulseName = newExchange pulseName ]
 		ifFound: [ :elementFound | 
 			^elementFound ]
 		ifNone: [ model add: newExchange.
@@ -266,9 +256,9 @@ RMQLogParser class >> populateHeaders: aHeader [
 	| newHeader headers |
 	headers := OrderedCollection new.
 	newHeader := RMQHeader new
-		headerString: aHeader.
+		pulseName: aHeader.
 	model allRMQHeaders
-		detect: [ :el | el headerString = newHeader headerString ]
+		detect: [ :el | el pulseName = newHeader pulseName ]
 		ifFound: [ :elementFound | 
 			headers add: elementFound.
 			^elementFound]
@@ -284,7 +274,7 @@ RMQLogParser class >> populateMessage: aRMQObject payload: payload [
 				payload: payload.
 	
 	model allRMQMessages
-		detect: [ :el | el payload payloadString = message payload payloadString ]
+		detect: [ :el | el payload pulseName = message payload pulseName ]
 		ifFound: [ :elementFound | 
 			elementFound payload messages add: message.
 			^elementFound. ]
@@ -297,9 +287,9 @@ RMQLogParser class >> populateMessage: aRMQObject payload: payload [
 RMQLogParser class >> populateNode: aRMQObject [
 	| newNode |
 	newNode := RMQNode new
-		nodeString: (aRMQObject at: 'node').
+		pulseName: (aRMQObject at: 'node').
 	model allRMQNodes
-		detect: [ :el | el nodeString = newNode nodeString ]
+		detect: [ :el | el pulseName = newNode pulseName ]
 		ifFound: [ :elementFound | 
 			^elementFound ]
 		ifNone: [ model add: newNode.
@@ -310,10 +300,10 @@ RMQLogParser class >> populateNode: aRMQObject [
 RMQLogParser class >> populatePayload: aRMQObject [
 	|payload |
 	payload := (RMQPayload new
-				payloadString: (aRMQObject at: 'payload')).
+				pulseName: (aRMQObject at: 'payload')).
 				
 	model allRMQPayloads
-		detect: [ :el | el payloadString = payload payloadString ]
+		detect: [ :el | el pulseName = payload pulseName ]
 		ifFound: [ :elementFound | 
 			^elementFound. ]
 		ifNone: [ model add: payload.
@@ -324,10 +314,10 @@ RMQLogParser class >> populatePayload: aRMQObject [
 RMQLogParser class >> populateQueue: aRMQObject [
 	| newQueue |
 	newQueue := RMQQueue new
-		queueString: (aRMQObject at: 'queue').
+		pulseName: (aRMQObject at: 'queue').
 		
 	model allRMQQueues
-		detect: [ :el | el queueString = newQueue queueString ]
+		detect: [ :el | el pulseName = newQueue pulseName ]
 		ifFound: [ :elementFound | 
 			^elementFound. ]
 		ifNone: [ model add: newQueue.
@@ -342,18 +332,18 @@ RMQLogParser class >> populateRoutedQueues: aRMQObject [
 		ifTrue: [ 
 			|routed_queue|
 			routed_queue := RMQQueue new
-				queueString: (aRMQObject at: 'routed_queues').
+				pulseName: (aRMQObject at: 'routed_queues').
 			model allRMQQueues
-				detect: [ :el | el queueString = routed_queue queueString ]
+				detect: [ :el | el pulseName = routed_queue pulseName ]
 				ifFound: [ :elementFound | ]
 				ifNone: [ model add: routed_queue.
 					routedQueues add: routed_queue ] ]
 		ifFalse: [ (aRMQObject at: 'routed_queues')
 				do: [ :aRoutedQueue | 
 					newRoutedQueue := RMQQueue new
-						queueString: aRoutedQueue.
+						pulseName: aRoutedQueue.
 					model allRMQQueues
-						detect: [ :el | el queueString = newRoutedQueue queueString ]
+						detect: [ :el | el pulseName = newRoutedQueue pulseName ]
 						ifFound: [ :elementFound | 
 							routedQueues add: elementFound.]
 						ifNone: [ model add: newRoutedQueue.
@@ -371,9 +361,9 @@ RMQLogParser class >> populateRoutingKeys: aRMQObject [
 	(aRMQObject at: 'routing_keys')
 		do: [ :aRoutingKey | 
 			newRoutingKey := RMQRoutingKey new
-				routingKeyString: aRoutingKey.
+				pulseName: aRoutingKey.
 			model allRMQRoutingKeys
-				detect: [ :el | el routingKeyString = newRoutingKey routingKeyString ]
+				detect: [ :el | el pulseName = newRoutingKey pulseName ]
 				ifFound: [ :elementFound | 
 					routingKeys add: elementFound.]
 				ifNone: [ model add: newRoutingKey.
@@ -398,9 +388,9 @@ RMQLogParser class >> populateType: aRMQObject [
 RMQLogParser class >> populateUser: aRMQObject [
 	| newUser |
 	newUser := RMQUser new
-		userString: (aRMQObject at: 'user').
+		pulseName: (aRMQObject at: 'user').
 	model allRMQUsers
-		detect: [ :el | el userString = newUser userString ]
+		detect: [ :el | el pulseName = newUser pulseName ]
 		ifFound: [ :elementFound | 
 			^elementFound ]
 		ifNone: [ model add: newUser.
@@ -411,9 +401,9 @@ RMQLogParser class >> populateUser: aRMQObject [
 RMQLogParser class >> populateVhost: aRMQObject [
 	| newVHost |
 	newVHost := RMQVHost new
-		vhostString: (aRMQObject at: 'vhost').
+		pulseName: (aRMQObject at: 'vhost').
 	model allRMQVHosts
-		detect: [ :el | el vhostString = newVHost vhostString ]
+		detect: [ :el | el pulseName = newVHost pulseName ]
 		ifFound: [ :elementFound | 
 			^elementFound ]
 		ifNone: [ model add: newVHost.
