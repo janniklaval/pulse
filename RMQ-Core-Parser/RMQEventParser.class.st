@@ -21,7 +21,7 @@ RMQEventParser >> populate: aModel withBindingCreated: aDictionnary at: timestam
 "aDictionnary : destination_kind source_kind, arguments (aDictionnary), destination_name, routing_key, source_name"
 "todo : set the arguments"
 	
-	| bindingObject source destination routingKeyName routingKey destType sourceName destinationName newBinding vhost vhostName|
+	| bindingObject source destination routingKey destType sourceName destinationName newBinding vhost |
 		
 	destType := (aDictionnary at: 'destination_kind').
 	sourceName := (aDictionnary at: 'source_name').
@@ -53,16 +53,14 @@ RMQEventParser >> populate: aModel withBindingCreated: aDictionnary at: timestam
 				source sourceBindings add: newBinding.
 				aModel add: newBinding.
 				newBinding ].
+		
+		bindingObject creationDate: timestamp. 
 			
-			
-		vhostName := (aDictionnary at: 'vhost').
-		vhost := aModel selectOrAddEntityNamed: vhostName withType: RMQVHost.
+		vhost := aModel selectOrAddEntityNamed: (aDictionnary at: 'vhost') withType: RMQVHost.
 		bindingObject vhost: vhost.
 		vhost bindings add: bindingObject.
 
-		
-		routingKeyName := (aDictionnary at: 'routing_key').
-		routingKey := aModel selectOrAddEntityNamed: routingKeyName withType: RMQRoutingKey.
+		routingKey := aModel selectOrAddEntityNamed: (aDictionnary at: 'routing_key') withType: RMQRoutingKey.
 		bindingObject routingKey: routingKey.
 		routingKey binding: bindingObject.
 	
@@ -74,22 +72,41 @@ RMQEventParser >> populate: aModel withBindingCreated: aDictionnary at: timestam
 { #category : #parsing }
 RMQEventParser >> populate: aModel withBindingDeleted: aDictionnary at: timestamp [
 "aDictionnary : destination_kind source_kind, arguments (aDictionnary), destination_name, routing_key, source_name"
-"todo : set the arguments"
+"todo : add test if the criteria are not nil
+        set the arguments"
 	
-	| bindingObject destType sourceName destinationName |
+	| bindingObject destType source sourceName destination destinationName routingKeyName routingKey |
 		
 	destType := (aDictionnary at: 'destination_kind').
 	sourceName := (aDictionnary at: 'source_name').
 	destinationName := (aDictionnary at: 'destination_name').
+	routingKeyName := (aDictionnary at:'routing_key' ).
 	
 	"if the binding does not exist, create it"
+	
+	source := aModel entityNamed: sourceName withType: RMQExchange.
+		
+	destType = 'exchange' ifTrue: [ 
+		destination:= aModel entityNamed: destinationName withType: RMQExchange.
+	] ifFalse: [ 
+		destination:= aModel entityNamed: destinationName withType: RMQQueue.
+	].
+   
+   routingKey := aModel entityNamed: routingKeyName withType: RMQRoutingKey.
+	
+	bindingObject := aModel allRMQBindings
+		detect: [ :element | element source = source and: [ element destination = destination  and: [ element routingKey = routingKey ] ]  ]
+		ifFound: [ :elementFound | 
+			elementFound ].
+	bindingObject ifNotNil:[ bindingObject deletionDate: timestamp. ]
+		
+	"//old version 
 	bindingObject := aModel entityNamed: (sourceName, '>', destinationName)  withType: RMQBinding.
 	bindingObject = nil ifFalse: [ 
 		 bindingObject routingKey name = (aDictionnary at: 'routing_key') & bindingObject destinationType = destType ifTrue: [ 
 			 	bindingObject deletionDate: timestamp.  
 			 ]
-		 ]
-	
+		 ]."
 	
 
 "// créer si absent ??"
@@ -155,22 +172,10 @@ RMQEventParser >> populate: aModel withBindingDeleted: aDictionnary at: timestam
 ]
 
 { #category : #parsing }
-RMQEventParser >> populate: aModel withChannelCreated: aDictionnary at: timestamp [
-   "a Dictionary( 'durable'->true 'vhost'->'/' 'auto_delete'->false  'name'->'Queue' 'exclusive'->false 'arguments'->a Dictionary() 'owner_pid'->string )"
+RMQEventParser >> populate: aModel withChannelClosed: aDictionnary at: timestamp [
+   "a Dictionary( pid )"
 
-      self notYetImplemented. 
-		
-	
-			
-
-
-
-]
-
-{ #category : #parsing }
-RMQEventParser >> populate: aModel withChanneldeleted: aDictionnary at: timestamp [
-   "a Dictionary( 'durable'->true 'vhost'->'/' 'auto_delete'->false  'name'->'Queue' 'exclusive'->false 'arguments'->a Dictionary() 'owner_pid'->string )"
-
+   " todo : add pid in the definition of the channel to corelate with the created channel"
      self notYetImplemented.
 	
 			
@@ -180,10 +185,26 @@ RMQEventParser >> populate: aModel withChanneldeleted: aDictionnary at: timestam
 ]
 
 { #category : #parsing }
-RMQEventParser >> populate: aModel withConnectionCreated: aDictionnary at: timestamp [
-   "a Dictionary( 'durable'->true 'vhost'->'/' 'auto_delete'->false  'name'->'Queue' 'exclusive'->false 'arguments'->a Dictionary() 'owner_pid'->string )"
+RMQEventParser >> populate: aModel withChannelCreated: aDictionnary at: timestamp [
+   "a Dictionary( vhost, number, name, connection, pid, user  )"
 
-     self notYetImplemented. 
+   "to do : Pb : qu'est ce qui identifie une channel "
+  | user channelObject vhost |
+      
+		channelObject := aModel selectOrAddEntityNamed: (aDictionnary at: 'name') withType: RMQExchange.
+		
+		channelObject creationDate: timestamp. 
+		
+		user := aModel selectOrAddEntityNamed: (aDictionnary at: 'user') withType: RMQUser.
+		channelObject users add: user.
+		user usedChannels add: channelObject.
+
+		vhost := aModel selectOrAddEntityNamed: (aDictionnary at: 'vhost') withType: RMQVHost.
+		channelObject vhost: vhost.
+		vhost channels add: channelObject.
+
+		
+		
 	
 			
 
@@ -192,11 +213,49 @@ RMQEventParser >> populate: aModel withConnectionCreated: aDictionnary at: times
 ]
 
 { #category : #parsing }
-RMQEventParser >> populate: aModel withConnectionDeleted: aDictionnary at: timestamp [
-   "a Dictionary( 'durable'->true 'vhost'->'/' 'auto_delete'->false  'name'->'Queue' 'exclusive'->false 'arguments'->a Dictionary() 'owner_pid'->string )"
+RMQEventParser >> populate: aModel withConnectionClosed: aDictionnary at: timestamp [
+ "a Dictionary( pid )"
+
+ " todo : add pid in the definition of the channel to corelate with the created channel"
 
       self notYetImplemented. 
 		
+	
+			
+
+
+
+]
+
+{ #category : #parsing }
+RMQEventParser >> populate: aModel withConnectionCreated: aDictionnary at: timestamp [
+"a Dictionary( timestamp_in_ms:	1544109134439
+type:	network
+pid:	<rabbit@fceed0d94b94.3.8698.0>
+name:	172.17.0.1:56246 -> 172.17.0.2:5672
+port:	5672
+peer_port:	56246
+host:	{0,0,0,0,0,65535,44049,2}
+peer_host:	{0,0,0,0,0,65535,44049,1}
+ssl:	false
+peer_cert_subject:	
+peer_cert_issuer:	
+peer_cert_validity:	
+auth_mechanism:	PLAIN
+ssl_protocol:	
+ssl_key_exchange:	
+ssl_cipher:	
+ssl_hash:	
+protocol:	{0,9,1}
+user:	guest
+vhost:	/
+timeout:	60
+frame_max:	131072
+channel_max:	0
+client_properties:	{<<""product"">>,longstr,<<""RabbitMQ Smalltalk"">>}
+connected_at:	1544109134432)"
+
+     self notYetImplemented. 
 	
 			
 
@@ -229,19 +288,12 @@ RMQEventParser >> populate: aModel withConsumerDeleted: aDictionnary at: timesta
 RMQEventParser >> populate: aModel withExchangeCreated: aDictionnary at: timestamp [
 "a Dictionary( 'durable'->true 'vhost'->'/' 'internal'->false 'auto_delete'->false  'name'->'exchangeName' 'arguments'->a Dictionary() 'type'->topic 'policy'->string )"
 	
-		| exchangeName exchangeObject vhostName vhost args altExchName altExch|
+		| exchangeObject vhost args altExchName altExch|
 		
-		exchangeName := (aDictionnary at: 'name').
 		
 		"if the exchange does not exist, create it"
-		exchangeObject := aModel entityNamed: exchangeName withType: RMQExchange "same problem as queues"
-			ifAbsent:[ 
-				|newExchange |
-				newExchange := RMQExchange new
-					exchangeString: (aDictionnary at: 'name').
-				aModel add: newExchange.
-				newExchange ].
-			
+		exchangeObject := aModel selectOrAddEntityNamed: (aDictionnary at: 'name') withType: RMQExchange. 
+		
 		exchangeObject creationDate: timestamp.
 			
 		exchangeObject type: (aDictionnary at: 'type').
@@ -249,15 +301,8 @@ RMQEventParser >> populate: aModel withExchangeCreated: aDictionnary at: timesta
 		exchangeObject autoDelete: (aDictionnary at: 'auto_delete').
 		exchangeObject durability:(aDictionnary at: 'durable').
 		
-		vhostName := (aDictionnary at: 'vhost').
-		vhost := aModel entityNamed: vhostName withType: RMQVHost
-			ifAbsent:[
-				|newVhost |
-				newVhost := RMQVHost new
-					vhostString: vhostName.
-				aModel add: newVhost.
-				newVhost
-			].
+		
+		vhost := aModel selectOrAddEntityNamed: (aDictionnary at: 'vhost') withType: RMQVHost.
 		exchangeObject vhost: vhost.
 		vhost exchanges add: exchangeObject.
 		
@@ -266,14 +311,7 @@ RMQEventParser >> populate: aModel withExchangeCreated: aDictionnary at: timesta
 		
 	   altExchName := (args at: 'alternate-exchange' ifAbsent:[nil]).
 		altExchName ifNotNil:[
-			altExch := aModel entityNamed: altExchName withType: RMQExchange
-				ifAbsent:[
-					|newExch |
-					newExch := RMQExchange new
-						exchangeString: altExchName.
-					aModel add: newExch.
-					newExch
-				].
+			altExch := aModel selectOrAddEntityNamed: altExchName withType: RMQExchange.
 			exchangeObject my_alternate_exchange: altExch.
 			altExch alternate_exchange_for add: exchangeObject.
 		].
@@ -287,7 +325,7 @@ RMQEventParser >> populate: aModel withExchangeDeleted: aDictionnary at: timesta
 		
 		exchangeObject := aModel entityNamed: (aDictionnary at: 'name') withType: RMQExchange."ici on peut avoir une liste ! à revoir dans ex: populate: aModel withQueues: anArray dans RMQRestParser "
 		
-		(exchangeObject = nil) ifFalse: [ 
+		exchangeObject ifNotNil: [ 
 			  (exchangeObject vhost name = (aDictionnary at: 'vhost')) ifTrue: [ exchangeObject deletionDate: timestamp ]	  
 			  ]
 	
@@ -304,6 +342,7 @@ RMQEventParser >> populate: aModel withExchangeDeleted: aDictionnary at: timesta
 { #category : #parsing }
 RMQEventParser >> populate: aModel withPermissionCreated: aDictionnary at: timestamp [
   "aDictionnary : timestamp_in_ms:	1543851859334 user:	testcreation vhost:	/ configure:	.* write:	.* read:	.*"
+  "todo : set parameters "
 						
 	" create user and vhost if they do not exist ?"
 	
@@ -312,14 +351,8 @@ RMQEventParser >> populate: aModel withPermissionCreated: aDictionnary at: times
 		userName := (aDictionnary at: 'name').
 		
 		"todo ? create 3 permission objects, one for each type"
-		permissionObject := aModel entityNamed: userName withType: RMQPermission "// what identifies a permission ??"
-			ifAbsent:[   
-				| newPermission |
-				newPermission := RMQPermission new.
-				"todo : set parameters "
-				aModel add: newPermission.
-				newPermission ].
-			
+		permissionObject := aModel selectOrAddEntityNamed: userName withType: RMQPermission. "// what identifies a permission ??"
+
 	   permissionObject vhost: (aDictionnary at: 'vhost').
 		permissionObject creationDate: timestamp. 
 ]
@@ -332,25 +365,19 @@ RMQEventParser >> populate: aModel withPermissionDeleted: aDictionnary at: times
 		userName := (aDictionnary at: 'name').
 		
 		permissionObject := aModel entityNamed: userName withType: RMQPermission. "// what identifies a permission ??"
-		permissionObject = nil ifFalse: [ permissionObject vhost = ( aDictionnary at: 'vhost')  ifTrue: [permissionObject deletionDate: timestamp.] ]
+		permissionObject ifNotNil: [ permissionObject vhost = ( aDictionnary at: 'vhost')  ifTrue: [permissionObject deletionDate: timestamp.] ]
 ]
 
 { #category : #parsing }
 RMQEventParser >> populate: aModel withQueueCreated: aDictionnary at: timestamp [
    "a Dictionary( 'durable'->true 'vhost'->'/' 'auto_delete'->false  'name'->'Queue' 'exclusive'->false 'arguments'->a Dictionary() 'owner_pid'->string )"
 
-      |queueName queueObject vhostName vhost arguments|
+      |queueName queueObject vhost arguments|
 
 		queueName := (aDictionnary at: 'name').
 		
 		"if the queue does not exist, create it"
-		queueObject := aModel entityNamed: queueName withType: RMQQueue "ici on peut avoir une liste ! à revoir dans ex: populate:withQueues: dans RMQRestParser. ++ est ce que cette méthode est définie de façon à rendre une liste ? non juste une entité.  sinon le nom de la resources dans rabbitmq ne doit pas être l'identifiant de l'objet dans le modèle, oui à voir "
-			ifAbsent:[  
-				|newQueue |
-				newQueue := RMQQueue new queueString: queueName .
-				aModel add: newQueue.
-				newQueue ]. "ask Jannik : why this line" "cest le return du bloc car c'est une affectation à queueObject"
-			
+		queueObject := aModel selectOrAddEntityNamed: queueName withType: RMQQueue. "ici on peut avoir une liste ! à revoir dans ex: populate:withQueues: dans RMQRestParser. ++ est ce que cette méthode est définie de façon à rendre une liste ? non juste une entité.  sinon le nom de la resources dans rabbitmq ne doit pas être l'identifiant de l'objet dans le modèle, oui à voir "
 			
 		queueObject creationDate: timestamp. 
 		
@@ -359,21 +386,13 @@ RMQEventParser >> populate: aModel withQueueCreated: aDictionnary at: timestamp 
 		queueObject exclusive:(aDictionnary at: 'exclusive').
 		
 	   "create the Vhost if it does not exist and link it to the queue"
-		vhostName := (aDictionnary at: 'vhost').
-		vhost := aModel entityNamed: vhostName withType: RMQVHost
-			ifAbsent:[
-				|newVhost |
-				newVhost := RMQVHost new
-					vhostString: vhostName.
-				aModel add: newVhost.
-				newVhost
-			].
+		vhost := aModel selectOrAddEntityNamed: (aDictionnary at: 'vhost') withType: RMQVHost.
 		queueObject vhost: vhost.
 		vhost queues add: queueObject.
 		
 		arguments := (aDictionnary at: 'arguments').
 		queueObject expiresAfter: (arguments at: 'x-expires' ifAbsent:[nil]);
-			     maxLength: (arguments at: 'x-max-length' ifAbsent:[nil]);
+			maxLength: (arguments at: 'x-max-length' ifAbsent:[nil]);
 			maxLengthBytes: (arguments at: 'x-max-length-bytes' ifAbsent:[nil]);
 			maxPriority: (arguments at: 'x-max-priority' ifAbsent:[nil]);
 			messageTTL: (arguments at: 'x-message-ttl' ifAbsent:[nil]).
@@ -393,9 +412,7 @@ RMQEventParser >> populate: aModel withQueueDeleted: aDictionnary at: timestamp 
 		
 		queueObject := aModel entityNamed: (aDictionnary at: 'name') withType: RMQQueue."ici on peut avoir une liste ! à revoir dans ex: populate: aModel withQueues: anArray dans RMQRestParser "
 		
-		(queueObject = nil) ifFalse: [ 
-			  (queueObject vhost name = (aDictionnary at: 'vhost')) ifTrue: [ queueObject deletionDate: timestamp ]	  
-			  ]
+		queueObject ifNotNil:[ (queueObject vhost name = (aDictionnary at: 'vhost')) ifTrue: [ queueObject deletionDate: timestamp ]]
 	
 			
 		
@@ -421,18 +438,10 @@ RMQEventParser >> populate: aModel withUserAuthenticationSucceeded: aDictionnary
 RMQEventParser >> populate: aModel withUserCreated: aDictionnary at: timestamp [
  " aDictionnary example: timestamp_in_ms:	1543851766334 name:	testcreation"
 
-		| userName userObject |
+		| userObject |
 		
-		userName := (aDictionnary at: 'name').
+		userObject := aModel selectOrAddEntityNamed: (aDictionnary at: 'name') withType: RMQUser.
 		
-		userObject := aModel entityNamed: userName withType: RMQUser
-			ifAbsent:[   
-				|newUser |
-				newUser := RMQUser new
-					userString: userName.
-				aModel add: newUser.
-				newUser ].
-	
 		userObject creationDate: timestamp. 
 		
 		
@@ -448,7 +457,7 @@ RMQEventParser >> populate: aModel withUserDeleted: aDictionnary at: timestamp [
 		userName := (aDictionnary at: 'name').
 		
 		userObject := aModel entityNamed: userName withType: RMQUser.
-		userObject = nil ifFalse: [ userObject deletionDate: timestamp. ]
+		userObject ifNotNil: [ userObject deletionDate: timestamp. ]
 	
 		
 ]
@@ -472,17 +481,9 @@ RMQEventParser >> populate: aModel withUserTagsSet: aDictionnary at: timestamp [
 RMQEventParser >> populate: aModel withVhostCreated: aDictionnary at: timestamp [
    "a Dictionary( timestamp_in_ms:	1543854933856 name:	smalltalk tracing:	false )"
 
-      |vhostObject vhostName|
+      | vhostObject |
 		
-		vhostName := (aDictionnary at: 'name').
-		
-		vhostObject := aModel entityNamed: vhostName withType: RMQVHost
-			ifAbsent:[   
-				| newVhost |
-				newVhost := RMQUser new
-					userString: vhostName.
-				aModel add: newVhost.
-				newVhost ].
+		vhostObject := aModel selectOrAddEntityNamed: (aDictionnary at: 'name') withType: RMQVHost.
 	
 		vhostObject creationDate: timestamp. 
 		
