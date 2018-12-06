@@ -21,72 +21,54 @@ RMQEventParser >> populate: aModel withBindingCreated: aDictionnary at: timestam
 "aDictionnary : destination_kind source_kind, arguments (aDictionnary), destination_name, routing_key, source_name"
 "todo : set the arguments"
 	
-	| bindingObject source destination routingKeyName routingKey destType sourceName destinationName |
+	| bindingObject source destination routingKeyName routingKey destType sourceName destinationName newBinding vhost vhostName|
 		
 	destType := (aDictionnary at: 'destination_kind').
 	sourceName := (aDictionnary at: 'source_name').
 	destinationName := (aDictionnary at: 'destination_name').
 	
+	
+   source:= aModel selectOrAddEntityNamed: sourceName withType: RMQExchange.
+		
+	destType = 'exchange' ifTrue: [ 
+		newBinding := RMQBindingWithExchange new.
+		destination:= aModel selectOrAddEntityNamed: destinationName withType: RMQExchange.
+	] ifFalse: [ 
+		newBinding := RMQBindingWithQueue new.
+		destination:= aModel selectOrAddEntityNamed: destinationName withType: RMQQueue.
+	].
+	newBinding 
+		source: source;
+		destination: destination.
+	
+		
 	"if the binding does not exist, create it"
-	bindingObject := aModel entityNamed: (sourceName, '>', destinationName)  withType: RMQBinding
-			ifAbsent:[  
-				|newBinding |
-				source:= aModel entityNamed: sourceName withType: RMQBinding
-				ifAbsent:[
-					|newExch |
-					newExch := RMQExchange new
-						exchangeString: sourceName.
-					aModel add: newExch.
-					newExch
-				].
-			
-				newBinding := RMQBinding new
-					destinationType: destType;
-					sourceExchange: source.
+	
+	bindingObject := aModel allRMQBindings
+		detect: [ :el | el source = source and: [ el destination = destination ] ]
+		ifFound: [ :elementFound | 
+			elementFound ]
+		ifNone: [  
+				destination destinationBindings add: newBinding.
 				source sourceBindings add: newBinding.
-				
-				newBinding destinationType = 'exchange' 
-				ifTrue: [ 
-					destination:= aModel entityNamed: destinationName withType: RMQExchange
-						ifAbsent:[
-							|newExch |
-							newExch := RMQExchange new
-								exchangeString: destinationName.
-							aModel add: newExch.
-							newExch
-						].
-					newBinding destinationQueue: nil.
-					newBinding destinationExchange: destination.
-					destination destinationBindings add: newBinding.
-		 		] ifFalse: [ 
-					destination:= aModel entityNamed: destinationName withType: RMQQueue
-						ifAbsent:[
-							|newQ|
-							newQ := RMQQueue new
-								queueString: destinationName.
-							aModel add: newQ.
-							newQ
-						].
-					newBinding destinationQueue: destination.
-					newBinding destinationExchange: nil.
-					destination destinationBindings add: newBinding.
-		 		].	
 				aModel add: newBinding.
 				newBinding ].
 			
-		bindingObject creationDate: timestamp.  
+			
+		vhostName := (aDictionnary at: 'vhost').
+		vhost := aModel selectOrAddEntityNamed: vhostName withType: RMQVHost.
+		bindingObject vhost: vhost.
+		vhost bindings add: bindingObject.
+
 		
 		routingKeyName := (aDictionnary at: 'routing_key').
-		routingKey := aModel entityNamed: routingKeyName withType: RMQRoutingKey
-			ifAbsent:[
-				|newRK |
-				newRK := RMQRoutingKey new
-					routingKeyString: routingKeyName.
-				aModel add: newRK.
-				newRK
-			].
+		routingKey := aModel selectOrAddEntityNamed: routingKeyName withType: RMQRoutingKey.
 		bindingObject routingKey: routingKey.
 		routingKey binding: bindingObject.
+	
+
+
+				
 ]
 
 { #category : #parsing }

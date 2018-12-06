@@ -126,7 +126,7 @@ RMQRESTParserApiExchanges class >> populate: aModel withJson: aString [
 			ifAbsent:[ 
 				|newExchange |
 				newExchange := RMQExchange new
-					exchangeString: exchangeName.
+					pulseName: exchangeName.
 				aModel add: newExchange.
 				newExchange ].
 		
@@ -145,7 +145,7 @@ RMQRESTParserApiExchanges class >> populate: aModel withJson: aString [
 			ifAbsent:[  
 				|newVhost |
 				newVhost := RMQVHost new
-					vhostString: (anObject at: 'vhost').
+					pulseName: (anObject at: 'vhost').
 				aModel add: newVhost.
 				newVhost ].
 		exchange vhost: vhost.
@@ -156,7 +156,7 @@ RMQRESTParserApiExchanges class >> populate: aModel withJson: aString [
 			ifAbsent:[   
 				|newUser |
 				newUser := RMQUser new
-					userString: (anObject at: 'user_who_performed_action').
+					pulseName: (anObject at: 'user_who_performed_action').
 				aModel add: newUser.
 				newUser ].
 		exchange user_who_performed_action:  user_who_performed_action.

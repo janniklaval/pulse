@@ -1892,7 +1892,7 @@ RMQRESTParserApiQueues class >> populate: aModel withJson: aString [
 			ifAbsent:[ 
 				|newQueue |
 				newQueue := RMQQueue new
-					queueString: queueName.
+					pulseName: queueName.
 				aModel add: newQueue.
 				newQueue ].
 			
@@ -1906,7 +1906,7 @@ RMQRESTParserApiQueues class >> populate: aModel withJson: aString [
 			ifAbsent:[  
 				|newVhost |
 				newVhost := RMQVHost new
-					vhostString: (anObject at: 'vhost').
+					pulseName: (anObject at: 'vhost').
 				aModel add: newVhost.
 				newVhost ].
 		queue vhost: vhost.
@@ -1917,7 +1917,7 @@ RMQRESTParserApiQueues class >> populate: aModel withJson: aString [
 			ifAbsent:[  
 				|newNode |
 				newNode := RMQNode new
-					nodeString: (anObject at: 'node').
+					pulseName: (anObject at: 'node').
 				aModel add: newNode.
 				vhost node: newNode.
 				newNode vhosts add: vhost.
