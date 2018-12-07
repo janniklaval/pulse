@@ -1,6 +1,6 @@
 Class {
 	#name : #RMQLogParser,
-	#superclass : #Object,
+	#superclass : #RMQParser,
 	#classInstVars : [
 		'model'
 	],
@@ -30,29 +30,38 @@ json first = $[
 
 { #category : #parsing }
 RMQLogParser class >> parse: aJSonFilePath [
-	| parser rmqObjects json routedQueues messageType  |
-	parser := PPParserResource current parserAt: PPJsonParser.
+	|  json |
 	json := self initializeContents: aJSonFilePath.
-	rmqObjects := parser parse: json.
-	
-	model := MooseModel new.
+	model := PulseModel new.
 	model name: aJSonFilePath asFileReference basenameWithoutExtension.
 	
+	self populate: model withJson: json
+]
+
+{ #category : #parsing }
+RMQLogParser class >> populate: aModel withJson: aString [
+	| parser rmqObjects |
+	parser := PPParserResource current parserAt: PPJsonParser.
+	rmqObjects := parser parse: aString.
+	
 	rmqObjects do: [:aRMQObject | 
-			| message connection queue user node exchange vhost channel routingKeys binding payload component delivMode|
-			payload := self populatePayload: aRMQObject.
+			| message connection queue user node exchange vhost channel routingKeys binding payload component delivMode routedQueues messageType|
+			payload := model selectOrAddEntityNamed: (aRMQObject at: 'payload') withType: RMQPayload.
+			
 			message := self populateMessage: aRMQObject payload: payload.
 			message timestamp: (aRMQObject at: 'timestamp').
 			
-			connection :=self populateConnection: aRMQObject.
+			connection := model selectOrAddEntityNamed: (aRMQObject at: 'connection') withType: RMQConnection.
 			
-			queue := self populateQueue: aRMQObject.
+			queue := model selectOrAddEntityNamed: (aRMQObject at: 'queue') withType: RMQQueue.
+			
 			message queue ifNil:[
 				queue sendedMessages add: message.
 				message queue: queue.
 			].
 			
-			user := self populateUser: aRMQObject.
+			user := model selectOrAddEntityNamed: (aRMQObject at: 'user') withType: RMQUser.
+			
 			user usedConnections 
 				detect: [:conn| conn = connection ]
 				ifNone: [
@@ -60,14 +69,15 @@ RMQLogParser class >> parse: aJSonFilePath [
 					user usedConnections add: connection.
 				].
 		
-			node := self populateNode: aRMQObject.
+			node := model selectOrAddEntityNamed: (aRMQObject at: 'node') withType: RMQNode.
 			
-			exchange := self populateExchange: aRMQObject.
+			
+			exchange := model selectOrAddEntityNamed: (aRMQObject at: 'exchange') withType: RMQExchange.
 			exchange messages add: message.
 			message exchange: exchange.
 			
 			
-			vhost := self populateVhost: aRMQObject.
+			vhost := model selectOrAddEntityNamed: (aRMQObject at: 'vhost') withType: RMQVHost.
 			user vhosts 
 				detect: [:vh| vh = vhost ]
 				ifNone: [
@@ -92,9 +102,7 @@ RMQLogParser class >> parse: aJSonFilePath [
 				vhost node: node.
 			].
 			
-			
-			
-			channel := self populateChannel: aRMQObject.
+			channel := model selectOrAddEntityNamed: (aRMQObject at: 'channel') withType: RMQChannel.
 			channel vhost ifNil:[
 				vhost channels add: vhost.
 				channel vhost: vhost.
@@ -153,7 +161,7 @@ RMQLogParser class >> parse: aJSonFilePath [
 			message messageType: messageType.
 			messageType messages add: message.
 			
-			component := self populateComponent: aRMQObject.
+			component := model selectOrAddEntityNamed: ((aRMQObject at: 'properties') at: 'app_id') withType: RMQComponent.
 			component senderMessages add: message.
 			message senderComponent:component.
 			
@@ -185,48 +193,6 @@ RMQLogParser class >> parse: aJSonFilePath [
 ]
 
 { #category : #parsing }
-RMQLogParser class >> populateChannel: aRMQObject [
-	| newChannel |
-	newChannel := RMQChannel new
-		pulseName: (aRMQObject at: 'channel').
-	model allRMQChannels
-		detect: [ :el | el pulseName = newChannel pulseName ]
-		ifFound: [ :elementFound | 
-			^elementFound ]
-		ifNone: [ model add: newChannel.
-			^newChannel]
-]
-
-{ #category : #parsing }
-RMQLogParser class >> populateComponent: aRMQObject [
-	| newComponent |
-	newComponent := RMQComponent new
-		pulseName: ((aRMQObject at: 'properties') at: 'app_id').
-	model allRMQComponents 
-		detect: [ :el | el pulseName = newComponent pulseName ]
-		ifFound: [ :elementFound |  
-			^elementFound.]
-		ifNone: [ model add: newComponent.
-			^newComponent].
-		
-	
-]
-
-{ #category : #parsing }
-RMQLogParser class >> populateConnection: aRMQObject [
-	| connection |
-	connection := RMQConnection new
-				pulseName: (aRMQObject at: 'connection').
-	
-	model allRMQConnections
-		detect: [ :el | el pulseName = connection pulseName ]
-		ifFound: [ :elementFound | 
-			^elementFound. ]
-		ifNone: [ model add: connection.
-			^connection. ]
-]
-
-{ #category : #parsing }
 RMQLogParser class >> populateDeliveryMode: aRMQObject [
 	| newType |
 	newType := DeliveryMode perform: (((aRMQObject at: 'properties') at: 'delivery_mode') = 2 ifTrue:[#persistent] ifFalse:[#nonPersistent]).
@@ -236,19 +202,6 @@ RMQLogParser class >> populateDeliveryMode: aRMQObject [
 			^elementFound]
 		ifNone: [ model add: newType.
 			^newType ]
-]
-
-{ #category : #parsing }
-RMQLogParser class >> populateExchange: aRMQObject [
-	| newExchange |
-	newExchange := RMQExchange new
-		pulseName: (aRMQObject at: 'exchange').
-	model allRMQExchanges
-		detect: [ :el | el pulseName = newExchange pulseName ]
-		ifFound: [ :elementFound | 
-			^elementFound ]
-		ifNone: [ model add: newExchange.
-			^newExchange]
 ]
 
 { #category : #parsing }
@@ -281,47 +234,6 @@ RMQLogParser class >> populateMessage: aRMQObject payload: payload [
 		ifNone: [ model add: message.
 			payload messages add: message.
 			^message. ].
-]
-
-{ #category : #parsing }
-RMQLogParser class >> populateNode: aRMQObject [
-	| newNode |
-	newNode := RMQNode new
-		pulseName: (aRMQObject at: 'node').
-	model allRMQNodes
-		detect: [ :el | el pulseName = newNode pulseName ]
-		ifFound: [ :elementFound | 
-			^elementFound ]
-		ifNone: [ model add: newNode.
-			^newNode ]
-]
-
-{ #category : #parsing }
-RMQLogParser class >> populatePayload: aRMQObject [
-	|payload |
-	payload := (RMQPayload new
-				pulseName: (aRMQObject at: 'payload')).
-				
-	model allRMQPayloads
-		detect: [ :el | el pulseName = payload pulseName ]
-		ifFound: [ :elementFound | 
-			^elementFound. ]
-		ifNone: [ model add: payload.
-			^payload. ]
-]
-
-{ #category : #parsing }
-RMQLogParser class >> populateQueue: aRMQObject [
-	| newQueue |
-	newQueue := RMQQueue new
-		pulseName: (aRMQObject at: 'queue').
-		
-	model allRMQQueues
-		detect: [ :el | el pulseName = newQueue pulseName ]
-		ifFound: [ :elementFound | 
-			^elementFound. ]
-		ifNone: [ model add: newQueue.
-			^newQueue. ]
 ]
 
 { #category : #parsing }
@@ -382,30 +294,4 @@ RMQLogParser class >> populateType: aRMQObject [
 			^elementFound]
 		ifNone: [ model add: newType.
 			^newType ]
-]
-
-{ #category : #parsing }
-RMQLogParser class >> populateUser: aRMQObject [
-	| newUser |
-	newUser := RMQUser new
-		pulseName: (aRMQObject at: 'user').
-	model allRMQUsers
-		detect: [ :el | el pulseName = newUser pulseName ]
-		ifFound: [ :elementFound | 
-			^elementFound ]
-		ifNone: [ model add: newUser.
-			^newUser ]
-]
-
-{ #category : #parsing }
-RMQLogParser class >> populateVhost: aRMQObject [
-	| newVHost |
-	newVHost := RMQVHost new
-		pulseName: (aRMQObject at: 'vhost').
-	model allRMQVHosts
-		detect: [ :el | el pulseName = newVHost pulseName ]
-		ifFound: [ :elementFound | 
-			^elementFound ]
-		ifNone: [ model add: newVHost.
-			^newVHost ]
 ]

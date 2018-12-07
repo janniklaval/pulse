@@ -76,6 +76,9 @@ RMQUser >> initialize [
 	usedChannels :=OrderedCollection new.
 	roles :=OrderedCollection new.
 	permissions :=OrderedCollection new.
+	initializedExchanges := OrderedCollection new.
+	initializedChannels  := OrderedCollection new.
+	initializedConnections  := OrderedCollection new.
 ]
 
 { #category : #accessing }

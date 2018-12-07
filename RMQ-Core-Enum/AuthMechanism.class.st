@@ -33,3 +33,10 @@ AuthMechanism >> connections [
 AuthMechanism >> connections: anObject [
 	connections := anObject
 ]
+
+{ #category : #initialization }
+AuthMechanism >> initialize [
+
+	super initialize.
+	connections := OrderedCollection new.
+]

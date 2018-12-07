@@ -202,7 +202,7 @@ RMQRESTParserApiChannels populate: model withJson: '[
 "
 Class {
 	#name : #RMQRESTParserApiChannels,
-	#superclass : #RMQRESTParser,
+	#superclass : #RMQParser,
 	#category : #'RMQ-Core-Parser'
 }
 
@@ -220,16 +220,9 @@ RMQRESTParserApiChannels class >> populate: aModel withJson: aString [
 		
 		channelName := (anObject at: 'name').
 		
-		channel := aModel entityNamed: channelName withType: RMQChannel
-			ifAbsent:[ 
-				|newChannel |
-				newChannel := RMQChannel new
-					pulseName: channelName.
-				aModel add: newChannel.
-				
-				newChannel ].
+		channel := aModel selectOrAddEntityNamed: channelName withType: RMQChannel.
 		
-		
+	
 		(anObject at: 'confirm') ifTrue: [ 			channel	guaranteeMode: (GuaranteeMode confirm).
 			channel guaranteeMode channels add: channel].
 		 
@@ -247,36 +240,18 @@ RMQRESTParserApiChannels class >> populate: aModel withJson: aString [
 		
 		channel idleSince: (anObject at: 'idle_since').
 		
-		user_who_performed_action := aModel entityNamed: (anObject at: 'user_who_performed_action') withType: RMQUser
-			ifAbsent:[   
-				|newUser |
-				newUser := RMQUser new
-					pulseName: (anObject at: 'user_who_performed_action').
-				aModel add: newUser.
-				newUser ].
+		user_who_performed_action := aModel selectOrAddEntityNamed: (anObject at: 'user_who_performed_action') withType: RMQUser.
 		channel user_who_performed_connection:  user_who_performed_action.
 		user_who_performed_action initializedChannels add: channel.
 		
 		
-		user := aModel entityNamed: (anObject at: 'user') withType: RMQUser
-			ifAbsent:[   
-				|newUser |
-				newUser := RMQUser new
-					pulseName: (anObject at: 'user').
-				aModel add: newUser.
-				newUser ].
+		user := aModel selectOrAddEntityNamed: (anObject at: 'user') withType: RMQUser.
 		channel users add: user.
 		user usedChannels add: channel.
 		
 		
 		
-		vhost := aModel entityNamed: (anObject at: 'vhost') withType: RMQVHost
-			ifAbsent:[  
-				|newVhost |
-				newVhost := RMQVHost new
-					pulseName: (anObject at: 'vhost').
-				aModel add: newVhost.
-				newVhost ].
+		vhost := aModel selectOrAddEntityNamed: (anObject at: 'vhost') withType: RMQVHost.
 		channel vhost: vhost.
 		vhost channels add: channel.
 		
@@ -292,14 +267,16 @@ RMQRESTParserApiChannels class >> populate: aModel withJson: aString [
 		
 		
 		
-		connection := aModel entityNamed: ((anObject at: 'connection_details') at: 'name') withType: RMQConnection
-			ifAbsent:[  
-				|newConnection |
-				newConnection := RMQConnection new
-					pulseName: ((anObject at: 'connection_details') at: 'name').
-				aModel add: newConnection.
-				newConnection ].
+		connection := aModel selectOrAddEntityNamed: ((anObject at: 'connection_details') at: 'name') withType: RMQConnection.
 		connection peerHost: ((anObject at: 'connection_details') at: 'peer_host').
 		connection peerPort: ((anObject at: 'connection_details') at: 'peer_port').
+		
+		connection host: ((('10.238.15.51:49677 -> 10.238.28.5:5672' substrings: '->') second) substrings: ':') first withBlanksCondensed.
+		connection port: ((('10.238.15.51:49677 -> 10.238.28.5:5672' substrings: '->') second) substrings: ':') second withBlanksCondensed asInteger.
+		
+		connection channels add: channel.
+		channel connection: connection.
+		connection users add: user.
+		user usedConnections add: connection.
 	]
 ]

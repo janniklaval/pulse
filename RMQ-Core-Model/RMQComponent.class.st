@@ -178,6 +178,17 @@ RMQComponent >> platform: anObject [
 ]
 
 { #category : #accessing }
+RMQComponent >> pulseName [
+	<MSEProperty: #pulseName type: #String>
+	^ consumerTag
+]
+
+{ #category : #accessing }
+RMQComponent >> pulseName: anObject [
+	pulseName := anObject
+]
+
+{ #category : #accessing }
 RMQComponent >> rmqState [
 	<MSEProperty: #rmqState type: #String>
 	^ rmqState

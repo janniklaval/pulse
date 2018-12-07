@@ -107,8 +107,8 @@ RMQChannel >> initialize [
 	guaranteeMode := GuaranteeMode none.
 	guaranteeMode channels add: self.
 	
-	state := State idle.
-	state channels add: self.
+	rmqState := State idle.
+	rmqState channels add: self.
 ]
 
 { #category : #accessing }

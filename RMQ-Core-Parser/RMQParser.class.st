@@ -1,11 +1,11 @@
 Class {
-	#name : #RMQRESTParser,
+	#name : #RMQParser,
 	#superclass : #Object,
 	#category : #'RMQ-Core-Parser'
 }
 
 { #category : #parsing }
-RMQRESTParser class >> populate: aModel withJson: aString [
+RMQParser class >> populate: aModel withJson: aString [
 
 	self subclassResponsibility 
 ]
