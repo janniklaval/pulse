@@ -175,8 +175,15 @@ RMQEventParser >> populate: aModel withBindingDeleted: aDictionnary at: timestam
 RMQEventParser >> populate: aModel withChannelClosed: aDictionnary at: timestamp [
    "a Dictionary( pid )"
 
-   " todo : add pid in the definition of the channel to corelate with the created channel"
-     self notYetImplemented.
+   " pid in the definition of the channel to corelate with the created channel"
+  	| channelObject |
+
+	   channelObject := aModel allRMQChannels
+		detect: [ :element | element pid = (aDictionnary at: 'pid') ]
+		ifFound: [ :elementFound | 
+			elementFound ].
+			
+		channelObject ifNotNil: [ channelObject closingDate: timestamp ]. 
 	
 			
 
@@ -189,7 +196,7 @@ RMQEventParser >> populate: aModel withChannelCreated: aDictionnary at: timestam
    "a Dictionary( vhost, number, name, connection, pid, user  )"
 
    "to do : Pb : qu'est ce qui identifie une channel "
-  | user channelObject vhost |
+      | user channelObject vhost |
       
 		channelObject := aModel selectOrAddEntityNamed: (aDictionnary at: 'name') withType: RMQExchange.
 		
@@ -229,7 +236,8 @@ RMQEventParser >> populate: aModel withConnectionClosed: aDictionnary at: timest
 
 { #category : #parsing }
 RMQEventParser >> populate: aModel withConnectionCreated: aDictionnary at: timestamp [
-"a Dictionary( timestamp_in_ms:	1544109134439
+"when connection is of network type : 
+a Dictionary( timestamp_in_ms:	1544109134439
 type:	network
 pid:	<rabbit@fceed0d94b94.3.8698.0>
 name:	172.17.0.1:56246 -> 172.17.0.2:5672
@@ -253,7 +261,21 @@ timeout:	60
 frame_max:	131072
 channel_max:	0
 client_properties:	{<<""product"">>,longstr,<<""RabbitMQ Smalltalk"">>}
-connected_at:	1544109134432)"
+connected_at:	1544109134432)
+when connection is of direc type :
+aDictionnary (timestamp_in_ms:	1544196873787
+pid:	<rabbit@fceed0d94b94.3.12113.0>
+protocol:	{'Direct',{0,9,1}}
+host:	unknown
+port:	unknown
+name:	<rabbit@fceed0d94b94.3.12113.0>
+peer_host:	unknown
+peer_port:	unknown
+user:	guest
+vhost:	/
+client_properties:	
+type:	direct
+connected_at:	1544196873787)"
 
      self notYetImplemented. 
 	
@@ -265,8 +287,32 @@ connected_at:	1544109134432)"
 
 { #category : #parsing }
 RMQEventParser >> populate: aModel withConsumerCreated: aDictionnary at: timestamp [
-   self notYetImplemented. 
+   "aDictionnary ( vhost, consumer_tag, channel, exclusive, arguments, ack_required, queue)"
+
+      | componentObject newComponent  vhost |
+
+		vhost:= aModel entityNamed: (aDictionnary at: 'vhost') withType: RMQVHost.
+		
+	   componentObject := aModel allRMQComponents
+		detect: [ :element | element consumerTag = (aDictionnary at: 'consumer_tag') 
+			"and the channels of the consumer are on the right vhost"
+			and: [ 
+				| channels |
+				channels := element subscribedChannels.
+				channels do: [ :achannel | achannel vhost = vhost ]
+				 ]		
+			 ]
+		ifFound: [ :elementFound | 
+			elementFound ]
+		ifNone: [  
+            newComponent := RMQComponent new.
+            newComponent consumerTag: (aDictionnary at: 'consumer_tag').
+				aModel add: newComponent.
+				newComponent ].
+			
+		componentObject creationDate: timestamp. 
 	
+	   "dans notre statégie décider de remplire le reste si création d'un nouveau consumer depuis l'api"
 			
 
 
@@ -275,10 +321,26 @@ RMQEventParser >> populate: aModel withConsumerCreated: aDictionnary at: timesta
 
 { #category : #parsing }
 RMQEventParser >> populate: aModel withConsumerDeleted: aDictionnary at: timestamp [
-    self notYetImplemented. 
+    "aDictionnary ( vhost, consumer_tag, channel, queue)"
 	
-	
+		| componentObject  vhost |
+
+		vhost:= aModel entityNamed: (aDictionnary at: 'vhost') withType: RMQVHost.
+		
+	   componentObject := aModel allRMQComponents
+		detect: [ :element | element consumerTag = (aDictionnary at: 'consumer_tag') 
+			"and the channels of the consumer are on the right vhost"
+			and: [ 
+				| channels |
+				channels := element subscribedChannels.
+				channels do: [ :achannel | achannel vhost = vhost ]
+				 ]		
+			 ]
+		ifFound: [ :elementFound | 
+			elementFound ].
 			
+		componentObject ifNotNil: [ componentObject deletionDate: timestamp ]. 
+	
 
 
 
@@ -426,12 +488,32 @@ RMQEventParser >> populate: aModel withQueueDeleted: aDictionnary at: timestamp 
 
 { #category : #parsing }
 RMQEventParser >> populate: aModel withUserAuthenticationFailed: aDictionnary at: timestamp [
+
+" essayer une appli consumer ici avec de faux credentials "
   self notYetImplemented.
 ]
 
 { #category : #parsing }
 RMQEventParser >> populate: aModel withUserAuthenticationSucceeded: aDictionnary at: timestamp [
-  self notYetImplemented. 
+" according to the type of the connection the dictionnary of headers is different : 
+connection_type:	network : 
+aDictionnary ( auth_mechanism:	PLAIN, connection_name:	10.238.28.3:40024 -> 10.238.28.5:5672, connection_type:	network, host:	{0,0,0,0,0,65535,2798,7173}, name:	bus-consolesaas, peer_host:	{0,0,0,0,0,65535,2798,7171}, peer_port:	40024, protocol:	{0,9,1}, ssl:	false, timestamp_in_ms:	1528449144710)
+connection_type: direct	: ()
+aDictionnary (connection_type:	direct, name:	admin, timestamp_in_ms:	1528454354351)"
+  | authentificationObject user |
+
+  authentificationObject := RMQAuthentification new. 
+  
+  user := aModel selectOrAddEntityNamed: (aDictionnary at: 'user') withType: RMQUser.
+  authentificationObject user: user.
+  user authentification add: authentificationObject.
+
+  authentificationObject success: True. 
+
+  authentificationObject timestamp: timestamp. 
+
+  aModel add: authentificationObject. 
+  
 ]
 
 { #category : #parsing }
@@ -452,11 +534,9 @@ RMQEventParser >> populate: aModel withUserCreated: aDictionnary at: timestamp [
 RMQEventParser >> populate: aModel withUserDeleted: aDictionnary at: timestamp [
   " aDictionnary example: timestamp_in_ms:	1543851766334 name:	testcreation"
 
-		| userName userObject |
+		| userObject |
 		
-		userName := (aDictionnary at: 'name').
-		
-		userObject := aModel entityNamed: userName withType: RMQUser.
+		userObject := aModel entityNamed: (aDictionnary at: 'name') withType: RMQUser.
 		userObject ifNotNil: [ userObject deletionDate: timestamp. ]
 	
 		
@@ -479,13 +559,12 @@ RMQEventParser >> populate: aModel withUserTagsSet: aDictionnary at: timestamp [
 
 { #category : #parsing }
 RMQEventParser >> populate: aModel withVhostCreated: aDictionnary at: timestamp [
-   "a Dictionary( timestamp_in_ms:	1543854933856 name:	smalltalk tracing:	false )"
+   "a Dictionary( 	timestamp_in_ms:	1543854933856, name:	smalltalk, tracing:	false )"
 
-      | vhostObject |
+	   | vhostObject |
 		
 		vhostObject := aModel selectOrAddEntityNamed: (aDictionnary at: 'name') withType: RMQVHost.
-	
-		vhostObject creationDate: timestamp. 
+		vhostObject ifNotNil: [ vhostObject creationDate: timestamp. ]
 		
 		
 	
@@ -497,5 +576,10 @@ RMQEventParser >> populate: aModel withVhostCreated: aDictionnary at: timestamp 
 
 { #category : #parsing }
 RMQEventParser >> populate: aModel withVhostDeleted: aDictionnary at: timestamp [
-   self notYetImplemented. 
+ "timestamp_in_ms:	1544113907521, name:	testtest"
+    | vhostObject |
+		
+		vhostObject := aModel entityNamed: (aDictionnary at: 'name') withType: RMQUser.
+		vhostObject ifNotNil: [ vhostObject deletionDate: timestamp. ]
+	
 ]
