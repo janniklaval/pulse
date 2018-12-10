@@ -1,8 +1,7 @@
 Class {
 	#name : #RMQUser,
-	#superclass : #MooseEntity,
+	#superclass : #PulseEntity,
 	#instVars : [
-		'userString',
 		'vhosts',
 		'password',
 		'passwordHash',
@@ -15,24 +14,24 @@ Class {
 		'initializedConnections',
 		'creationDate',
 		'deletionDate',
-		'passwordCreationDate',
+		'passwordClearingDate',
 		'passwordChangingDate',
-		'authentification',
+		'authentifications',
 		'initializedExchanges'
 	],
 	#category : #'RMQ-Core-Model'
 }
 
 { #category : #accessing }
-RMQUser >> authentification [
-	<MSEProperty: #authentification type: #RMQAuthentification opposite: #user>
+RMQUser >> authentifications [
+	<MSEProperty: #authentifications type: #RMQAuthentification opposite: #user>
 	<multivalued>
-	^ authentification
+	^ authentifications
 ]
 
 { #category : #accessing }
-RMQUser >> authentification: anObject [
-	authentification := anObject
+RMQUser >> authentifications: anObject [
+	authentifications := anObject
 ]
 
 { #category : #accessing }
@@ -144,14 +143,14 @@ RMQUser >> passwordChangingDate: anObject [
 ]
 
 { #category : #accessing }
-RMQUser >> passwordCreationDate [
-	<MSEProperty: #passwordCreationDate type: #Number>
-	^ passwordCreationDate
+RMQUser >> passwordClearingDate [
+	<MSEProperty: #passwordClearingDate type: #Number>
+	^ passwordClearingDate
 ]
 
 { #category : #accessing }
-RMQUser >> passwordCreationDate: anObject [
-	passwordCreationDate := anObject
+RMQUser >> passwordClearingDate: anObject [
+	passwordClearingDate := anObject
 ]
 
 { #category : #accessing }

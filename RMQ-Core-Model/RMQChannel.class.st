@@ -1,8 +1,7 @@
 Class {
 	#name : #RMQChannel,
-	#superclass : #MooseEntity,
+	#superclass : #PulseEntity,
 	#instVars : [
-		'channelString',
 		'connection',
 		'prefetchCount',
 		'globalPrefetchCount',
@@ -11,11 +10,12 @@ Class {
 		'rmqState',
 		'subscribedComponents',
 		'vhost',
-		'users',
+		'user',
 		'user_who_performed_connection',
 		'creationDate',
 		'closingDate',
-		'consumedQueues'
+		'consumedQueues',
+		'pid'
 	],
 	#category : #'RMQ-Core-Model'
 }
@@ -130,6 +130,17 @@ RMQChannel >> name [
 ]
 
 { #category : #accessing }
+RMQChannel >> pid [
+	<MSEProperty: #pid type: #String>
+	^ pid
+]
+
+{ #category : #accessing }
+RMQChannel >> pid: anObject [
+	pid := anObject
+]
+
+{ #category : #accessing }
 RMQChannel >> prefetchCount [
 	<MSEProperty: #prefetchCount type: #Number>
 	^ prefetchCount
@@ -169,6 +180,17 @@ RMQChannel >> subscribedComponents: anObject [
 ]
 
 { #category : #accessing }
+RMQChannel >> user [
+	<MSEProperty: #users type: #RMQUser opposite:#usedChannels>
+	^ user
+]
+
+{ #category : #accessing }
+RMQChannel >> user: anObject [
+	user := anObject
+]
+
+{ #category : #accessing }
 RMQChannel >> user_who_performed_connection [
 	<MSEProperty: #user_who_performed_connection type: #RMQUser opposite:#usedChannels>
 	^ user_who_performed_connection
@@ -177,18 +199,6 @@ RMQChannel >> user_who_performed_connection [
 { #category : #accessing }
 RMQChannel >> user_who_performed_connection: anObject [
 	user_who_performed_connection := anObject
-]
-
-{ #category : #accessing }
-RMQChannel >> users [
-	<MSEProperty: #users type: #RMQUser opposite:#usedChannels>
-	<multivalued>
-	^ users
-]
-
-{ #category : #accessing }
-RMQChannel >> users: anObject [
-	users := anObject
 ]
 
 { #category : #accessing }

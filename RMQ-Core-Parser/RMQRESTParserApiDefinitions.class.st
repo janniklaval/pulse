@@ -299,19 +299,19 @@ RMQRESTParserApiDefinitions class >> populate: aModel withUsers: anArray [
 		
 		
 		
-		((aUser at: 'tags') substrings: ',') do:[:aRoleString |
+		((aUser at: 'tags') substrings: ',') do:[:aRoleString | "// the tags are separated by ';'"
 			|role|			
 			role := aModel entityNamed: aRoleString withType: RMQRole
 			ifAbsent:[   
 				|newRole |
 				newRole := RMQRole new
-					tag: (aUser at: 'tags').
+					tag: (aUser at: 'tags'). "// ici mettre aRoleString ?"
 				aModel add: newRole.
 				newRole ].
 			
 			(element roles anySatisfy: [ :e | e = role ]) ifFalse: [
 			element roles add: role.
-				role users add: element
+				role user: element  " // updated by Nawel "
 			].
 			
 		].

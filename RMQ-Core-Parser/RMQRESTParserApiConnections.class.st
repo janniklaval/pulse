@@ -468,7 +468,7 @@ RMQRESTParserApiConnections class >> populate: aModel withJson: aString [
 					pulseName: (anObject at: 'user').
 				aModel add: newUser.
 				newUser ].
-		connection users add: user.
+		connection user: user.
 		user usedConnections add: connection.
 		
 		
