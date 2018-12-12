@@ -1,11 +1,11 @@
 Class {
 	#name : #RMQAuthentification,
-	#superclass : #MooseEntity,
+	#superclass : #PulseEntity,
 	#instVars : [
-		'authentificationString',
 		'success',
 		'timestamp',
-		'user'
+		'user',
+		'failureError'
 	],
 	#category : #'RMQ-Core-Model'
 }
@@ -19,6 +19,17 @@ RMQAuthentification >> authentificationString [
 { #category : #accessing }
 RMQAuthentification >> authentificationString: anObject [
 	authentificationString := anObject
+]
+
+{ #category : #accessing }
+RMQAuthentification >> failureError [
+	<MSEProperty: #failureError type: #Number>
+	^ failureError
+]
+
+{ #category : #accessing }
+RMQAuthentification >> failureError: anObject [
+	failureError := anObject
 ]
 
 { #category : #accessing }

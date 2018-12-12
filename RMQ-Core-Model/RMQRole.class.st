@@ -1,8 +1,8 @@
 Class {
 	#name : #RMQRole,
-	#superclass : #MooseEntity,
+	#superclass : #PulseEntity,
 	#instVars : [
-		'users',
+		'user',
 		'tag',
 		'settingDate'
 	],
@@ -45,13 +45,12 @@ RMQRole >> tag: anObject [
 ]
 
 { #category : #accessing }
-RMQRole >> users [
-	<MSEProperty: #users type: #RMQUser opposite:#roles>
-	<multivalued>
-	^ users
+RMQRole >> user [
+	<MSEProperty: #user type: #RMQUser opposite:#roles>
+	^ user
 ]
 
 { #category : #accessing }
-RMQRole >> users: anObject [
-	users := anObject
+RMQRole >> user: anObject [
+	user := anObject
 ]

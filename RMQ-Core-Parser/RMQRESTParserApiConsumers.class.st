@@ -99,7 +99,7 @@ RMQRESTParserApiConsumers class >> populate: aModel withJson: aString [
 			ifAbsent:[ 
 				|newQueue |
 				newQueue := RMQQueue new
-					connectionString: queueName.
+					pulseName: queueName.
 				aModel add: newQueue.
 				
 				newQueue ].
@@ -108,7 +108,7 @@ RMQRESTParserApiConsumers class >> populate: aModel withJson: aString [
 			ifAbsent:[  
 				|newVhost |
 				newVhost := RMQVHost new
-					vhostString: (anObject at: 'vhost').
+					pulseName: (anObject at: 'vhost').
 				aModel add: newVhost.
 				newVhost ].
 		queue vhost: vhost.
@@ -121,7 +121,7 @@ RMQRESTParserApiConsumers class >> populate: aModel withJson: aString [
 			ifAbsent:[ 
 				|newChannel |
 				newChannel := RMQChannel new
-					channel: channelName.
+					pulseName: channelName.
 				aModel add: newChannel.
 				
 				newChannel ].
@@ -130,7 +130,7 @@ RMQRESTParserApiConsumers class >> populate: aModel withJson: aString [
 			ifAbsent:[   
 				|newUser |
 				newUser := RMQUser new
-					userString: ((anObject at: 'channel_details') at: 'user').
+					pulseName: ((anObject at: 'channel_details') at: 'user').
 				aModel add: newUser.
 				newUser ].
 		channel users add: user.
@@ -140,7 +140,7 @@ RMQRESTParserApiConsumers class >> populate: aModel withJson: aString [
 			ifAbsent:[  
 				|newNode |
 				newNode := RMQNode new
-					nodeString: ((anObject at: 'channel_details') at: 'node').
+					pulseName: ((anObject at: 'channel_details') at: 'node').
 				aModel add: newNode.
 				vhost node: newNode.
 				newNode vhosts add: vhost.
@@ -151,7 +151,7 @@ RMQRESTParserApiConsumers class >> populate: aModel withJson: aString [
 			ifAbsent:[  
 				|newConnection |
 				newConnection := RMQConnection new
-					connectionString: ((anObject at: 'channel_details') at: 'connection_name').
+					pulseName: ((anObject at: 'channel_details') at: 'connection_name').
 				aModel add: newConnection.
 				newConnection ].
 		connection peerHost: ((anObject at: 'channel_details') at: 'peer_host').

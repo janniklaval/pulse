@@ -1,8 +1,7 @@
 Class {
 	#name : #RMQConnection,
-	#superclass : #MooseEntity,
+	#superclass : #PulseEntity,
 	#instVars : [
-		'connectionString',
 		'rmqState',
 		'protocol',
 		'connectedAt',
@@ -11,7 +10,7 @@ Class {
 		'port',
 		'vhost',
 		'channels',
-		'users',
+		'user',
 		'creationDate',
 		'closingDate',
 		'user_who_performed_connection',
@@ -19,7 +18,9 @@ Class {
 		'peerPort',
 		'sslProtocol',
 		'ssl',
-		'sslHash'
+		'sslHash',
+		'pid',
+		'connectionType'
 	],
 	#category : #'RMQ-Core-Model'
 }
@@ -80,6 +81,17 @@ RMQConnection >> connectionString: anObject [
 ]
 
 { #category : #accessing }
+RMQConnection >> connectionType [
+	<MSEProperty: #connectionType type: #String>
+	^ connectionType
+]
+
+{ #category : #accessing }
+RMQConnection >> connectionType: anObject [
+	connectionType := anObject
+]
+
+{ #category : #accessing }
 RMQConnection >> creationDate [
 	<MSEProperty: #creationDate type: #Number>
 	^ creationDate
@@ -135,6 +147,17 @@ RMQConnection >> peerPort [
 { #category : #accessing }
 RMQConnection >> peerPort: anObject [
 	peerPort := anObject
+]
+
+{ #category : #accessing }
+RMQConnection >> pid [
+	<MSEProperty: #pid type: #String>
+	^ pid
+]
+
+{ #category : #accessing }
+RMQConnection >> pid: anObject [
+	pid := anObject
 ]
 
 { #category : #accessing }
@@ -204,6 +227,17 @@ RMQConnection >> sslProtocol: anObject [
 ]
 
 { #category : #accessing }
+RMQConnection >> user [
+	<MSEProperty: #users type: #RMQUser opposite:#usedConnections>
+	^ user
+]
+
+{ #category : #accessing }
+RMQConnection >> user: anObject [
+	user := anObject
+]
+
+{ #category : #accessing }
 RMQConnection >> user_who_performed_connection [
 	<MSEProperty: #user_who_performed_connection type: #RMQUser opposite:#initializedConnections>
 	^ user_who_performed_connection
@@ -212,18 +246,6 @@ RMQConnection >> user_who_performed_connection [
 { #category : #accessing }
 RMQConnection >> user_who_performed_connection: anObject [
 	user_who_performed_connection := anObject
-]
-
-{ #category : #accessing }
-RMQConnection >> users [
-	<MSEProperty: #users type: #RMQUser opposite:#usedConnections>
-	<multivalued>
-	^ users
-]
-
-{ #category : #accessing }
-RMQConnection >> users: anObject [
-	users := anObject
 ]
 
 { #category : #accessing }
