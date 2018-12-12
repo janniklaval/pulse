@@ -157,47 +157,40 @@ RMQRESTParserApiDefinitions class >> populate: aModel withParameters: anArray [
 RMQRESTParserApiDefinitions class >> populate: aModel withPermissions: anArray [
 	"a Dictionary('configure'->'.*' 'read'->'.*' 'user'->'guest' 'vhost'->'/' 'write'->'.*' )"
 
-	| vhost user permissionTypes |
+	| vhost user |
 	anArray
 		do: [ :aPermission | 
-			| permissionVhostName permissionUserName element |
+			| permissionVhostName permissionUserName element configureValue writeValue readValue |
+			
 			permissionUserName := aPermission at: 'user'.
-			permissionVhostName := aPermission at: 'vhost'.
-			permissionTypes := {(PermissionType configure -> (aPermission at: 'configure')).
-			(PermissionType write -> (aPermission at: 'write')).
-			(PermissionType read -> (aPermission at: 'read'))}.
-			permissionTypes
-				do: [ :permissionType | 
-					aModel allRMQPermissions
-						detect: [ :el | 
-							el vhost name = permissionVhostName
-								and: [ el user name = permissionUserName and: [ el type = permissionType key ] ] ]
+			permissionVhostName := aPermission at: 'vhost'.		
+			configureValue := aPermission at: 'configure'.
+			writeValue := aPermission at: 'write'.
+			readValue := aPermission at: 'read'.
+
+         "add the new permission to the model if it doest not exist"
+			aModel allRMQPermissions
+					detect: [ :el | el vhost name = permissionVhostName
+								and: [ el user name = permissionUserName and: [ el configureValue = configureValue and: [ el writeValue = writeValue and: [el readValue = readValue] ] ] ] ]
 						ifFound: [ :elementFound | element := elementFound ]
 						ifNone: [ | newPermission |
 							newPermission := RMQPermission new
-								type: permissionType key;
-								rmqValue: permissionType value.
-							user := aModel
-								entityNamed: permissionUserName
-								withType: RMQUser 
-								ifAbsent: [ | newUser |
-									newUser := RMQUser new pulseName: permissionUserName.
-									aModel add: newUser.
-									newUser ].
+								configureValue: configureValue;
+								writeValue: writeValue; 
+								readValue: readValue.
+								
+						   "add the user to the model if it doest not exist"
+							user := aModel selectOrAddEntityNamed: permissionUserName withType: RMQUser.
 							newPermission user: user.
 							user permissions add: newPermission.
-							vhost := aModel
-								entityNamed: permissionVhostName
-								withType: RMQVHost
-								ifAbsent: [ | newVhost |
-									newVhost := RMQVHost new pulseName: permissionVhostName.
-									aModel add: newVhost.
-									newVhost ].
+							
+							"add the vhost to the model if it doest not exist"
+							vhost := aModel selectOrAddEntityNamed: permissionVhostName withType: RMQVHost.
 							newPermission vhost: vhost.
 							vhost permissions add: newPermission.
-							permissionType key permissions add: newPermission.
+						
 							aModel add: newPermission.
-							element := newPermission ] ] ]
+							element := newPermission ] ] 
 ]
 
 { #category : #'to finish' }

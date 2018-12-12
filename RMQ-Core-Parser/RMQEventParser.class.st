@@ -21,7 +21,7 @@ RMQEventParser >> populate: aModel withBindingCreated: aDictionnary at: timestam
 "aDictionnary : destination_kind source_kind, arguments (aDictionnary), destination_name, routing_key, source_name"
 "todo : set the arguments"
 	
-	| bindingObject source destination routingKey destType sourceName destinationName newBinding vhost |
+	| bindingObject source destination routingKey destType sourceName destinationName newBinding |
 		
 	destType := (aDictionnary at: 'destination_kind').
 	sourceName := (aDictionnary at: 'source_name').
@@ -55,10 +55,6 @@ RMQEventParser >> populate: aModel withBindingCreated: aDictionnary at: timestam
 				newBinding ].
 		
 		bindingObject creationDate: timestamp. 
-			
-		vhost := aModel selectOrAddEntityNamed: (aDictionnary at: 'vhost') withType: RMQVHost.
-		bindingObject vhost: vhost.
-		vhost bindings add: bindingObject.
 
 		routingKey := aModel selectOrAddEntityNamed: (aDictionnary at: 'routing_key') withType: RMQRoutingKey.
 		bindingObject routingKey: routingKey.
@@ -100,75 +96,7 @@ RMQEventParser >> populate: aModel withBindingDeleted: aDictionnary at: timestam
 			elementFound ].
 	bindingObject ifNotNil:[ bindingObject deletionDate: timestamp. ]
 		
-	"//old version 
-	bindingObject := aModel entityNamed: (sourceName, '>', destinationName)  withType: RMQBinding.
-	bindingObject = nil ifFalse: [ 
-		 bindingObject routingKey name = (aDictionnary at: 'routing_key') & bindingObject destinationType = destType ifTrue: [ 
-			 	bindingObject deletionDate: timestamp.  
-			 ]
-		 ]."
-	
 
-"// créer si absent ??"
-	
-			"ifAbsent:[  
-				|newBinding |
-				source:= aModel entityNamed: sourceName withType: RMQExchange
-				ifAbsent:[
-					|newExch |
-					newExch := RMQExchange new
-						exchangeString: sourceName.
-					aModel add: newExch.
-					newExch
-				].
-			
-				newBinding := RMQBinding new
-					destinationType: destType;
-					sourceExchange: source.
-				source sourceBindings add: newBinding.
-				
-				newBinding destinationType = 'exchange' 
-				ifTrue: [ 
-					destination:= aModel entityNamed: destinationName withType: RMQExchange
-						ifAbsent:[
-							|newExch |
-							newExch := RMQExchange new
-								exchangeString: destinationName.
-							aModel add: newExch.
-							newExch
-						].
-					newBinding destinationQueue: nil.
-					newBinding destinationExchange: destination.
-					destination destinationBindings add: newBinding.
-		 		] ifFalse: [ 
-					destination:= aModel entityNamed: destinationName withType: RMQQueue
-						ifAbsent:[
-							|newQ|
-							newQ := RMQQueue new
-								queueString: destinationName.
-							aModel add: newQ.
-							newQ
-						].
-					newBinding destinationQueue: destination.
-					newBinding destinationExchange: nil.
-					destination destinationBindings add: newBinding.
-		 		].	
-				aModel add: newBinding.
-				newBinding ].
-			
-	
-		
-		routingKeyName := (aDictionnary at: 'routing_key').
-		routingKey := aModel entityNamed: routingKeyName withType: RMQRoutingKey
-			ifAbsent:[
-				|newRK |
-				newRK := RMQRoutingKey new
-					routingKeyString: routingKeyName.
-				aModel add: newRK.
-				newRK
-			].
-		bindingObject routingKey: routingKey.
-		routingKey binding: bindingObject."
 ]
 
 { #category : #parsing }
@@ -193,24 +121,32 @@ RMQEventParser >> populate: aModel withChannelClosed: aDictionnary at: timestamp
 
 { #category : #parsing }
 RMQEventParser >> populate: aModel withChannelCreated: aDictionnary at: timestamp [
-   "a Dictionary( vhost, number, name, connection, pid, user  )"
+   "a Dictionary( vhost, number, name, connection(pid), pid, user  )"
 
-   "to do : Pb : qu'est ce qui identifie une channel "
-      | user channelObject vhost |
+   "todo : Pb : qu'est ce qui identifie une channel, le pid semble unique  "
+   "todo : set the related connection's pid "
+      | channelObject vhost user connection|
       
 		channelObject := aModel selectOrAddEntityNamed: (aDictionnary at: 'name') withType: RMQExchange.
 		
-		channelObject creationDate: timestamp. 
+		channelObject creationDate: timestamp.
+		channelObject pid: (aDictionnary at: 'pid').
 		
 		user := aModel selectOrAddEntityNamed: (aDictionnary at: 'user') withType: RMQUser.
-		channelObject users add: user.
+		channelObject user: user.
 		user usedChannels add: channelObject.
 
 		vhost := aModel selectOrAddEntityNamed: (aDictionnary at: 'vhost') withType: RMQVHost.
 		channelObject vhost: vhost.
 		vhost channels add: channelObject.
 
-		
+     "if the pid is unique"
+     connection :=	aModel allRMQConnections
+					detect: [ :element | element pid = aDictionnary at: 'connection' ]
+					ifFound: [ :elementFound | 
+			                 elementFound ]
+		          ifNone: [  ]. "// créer la connection ??"
+		channelObject connection: connection. 
 		
 	
 			
@@ -251,7 +187,7 @@ auth_mechanism:	PLAIN, ssl_protocol:, ssl_key_exchange:, ssl_cipher: ssl_hash:, 
 
 when connection is of direct type :
 aDictionnary (timestamp_in_ms:	1544196873787, pid:	<rabbit@fceed0d94b94.3.12113.0>, protocol:	{'Direct',{0,9,1}}, host:	unknown, port:	unknown, name:	<rabbit@fceed0d94b94.3.12113.0>, peer_host:	unknown, peer_port:	unknown, user:	guest, vhost:	/, client_properties:	, type:	direct, connected_at:	1544196873787)"
-	|connectionType connectionObject connectionName user vhost|
+	| connectionType connectionObject connectionName user vhost |
 	
 	connectionName := (aDictionnary at: 'name').
 	connectionType := (aDictionnary at: 'type').
@@ -264,7 +200,7 @@ aDictionnary (timestamp_in_ms:	1544196873787, pid:	<rabbit@fceed0d94b94.3.12113.
 					pulseName: connectionName.
 				
 	  newConnection pid: (aDictionnary at: 'pid').
-	  newConnection connectionType: (aDictionnary at: 'connection_type').
+	  newConnection connectionType: (aDictionnary at: 'type').
 	  newConnection connectedAt: (aDictionnary at: 'connected_at').
 	  newConnection host: (aDictionnary at: 'host').
 	  newConnection port: (aDictionnary at: 'port').
@@ -305,20 +241,16 @@ aDictionnary (timestamp_in_ms:	1544196873787, pid:	<rabbit@fceed0d94b94.3.12113.
 
 { #category : #parsing }
 RMQEventParser >> populate: aModel withConsumerCreated: aDictionnary at: timestamp [
-   "aDictionnary ( vhost, consumer_tag, channel, exclusive, arguments, ack_required, queue)"
+   "aDictionnary ( vhost, consumer_tag, channel(pid), exclusive, arguments, ack_required, queue)"
 
-      | componentObject newComponent  vhost |
+      | componentObject newComponent  vhost channel |
 
 		vhost:= aModel entityNamed: (aDictionnary at: 'vhost') withType: RMQVHost.
 		
+		"// find the consumer with the right channel and vhost"
 	   componentObject := aModel allRMQComponents
 		detect: [ :element | element consumerTag = (aDictionnary at: 'consumer_tag') 
-			"and the channels of the consumer are on the right vhost"
-			and: [ 
-				| channels |
-				channels := element subscribedChannels.
-				channels do: [ :achannel | achannel vhost = vhost ]
-				 ]		
+			and: [ element subscribedChannels anySatisfy: [ :el | el pid = aDictionnary at: 'channel' and: [ el  vhost = vhost] ] ]		
 			 ]
 		ifFound: [ :elementFound | 
 			elementFound ]
@@ -329,10 +261,14 @@ RMQEventParser >> populate: aModel withConsumerCreated: aDictionnary at: timesta
 				newComponent ].
 			
 		componentObject creationDate: timestamp. 
-	
-	   "dans notre statégie décider de remplire le reste si création d'un nouveau consumer depuis l'api"
-			
-
+		
+		"trouver la channel et la lier au consumer "
+		channel :=	aModel allRMQChannels
+					detect: [ :el | el pid = aDictionnary at: 'channel' and: [ el  vhost = vhost] ]
+					ifFound: [ :elementFound | 
+			                 elementFound ]
+		          ifNone: [  ]. "// créer la channel ??"
+		componentObject connection: channel. 
 
 
 ]
@@ -348,11 +284,7 @@ RMQEventParser >> populate: aModel withConsumerDeleted: aDictionnary at: timesta
 	   componentObject := aModel allRMQComponents
 		detect: [ :element | element consumerTag = (aDictionnary at: 'consumer_tag') 
 			"and the channels of the consumer are on the right vhost"
-			and: [ 
-				| channels |
-				channels := element subscribedChannels.
-				channels do: [ :achannel | achannel vhost = vhost ]
-				 ]		
+			and: [ element subscribedChannels anySatisfy: [ :el | el pid = aDictionnary at: 'channel' and: [ el  vhost = vhost] ] ]				
 			 ]
 		ifFound: [ :elementFound | 
 			elementFound ].
@@ -399,9 +331,9 @@ RMQEventParser >> populate: aModel withExchangeCreated: aDictionnary at: timesta
 
 { #category : #parsing }
 RMQEventParser >> populate: aModel withExchangeDeleted: aDictionnary at: timestamp [
-   "a Dictionary( 'vhost'->'/' 'name'->'Queue' )"
+   "a Dictionary( 'vhost'->'/' 'name'->'echangename' )"
 
-      |exchangeObject|
+      | exchangeObject |
 		
 		exchangeObject := aModel entityNamed: (aDictionnary at: 'name') withType: RMQExchange."ici on peut avoir une liste ! à revoir dans ex: populate: aModel withQueues: anArray dans RMQRestParser "
 		
@@ -424,28 +356,57 @@ RMQEventParser >> populate: aModel withPermissionCreated: aDictionnary at: times
   "aDictionnary : timestamp_in_ms:	1543851859334 user:	testcreation vhost:	/ configure:	.* write:	.* read:	.*"
   "todo : set parameters "
 						
-	" create user and vhost if they do not exist ?"
+	" along with permission, create user and vhost if they do not exist "	
 	
-   | userName permissionObject |
+   | permissionObject user userName vhost vhostName configureValue writeValue readValue |
 		
-		userName := (aDictionnary at: 'name').
-		
-		"todo ? create 3 permission objects, one for each type"
-		permissionObject := aModel selectOrAddEntityNamed: userName withType: RMQPermission. "// what identifies a permission ??"
+		userName := aDictionnary at: 'user'.
+		vhostName := aDictionnary at: 'vhost'.		
+	   configureValue := aDictionnary at: 'configure'.
+	   writeValue := aDictionnary at: 'write'.
+		readValue := aDictionnary at: 'read'.
 
-	   permissionObject vhost: (aDictionnary at: 'vhost').
-		permissionObject creationDate: timestamp. 
+         "add the new permission to the model if it doest not exist"
+		permissionObject :=	aModel allRMQPermissions
+					detect: [ :el | el vhost name = vhostName
+								and: [ el user name = userName and: [ el configureValue = configureValue and: [ el writeValue = writeValue and: [el readValue = readValue] ] ] ] ]
+						ifFound: [ :elementFound | permissionObject := elementFound ]
+						ifNone: [ | newPermission |
+							newPermission := RMQPermission new
+								configureValue: configureValue;
+								writeValue: writeValue; 
+								readValue: readValue.
+								
+						   "add the user to the model if it doest not exist"
+							user := aModel selectOrAddEntityNamed: userName withType: RMQUser.
+							newPermission user: user.
+							user permissions add: newPermission.
+							
+							"add the vhost to the model if it doest not exist"
+							vhost := aModel selectOrAddEntityNamed: vhostName withType: RMQVHost.
+							newPermission vhost: vhost.
+							vhost permissions add: newPermission.
+						
+							aModel add: newPermission.
+						   newPermission ]. 
+					
+				permissionObject creationDate: timestamp. 
 ]
 
 { #category : #parsing }
 RMQEventParser >> populate: aModel withPermissionDeleted: aDictionnary at: timestamp [
 " aDictionnary ex :  timestamp_in_ms:	1543853881862 user:	testuser vhost:	/"
-  | userName permissionObject |
+ | permissionObject  userName  vhostName |
 		
-		userName := (aDictionnary at: 'name').
+		userName := aDictionnary at: 'user'.
+		vhostName := aDictionnary at: 'vhost'.		
 		
-		permissionObject := aModel entityNamed: userName withType: RMQPermission. "// what identifies a permission ??"
-		permissionObject ifNotNil: [ permissionObject vhost = ( aDictionnary at: 'vhost')  ifTrue: [permissionObject deletionDate: timestamp.] ]
+		"a user has only one permission per vhost at a time"
+			aModel allRMQPermissions
+					detect: [ :el | el vhost name = vhostName and: [ el user name = userName  ] ]
+						ifFound: [ :elementFound | permissionObject := elementFound ].
+					
+				permissionObject deletionDate: timestamp. 
 ]
 
 { #category : #parsing }
@@ -627,8 +588,7 @@ RMQEventParser >> populate: aModel withUserCreated: aDictionnary at: timestamp [
 
 		| userObject |
 		
-		userObject := aModel selectOrAddEntityNamed: (aDictionnary at: 'name') withType: RMQUser.
-		
+		userObject := aModel selectOrAddEntityNamed: (aDictionnary at: 'name') withType: RMQUser.	
 		userObject creationDate: timestamp. 
 		
 		
@@ -662,7 +622,7 @@ RMQEventParser >> populate: aModel withUserPasswordCleared: aDictionnary at: tim
   | UserObject |
 		
 		UserObject := aModel entityNamed: (aDictionnary at: 'name') withType: RMQUser.
-		UserObject ifNotNil: [ UserObject passwordClearingDate:  timestamp. ] "// change to password clearingDate "
+		UserObject ifNotNil: [ UserObject passwordClearingDate:  timestamp. ] 
 ]
 
 { #category : #parsing }
