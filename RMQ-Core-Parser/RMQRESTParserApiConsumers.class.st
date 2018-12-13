@@ -109,7 +109,7 @@ RMQRESTParserApiConsumers class >> populate: aModel withJson: aString [
 		queue consumerChannels add: channel.
 		
 		user := aModel selectOrAddEntityNamed: ((anObject at: 'channel_details') at: 'user') withType: RMQUser.
-		channel users add: user.
+		channel user: user.
 		user usedChannels add: channel.
 		
 		node := aModel entityNamed: ((anObject at: 'channel_details') at: 'node') withType: RMQNode

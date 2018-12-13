@@ -2,15 +2,26 @@ Class {
 	#name : #RMQPermission,
 	#superclass : #PulseEntity,
 	#instVars : [
-		'type',
+		'configureValue',
+		'writeValue',
+		'readValue',
 		'user',
-		'creationDate',
-		'deletionDate',
 		'vhost',
-		'rmqValue'
+		'creationDate',
+		'deletionDate'
 	],
 	#category : #'RMQ-Core-Model'
 }
+
+{ #category : #accessing }
+RMQPermission >> configureValue [
+	^ configureValue
+]
+
+{ #category : #accessing }
+RMQPermission >> configureValue: anObject [
+	configureValue := anObject
+]
 
 { #category : #accessing }
 RMQPermission >> creationDate [
@@ -35,25 +46,19 @@ RMQPermission >> deletionDate: anObject [
 ]
 
 { #category : #accessing }
-RMQPermission >> rmqValue [
-	<MSEProperty: #value type: #String>
-	^ rmqValue
+RMQPermission >> name [
+	<MSEProperty: #name type: #String>
+	^ vhost mooseName, '.', user mooseName, '>', configureValue mooseName, '_', writeValue mooseName, '_', readValue mooseName
 ]
 
 { #category : #accessing }
-RMQPermission >> rmqValue: anObject [
-	rmqValue := anObject
+RMQPermission >> readValue [
+	^ readValue
 ]
 
 { #category : #accessing }
-RMQPermission >> type [
-	<MSEProperty: #type type: #PermissionType opposite:#permissions>
-	^ type
-]
-
-{ #category : #accessing }
-RMQPermission >> type: anObject [
-	type := anObject
+RMQPermission >> readValue: anObject [
+	readValue := anObject
 ]
 
 { #category : #accessing }
@@ -76,4 +81,14 @@ RMQPermission >> vhost [
 { #category : #accessing }
 RMQPermission >> vhost: anObject [
 	vhost := anObject
+]
+
+{ #category : #accessing }
+RMQPermission >> writeValue [
+	^ writeValue
+]
+
+{ #category : #accessing }
+RMQPermission >> writeValue: anObject [
+	writeValue := anObject
 ]

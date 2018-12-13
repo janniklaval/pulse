@@ -246,7 +246,7 @@ RMQRESTParserApiChannels class >> populate: aModel withJson: aString [
 		
 		
 		user := aModel selectOrAddEntityNamed: (anObject at: 'user') withType: RMQUser.
-		channel users add: user.
+		channel user: user.
 		user usedChannels add: channel.
 		
 		
