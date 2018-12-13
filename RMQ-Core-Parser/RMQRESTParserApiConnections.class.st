@@ -397,7 +397,7 @@ RMQRESTParserApiConnections populate: model withJson: '[
 "
 Class {
 	#name : #RMQRESTParserApiConnections,
-	#superclass : #RMQRESTParser,
+	#superclass : #RMQParser,
 	#category : #'RMQ-Core-Parser'
 }
 
@@ -410,14 +410,7 @@ RMQRESTParserApiConnections class >> populate: aModel withJson: aString [
 	
 	rmqObjects do: [ :anObject |
 		connectionName := (anObject at: 'name').
-		connection := aModel entityNamed: connectionName withType: RMQConnection 
-			ifAbsent:[ 
-				|newConnection |
-				newConnection := RMQConnection new
-					pulseName: connectionName.
-				aModel add: newConnection.
-				
-				newConnection ].
+		connection := aModel selectOrAddEntityNamed: connectionName withType: RMQConnection.
 		
 		connection host: (anObject at: 'host').
 		connection port: (anObject at: 'port').
@@ -440,13 +433,8 @@ RMQRESTParserApiConnections class >> populate: aModel withJson: aString [
 		connection protocol: (anObject at: 'protocol').
 		
 		
-		vhost := aModel entityNamed: (anObject at: 'vhost') withType: RMQVHost
-			ifAbsent:[  
-				|newVhost |
-				newVhost := RMQVHost new
-					pulseName: (anObject at: 'vhost').
-				aModel add: newVhost.
-				newVhost ].
+		vhost := aModel selectOrAddEntityNamed: (anObject at: 'vhost') withType: RMQVHost.
+		
 		connection vhost: vhost.
 		vhost connections add: connection.
 		
@@ -461,24 +449,13 @@ RMQRESTParserApiConnections class >> populate: aModel withJson: aString [
 				newNode vhosts add: vhost.
 				newNode ].
 			
-		user := aModel entityNamed: (anObject at: 'user') withType: RMQUser
-			ifAbsent:[   
-				|newUser |
-				newUser := RMQUser new
-					pulseName: (anObject at: 'user').
-				aModel add: newUser.
-				newUser ].
+		user := aModel selectOrAddEntityNamed:  (anObject at: 'user') withType: RMQUser.
 		connection user: user.
 		user usedConnections add: connection.
 		
 		
-		user_who_performed_action := aModel entityNamed: (anObject at: 'user_who_performed_action') withType: RMQUser
-			ifAbsent:[   
-				|newUser |
-				newUser := RMQUser new
-					pulseName: (anObject at: 'user_who_performed_action').
-				aModel add: newUser.
-				newUser ].
+		user_who_performed_action := aModel selectOrAddEntityNamed: (anObject at: 'user_who_performed_action') withType: RMQUser.
+		
 		connection user_who_performed_connection:  user_who_performed_action.
 		user_who_performed_action initializedConnections add: connection.
 			

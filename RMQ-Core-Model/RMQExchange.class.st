@@ -1,8 +1,7 @@
 Class {
 	#name : #RMQExchange,
-	#superclass : #MooseEntity,
+	#superclass : #PulseEntity,
 	#instVars : [
-		'exchangeString',
 		'type',
 		'durability',
 		'autoDelete',
@@ -81,7 +80,7 @@ RMQExchange >> deletionDate: anObject [
 
 { #category : #accessing }
 RMQExchange >> destinationBindings [
-	<MSEProperty: #destinationBindings type: #RMQBinding opposite:#destinationExchange>
+	<MSEProperty: #destinationBindings type: #RMQBindingWithExchange opposite:#destination>
 	<multivalued>
 	^ destinationBindings
 ]
@@ -100,17 +99,6 @@ RMQExchange >> durability [
 { #category : #accessing }
 RMQExchange >> durability: anObject [
 	durability := anObject
-]
-
-{ #category : #accessing }
-RMQExchange >> exchangeString [
-	<MSEProperty: #exchangeString type: #String>
-	^ exchangeString
-]
-
-{ #category : #accessing }
-RMQExchange >> exchangeString: anObject [
-	exchangeString := anObject
 ]
 
 { #category : #accessing }
@@ -160,12 +148,6 @@ RMQExchange >> my_alternate_exchange: anObject [
 ]
 
 { #category : #accessing }
-RMQExchange >> name [
-	<MSEProperty: #name type: #String>
-	^ self exchangeString
-]
-
-{ #category : #accessing }
 RMQExchange >> queues_for_dead_letter [
 	<MSEProperty: #queues_for_dead_letter type: #RMQQueue opposite:#dead_letter_exchange>
 	<multivalued>
@@ -179,7 +161,7 @@ RMQExchange >> queues_for_dead_letter: anObject [
 
 { #category : #accessing }
 RMQExchange >> sourceBindings [
-	<MSEProperty: #sourceBindings type: #RMQBinding opposite:#sourceExchange>
+	<MSEProperty: #sourceBindings type: #RMQBinding opposite:#source>
 	<multivalued>
 	^ sourceBindings
 ]

@@ -1,11 +1,9 @@
 Class {
 	#name : #RMQComponent,
-	#superclass : #MooseEntity,
+	#superclass : #PulseEntity,
 	#instVars : [
-		'guid',
 		'adress',
 		'rmqState',
-		'symbolicName',
 		'componentType',
 		'owner',
 		'author',
@@ -139,12 +137,12 @@ RMQComponent >> exclusive: anObject [
 { #category : #accessing }
 RMQComponent >> guid [
 	<MSEProperty: #guid type: #String>
-	^ guid
+	^ self pulseName
 ]
 
 { #category : #accessing }
 RMQComponent >> guid: anObject [
-	guid := anObject
+	self pulseName: anObject
 ]
 
 { #category : #accessing }
@@ -155,12 +153,6 @@ RMQComponent >> initialize [
 	subscribedChannels := OrderedCollection new.
 	exchanges := OrderedCollection new.
 	tenants := OrderedCollection new.
-]
-
-{ #category : #printing }
-RMQComponent >> name [ 
-<MSEProperty: #name type: #String>
-^ self symbolicName 
 ]
 
 { #category : #accessing }
@@ -183,6 +175,17 @@ RMQComponent >> platform [
 { #category : #accessing }
 RMQComponent >> platform: anObject [
 	platform := anObject
+]
+
+{ #category : #accessing }
+RMQComponent >> pulseName [
+	<MSEProperty: #pulseName type: #String>
+	^ consumerTag
+]
+
+{ #category : #accessing }
+RMQComponent >> pulseName: anObject [
+	pulseName := anObject
 ]
 
 { #category : #accessing }
@@ -218,17 +221,6 @@ RMQComponent >> subscribedChannels [
 { #category : #accessing }
 RMQComponent >> subscribedChannels: anObject [
 	subscribedChannels := anObject
-]
-
-{ #category : #accessing }
-RMQComponent >> symbolicName [
-	<MSEProperty: #symbolicName type: #String>
-	^ symbolicName
-]
-
-{ #category : #accessing }
-RMQComponent >> symbolicName: anObject [
-	symbolicName := anObject
 ]
 
 { #category : #accessing }

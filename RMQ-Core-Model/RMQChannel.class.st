@@ -21,17 +21,6 @@ Class {
 }
 
 { #category : #accessing }
-RMQChannel >> channel [
-	<MSEProperty: #channel type: #String>
-	^ channelString
-]
-
-{ #category : #accessing }
-RMQChannel >> channel: anObject [
-	channelString := anObject
-]
-
-{ #category : #accessing }
 RMQChannel >> closingDate [
 	<MSEProperty: #closingDate type: #Number>
 	^ closingDate
@@ -119,15 +108,11 @@ RMQChannel >> initialize [
 	guaranteeMode := GuaranteeMode none.
 	guaranteeMode channels add: self.
 	
-	state := State idle.
-	state channels add: self.
+	rmqState := State idle.
+	rmqState channels add: self.
 ]
 
 { #category : #accessing }
-RMQChannel >> name [
-	<MSEProperty: #name type: #String>
-	^ self channel asString
-]
 
 { #category : #accessing }
 RMQChannel >> pid [

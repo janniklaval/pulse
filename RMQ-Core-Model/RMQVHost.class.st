@@ -1,8 +1,7 @@
 Class {
 	#name : #RMQVHost,
-	#superclass : #MooseEntity,
+	#superclass : #PulseEntity,
 	#instVars : [
-		'vhostString',
 		'node',
 		'users',
 		'connections',
@@ -102,12 +101,6 @@ RMQVHost >> initialize [
 ]
 
 { #category : #accessing }
-RMQVHost >> name [
-	<MSEProperty: #name type: #String>
-	^ self vhostString
-]
-
-{ #category : #accessing }
 RMQVHost >> node [
 	<MSEProperty: #node type: #RMQNode opposite:#vhosts>
 	^ node
@@ -163,15 +156,4 @@ RMQVHost >> users [
 { #category : #accessing }
 RMQVHost >> users: anObject [
 	users := anObject
-]
-
-{ #category : #accessing }
-RMQVHost >> vhostString [
-	<MSEProperty: #vhost type: #String>
-	^ vhostString
-]
-
-{ #category : #accessing }
-RMQVHost >> vhostString: anObject [
-	vhostString := anObject
 ]

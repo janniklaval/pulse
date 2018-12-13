@@ -1,13 +1,13 @@
 Class {
 	#name : #RMQPermission,
-	#superclass : #MooseEntity,
+	#superclass : #PulseEntity,
 	#instVars : [
 		'type',
-		'value',
 		'user',
 		'creationDate',
 		'deletionDate',
-		'vhost'
+		'vhost',
+		'rmqValue'
 	],
 	#category : #'RMQ-Core-Model'
 }
@@ -35,9 +35,14 @@ RMQPermission >> deletionDate: anObject [
 ]
 
 { #category : #accessing }
-RMQPermission >> name [
-	<MSEProperty: #name type: #String>
-	^ attachedVHost mooseName, '.', user mooseName, '>', type mooseName
+RMQPermission >> rmqValue [
+	<MSEProperty: #value type: #String>
+	^ rmqValue
+]
+
+{ #category : #accessing }
+RMQPermission >> rmqValue: anObject [
+	rmqValue := anObject
 ]
 
 { #category : #accessing }
@@ -60,17 +65,6 @@ RMQPermission >> user [
 { #category : #accessing }
 RMQPermission >> user: anObject [
 	user := anObject
-]
-
-{ #category : #accessing }
-RMQPermission >> value1 [
-	<MSEProperty: #value type: #String>
-	^ value
-]
-
-{ #category : #accessing }
-RMQPermission >> value: anObject [
-	value := anObject
 ]
 
 { #category : #accessing }

@@ -1,8 +1,7 @@
 Class {
 	#name : #RMQQueue,
-	#superclass : #MooseEntity,
+	#superclass : #PulseEntity,
 	#instVars : [
-		'queueString',
 		'durability',
 		'autoDelete',
 		'messageTTL',
@@ -95,7 +94,7 @@ RMQQueue >> deletionDate: anObject [
 
 { #category : #accessing }
 RMQQueue >> destinationBindings [
-	<MSEProperty: #destinationBindings type: #RMQBinding opposite:#destinationQueue>
+	<MSEProperty: #destinationBindings type: #RMQBindingWithQueue opposite:#destination>
 	<multivalued>
 	^ destinationBindings
 ]
@@ -213,23 +212,6 @@ RMQQueue >> messages [
 { #category : #accessing }
 RMQQueue >> messages: anObject [
 	messages := anObject
-]
-
-{ #category : #accessing }
-RMQQueue >> name [
-	<MSEProperty: #name type: #String>
-	^ self queueString
-]
-
-{ #category : #accessing }
-RMQQueue >> queueString [
-	<MSEProperty: #queueString type: #String>
-	^ queueString
-]
-
-{ #category : #accessing }
-RMQQueue >> queueString: anObject [
-	queueString := anObject
 ]
 
 { #category : #accessing }

@@ -9,17 +9,17 @@ Class {
 
 { #category : #'as yet unclassified' }
 GuaranteeMode class >> confirm [
-	^ self new state: #confirm
+	^ self new rmqState: #confirm
 ]
 
 { #category : #'instance creation' }
 GuaranteeMode class >> none [
-	^ self new state: #none
+	^ self new rmqState: #none
 ]
 
 { #category : #'as yet unclassified' }
 GuaranteeMode class >> transactional [
-	^ self new state: #transactional
+	^ self new rmqState: #transactional
 ]
 
 { #category : #accessing }
@@ -32,4 +32,11 @@ GuaranteeMode >> channels [
 { #category : #accessing }
 GuaranteeMode >> channels: anObject [
 	channels := anObject
+]
+
+{ #category : #initialization }
+GuaranteeMode >> initialize [
+
+	super initialize.
+	channels := OrderedCollection new.
 ]

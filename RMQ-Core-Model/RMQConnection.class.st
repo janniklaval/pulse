@@ -71,16 +71,6 @@ RMQConnection >> connectedAt: anObject [
 ]
 
 { #category : #accessing }
-RMQConnection >> connectionString [
-	^ connectionString
-]
-
-{ #category : #accessing }
-RMQConnection >> connectionString: anObject [
-	connectionString := anObject
-]
-
-{ #category : #accessing }
 RMQConnection >> connectionType [
 	<MSEProperty: #connectionType type: #String>
 	^ connectionType
@@ -119,12 +109,6 @@ RMQConnection >> initialize [
 	super initialize.
 	users := OrderedCollection new.
 	channels := OrderedCollection new.
-]
-
-{ #category : #accessing }
-RMQConnection >> name [
-<MSEProperty: #name type: #String>
-	^self connectionString
 ]
 
 { #category : #accessing }

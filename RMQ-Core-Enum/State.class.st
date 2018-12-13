@@ -9,19 +9,19 @@ Class {
 	#category : #'RMQ-Core-Enum'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 State class >> idle [
-	^ self new state: #idle
+	^ self new rmqState: #idle
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 State class >> other [
-	^ self new state: #other
+	^ self new rmqState: #other
 ]
 
 { #category : #accessing }
 State class >> running [
-	^ self new state: #running
+	^ self new rmqState: #running
 ]
 
 { #category : #accessing }
@@ -46,6 +46,16 @@ State >> connections [
 { #category : #accessing }
 State >> connections: anObject [
 	connections := anObject
+]
+
+{ #category : #accessing }
+State >> initialize [
+
+	super initialize.
+	channels := OrderedCollection new.
+	connections := OrderedCollection new.
+	queues := OrderedCollection new.
+	
 ]
 
 { #category : #accessing }

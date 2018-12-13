@@ -9,22 +9,22 @@ Class {
 
 { #category : #accessing }
 ExchangeType class >> direct [
-	^ self new state: #direct
+	^ self new rmqState: #direct
 ]
 
 { #category : #accessing }
 ExchangeType class >> fanout [
-	^ self new state: #fanout
+	^ self new rmqState: #fanout
 ]
 
 { #category : #accessing }
 ExchangeType class >> headers [
-	^ self new state: #headers
+	^ self new rmqState: #headers
 ]
 
 { #category : #accessing }
 ExchangeType class >> topic [
-	^ self new state: #topic
+	^ self new rmqState: #topic
 ]
 
 { #category : #accessing }
@@ -37,4 +37,12 @@ ExchangeType >> exchanges [
 { #category : #accessing }
 ExchangeType >> exchanges: anObject [
 	exchanges := anObject
+]
+
+{ #category : #initialization }
+ExchangeType >> initialize [
+
+	super initialize.
+	exchanges := OrderedCollection new.
+	
 ]

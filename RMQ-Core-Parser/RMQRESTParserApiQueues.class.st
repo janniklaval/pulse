@@ -1873,7 +1873,7 @@ RMQRESTParserApiExchanges populate: model withJson: '[{
 "
 Class {
 	#name : #RMQRESTParserApiQueues,
-	#superclass : #RMQRESTParser,
+	#superclass : #RMQParser,
 	#category : #'RMQ-Core-Parser'
 }
 
@@ -1888,13 +1888,7 @@ RMQRESTParserApiQueues class >> populate: aModel withJson: aString [
 	rmqObjects do: [ :anObject |
 		
 		queueName := (anObject at: 'name').
-		queue := aModel entityNamed: queueName withType: RMQQueue 
-			ifAbsent:[ 
-				|newQueue |
-				newQueue := RMQQueue new
-					pulseName: queueName.
-				aModel add: newQueue.
-				newQueue ].
+		queue := aModel selectOrAddEntityNamed: queueName withType: RMQQueue.
 			
 		queue autoDelete: 	(anObject at: 'auto_delete').
 		queue idleSince: (anObject at: 'idle_since').
@@ -1902,13 +1896,7 @@ RMQRESTParserApiQueues class >> populate: aModel withJson: aString [
 		queue exclusive: (anObject at: 'exclusive').
 				
 		
-		vhost := aModel entityNamed: (anObject at: 'vhost') withType: RMQVHost
-			ifAbsent:[  
-				|newVhost |
-				newVhost := RMQVHost new
-					pulseName: (anObject at: 'vhost').
-				aModel add: newVhost.
-				newVhost ].
+		vhost := aModel selectOrAddEntityNamed: (anObject at: 'vhost') withType: RMQVHost.
 		queue vhost: vhost.
 		vhost queues add: queue.
 		

@@ -1,8 +1,7 @@
 Class {
 	#name : #RMQNode,
-	#superclass : #MooseEntity,
+	#superclass : #PulseEntity,
 	#instVars : [
-		'nodeString',
 		'type',
 		'running',
 		'cluster',
@@ -61,23 +60,6 @@ RMQNode >> initialize [
 
 	super initialize.
 	vhosts := OrderedCollection new.
-]
-
-{ #category : #accessing }
-RMQNode >> name [
-	<MSEProperty: #name type: #String>
-	^ self nodeString
-]
-
-{ #category : #accessing }
-RMQNode >> nodeString [
-	<MSEProperty: #nodeString type: #String>
-	^ nodeString
-]
-
-{ #category : #accessing }
-RMQNode >> nodeString: anObject [
-	nodeString := anObject
 ]
 
 { #category : #accessing }

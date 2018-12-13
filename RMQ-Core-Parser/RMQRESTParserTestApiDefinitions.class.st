@@ -13,11 +13,6 @@ RMQRESTParserTestApiDefinitions >> data [
 	^ '{"rabbit_version":"3.7.8","users":[{"name":"userMonitoring","password_hash":"tY9o+KU/Qns8Mccyplrw7oEDt8r8SmkARQhrJ3KC5OD635Eb","hashing_algorithm":"rabbit_password_hashing_sha256","tags":"monitoring"},{"name":"guest2","password_hash":"jaEzGO38CAFeJdYm8c4JqVYOi9iGfkjFpNOp1ffta+qgRcYZ","hashing_algorithm":"rabbit_password_hashing_sha256","tags":"administrator"},{"name":"newUser","password_hash":"YBXeQ+KOyQLe8gciHkQdO+lwN1lnh9G5BnFWp+BnAGLM2I70","hashing_algorithm":"rabbit_password_hashing_sha256","tags":"management"},{"name":"guest","password_hash":"RgD5L5W9tmsqQBlVt+VciTra/o4TlfiZALWegc0vH8zVb4PI","hashing_algorithm":"rabbit_password_hashing_sha256","tags":"administrator"}],"vhosts":[{"name":"/"},{"name":"/2"}],"permissions":[{"user":"guest","vhost":"/2","configure":".*","write":".*","read":".*"},{"user":"guest","vhost":"/","configure":".*","write":".*","read":".*"}],"topic_permissions":[],"parameters":[{"value":{"max-connections":1000},"vhost":"/","component":"vhost-limits","name":"limits"},{"value":{"max-queues":200},"vhost":"/2","component":"vhost-limits","name":"limits"},{"value":{"pattern":"patt1","definition":{"expires":10000000000,"max-length":244,"max-length-bytes":245,"message-ttl":45},"priority":5,"apply-to":"queues"},"vhost":"/","component":"operator_policy","name":"policy1"}],"global_parameters":[{"name":"cluster_name","value":"rabbit@a12b253c30bd"}],"policies":[],"queues":[{"name":"testQueue","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},{"name":"testQueue2","vhost":"/","durable":true,"auto_delete":false,"arguments":{"x-dead-letter-exchange":"testExchange","x-dead-letter-routing-key":"dead-letter-routing-key","x-expires":10000000000,"x-max-length":255,"x-max-length-bytes":256,"x-max-priority":1,"x-message-ttl":9,"x-queue-mode":"lazy"}}],"exchanges":[{"name":"testExchange","vhost":"/","type":"direct","durable":true,"auto_delete":false,"internal":false,"arguments":{}},{"name":"testExchange2","vhost":"/","type":"topic","durable":false,"auto_delete":false,"internal":true,"arguments":{"alternate-exchange":"testExchange"}}],"bindings":[{"source":"testExchange","vhost":"/","destination":"testExchange2","destination_type":"exchange","routing_key":"rkExchange","arguments":{}},{"source":"testExchange","vhost":"/","destination":"testQueue","destination_type":"queue","routing_key":"testRoutingKey","arguments":{}},{"source":"testExchange","vhost":"/","destination":"testQueue2","destination_type":"queue","routing_key":"testRoutingKeyBinding","arguments":{}}]}'.
 ]
 
-{ #category : #accessing }
-RMQRESTParserTestApiDefinitions >> dataFirst [
-	^ '{"rabbit_version":"3.7.8","users":[{"name":"guest","password_hash":"RgD5L5W9tmsqQBlVt+VciTra/o4TlfiZALWegc0vH8zVb4PI","hashing_algorithm":"rabbit_password_hashing_sha256","tags":"administrator"}],"vhosts":[{"name":"/"}],"permissions":[{"user":"guest","vhost":"/","configure":".*","write":".*","read":".*"}],"topic_permissions":[],"parameters":[],"global_parameters":[{"name":"cluster_name","value":"rabbit@a12b253c30bd"}],"policies":[],"queues":[{"name":"testQueue","vhost":"/","durable":true,"auto_delete":false,"arguments":{}}],"exchanges":[{"name":"testExchange","vhost":"/","type":"direct","durable":true,"auto_delete":false,"internal":false,"arguments":{}}],"bindings":[{"source":"testExchange","vhost":"/","destination":"testQueue","destination_type":"queue","routing_key":"testRoutingKey","arguments":{}}]}'.
-]
-
 { #category : #initialization }
 RMQRESTParserTestApiDefinitions >> setUp [
 
@@ -27,16 +22,6 @@ RMQRESTParserTestApiDefinitions >> setUp [
 	
 	model := PulseModel new.
 	model name: 'test'.
-]
-
-{ #category : #'as yet unclassified' }
-RMQRESTParserTestApiDefinitions >> testNOTWORKINGPopulateUser [
-	"I have not the information for now"
-	| user vh |
-	"self assert: user vhosts size = 2.	
-	vh := (model allRMQVHosts detect: [:e | e name = '/']).
-	self assert: (user vhosts anySatisfy:[:e | e = vh]).
-	self assert: (vh users anySatisfy: [ :e | e =user ])."
 ]
 
 { #category : #'testing - simple' }
@@ -384,25 +369,35 @@ RMQRESTParserTestApiDefinitions >> testPopulateQueue [
 
 { #category : #'testing - simple' }
 RMQRESTParserTestApiDefinitions >> testPopulateUser [
-
-	| user vh |
+	"I have not the information for now"
+	| user vh t1 t2 t3 t4 |
+	"self assert: user vhosts size = 2.	
+	vh := (model allRMQVHosts detect: [:e | e name = '/']).
+	self assert: (user vhosts anySatisfy:[:e | e = vh]).
+	self assert: (vh users anySatisfy: [ :e | e =user ])."
+	
 	RMQRESTParserApiDefinitions populate: model withUsers: (objects at: 'users').
 	
 	self assert: model allRMQUsers size = 4.
-	
 	self assert: (model allRMQUsers anySatisfy: [:e | e name = 'guest']).
-	user := model allRMQUsers detect: [:e | e name = 'guest'].
+	t1 := model allRMQUsers detect: [:e | e name = 'guest'].
+	t2 := model allRMQUsers detect: [:e | e name = 'guest2'].
+	t3 := model allRMQUsers detect: [:e | e name = 'newUser'].
+	t4 := model allRMQUsers detect: [:e | e name = 'userMonitoring'].
 	
-	self assert: user passwordHash = 'RgD5L5W9tmsqQBlVt+VciTra/o4TlfiZALWegc0vH8zVb4PI'.
-	self assert: user hashingAlgorithm = 'rabbit_password_hashing_sha256'.
+	self assert: t1 passwordHash = 'RgD5L5W9tmsqQBlVt+VciTra/o4TlfiZALWegc0vH8zVb4PI'.
+	self assert: t1 hashingAlgorithm = 'rabbit_password_hashing_sha256'.
+	self assert: t1 roles size = 1.
+	self assert: t2 roles size = 1.
+	self assert: t3 roles size = 1.
+	self assert: t4 roles size = 1.
 	
-	self assert: model allRMQRoles size = 3.
-	self assert: model allRMQRoles first name = 'administrator'.
+	self assert: (t1 roles anySatisfy: [:e | e users first = t2]).
+	self assert: (t1 roles anySatisfy: [:e | e users second = t1]).
+	self assert: t2 roles first = t1 roles first.
 	
-	self assert: user roles size = 1.
-	self assert: model allRMQRoles first users size = 2.
-	self assert: user roles first = model allRMQRoles first. 
-	self assert: model allRMQRoles first users first = model allRMQUsers first.
+	self assert: (t3 roles allSatisfy: [:e | e users first = t3]).
+	self assert: (t4 roles allSatisfy: [:e | e users first = t4]).
 ]
 
 { #category : #'testing - simple' }

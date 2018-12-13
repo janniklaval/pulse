@@ -6,7 +6,7 @@ RMQRESTParserApiDefinitions populate: model withJson: '{""rabbit_version"":""3.7
 "
 Class {
 	#name : #RMQRESTParserApiDefinitions,
-	#superclass : #RMQRESTParser,
+	#superclass : #RMQParser,
 	#category : #'RMQ-Core-Parser'
 }
 
@@ -49,9 +49,6 @@ RMQRESTParserApiDefinitions class >> populate: aModel withBindings: anArray [
 		vhost := aModel selectOrAddEntityNamed: vhostName withType: RMQVHost.
 		element vhost: vhost.
 		vhost bindings add: element.
-
-
-
 		
 		rkName := (aBinding at: 'routing_key').
 		rk := aModel selectOrAddEntityNamed: rkName withType: RMQRoutingKey.
@@ -69,44 +66,24 @@ RMQRESTParserApiDefinitions class >> populate: aModel withExchanges: anArray [
 		
 		exchangeName := (anExchange at: 'name').
 		
-		element := aModel entityNamed: exchangeName withType: RMQExchange
-			ifAbsent:[ 
-				|newExchange |
-				newExchange := RMQExchange new
-					pulseName: (anExchange at: 'name').
-				aModel add: newExchange.
-				newExchange ].
+		element := aModel selectOrAddEntityNamed: exchangeName withType:RMQExchange.
+		
 		element type: (anExchange at: 'type').
 		element internal: (anExchange at: 'internal').
 		element autoDelete: (anExchange at: 'auto_delete').
 		
 		vhostName := (anExchange at: 'vhost').
-		vhost := aModel entityNamed: vhostName withType: RMQVHost
-			ifAbsent:[
-				|newVhost |
-				newVhost := RMQVHost new
-					pulseName: vhostName.
-				aModel add: newVhost.
-				newVhost
-			].
+		vhost := aModel selectOrAddEntityNamed: vhostName withType:RMQVHost.
 		element vhost: vhost.
 		vhost exchanges add: element.
-		
-		
+
 		element durability:(anExchange at: 'durable').
-		
 		arg := (anExchange at: 'arguments').
 		
 		altExchName := (arg at: 'alternate-exchange' ifAbsent:[nil]).
 		altExchName ifNotNil:[
-			altExch := aModel entityNamed: altExchName withType: RMQExchange
-				ifAbsent:[
-					|newExch |
-					newExch := RMQExchange new
-						pulseName: altExchName.
-					aModel add: newExch.
-					newExch
-				].
+			altExch := aModel selectOrAddEntityNamed: altExchName withType:RMQExchange.
+			
 			element my_alternate_exchange: altExch.
 			altExch alternate_exchange_for add: element.
 		].
@@ -120,13 +97,9 @@ RMQRESTParserApiDefinitions class >> populate: aModel withGlobalParameters: anAr
 			(el at:'name') = 'cluster_name'
 				ifTrue: [ | clusterName |
 					clusterName := el at: 'value'.
-					aModel
-						entityNamed: clusterName
-						withType: RMQCluster
-						ifAbsent: [ | newCluster |
-							newCluster := RMQCluster new pulseName: clusterName.
-							aModel add: newCluster.
-							newCluster ] ] ]
+					aModel selectOrAddEntityNamed: clusterName withType:RMQCluster.
+				] 
+		]
 ]
 
 { #category : #parsing }
@@ -136,11 +109,11 @@ RMQRESTParserApiDefinitions class >> populate: aModel withJson: aString [
 	rmqObjects := parser parse: aString.
 	
 	self populate: aModel withVhosts: (rmqObjects at: 'vhosts').
-	self populate: aModel withParameters: (rmqObjects at: 'parameters').
+	"self populate: aModel withParameters: (rmqObjects at: 'parameters')."
 	self populate: aModel withUsers: (rmqObjects at: 'users').
-	self populate: aModel withTopicPermissions: (rmqObjects at: 'topic_permissions').
+	"self populate: aModel withTopicPermissions: (rmqObjects at: 'topic_permissions')."
 	self populate: aModel withPermissions: (rmqObjects at: 'permissions').
-	self populate: aModel withPolicies: (rmqObjects at: 'policies').
+	"self populate: aModel withPolicies: (rmqObjects at: 'policies')."
 	self populate: aModel withQueues: (rmqObjects at: 'queues').
 	self populate: aModel withExchanges: (rmqObjects at: 'exchanges').
 	self populate: aModel withBindings: (rmqObjects at: 'bindings').
@@ -208,25 +181,12 @@ RMQRESTParserApiDefinitions class >> populate: aModel withQueues: anArray [
 		
 		queueName := (aQueue at: 'name').
 		
-		element := aModel entityNamed: queueName withType: RMQQueue
-			ifAbsent:[  
-				|newQueue |
-				newQueue := RMQQueue new
-					pulseName: (aQueue at: 'name').
-				aModel add: newQueue.
-				newQueue ].
+		element := aModel selectOrAddEntityNamed: queueName withType: RMQQueue.
 		element autoDelete: (aQueue at: 'auto_delete').
 		element durability:(aQueue at: 'durable').
 		
 		vhostName := (aQueue at: 'vhost').
-		vhost := aModel entityNamed: vhostName withType: RMQVHost
-			ifAbsent:[
-				|newVhost |
-				newVhost := RMQVHost new
-					pulseName: vhostName.
-				aModel add: newVhost.
-				newVhost
-			].
+		vhost := aModel selectOrAddEntityNamed: vhostName withType: RMQVHost.
 		element vhost: vhost.
 		vhost queues add: element.
 		
@@ -239,28 +199,14 @@ RMQRESTParserApiDefinitions class >> populate: aModel withQueues: anArray [
 			
 		deadRKName := (arg at: 'x-dead-letter-routing-key' ifAbsent:[nil]).
 		deadRKName ifNotNil:[
-			deadRK := aModel entityNamed: deadRKName withType: RMQRoutingKey
-				ifAbsent:[
-					|newRK |
-					newRK := RMQRoutingKey new
-						pulseName: deadRKName.
-					aModel add: newRK.
-					newRK
-				].
+			deadRK := aModel selectOrAddEntityNamed: deadRKName withType: RMQRoutingKey.
 			element dead_letter_routing_key: deadRK.
 			deadRK queues_for_dead_letter add: element.
 		].
 	
 		deadExchName := (arg at: 'x-dead-letter-exchange' ifAbsent:[nil]).
 		deadExchName ifNotNil: [
-			deadExch := aModel entityNamed: deadExchName withType: RMQExchange
-				ifAbsent:[
-					|newExch |
-					newExch := RMQExchange new
-						pulseName: deadExchName.
-					aModel add: newExch.
-					newExch
-				].
+			deadExch := aModel selectOrAddEntityNamed: deadExchName withType: RMQExchange.
 			element dead_letter_exchange: deadExch.
 			deadExch queues_for_dead_letter add: element.
 		].
@@ -280,13 +226,7 @@ RMQRESTParserApiDefinitions class >> populate: aModel withUsers: anArray [
 		
 		userName := (aUser at: 'name').
 		
-		element := aModel entityNamed: userName withType: RMQUser
-			ifAbsent:[   
-				|newUser |
-				newUser := RMQUser new
-					pulseName: (aUser at: 'name').
-				aModel add: newUser.
-				newUser ].
+		element := aModel selectOrAddEntityNamed: userName withType: RMQUser.
 		element passwordHash: (aUser at: 'password_hash').
 		element hashingAlgorithm: (aUser at: 'hashing_algorithm').
 		
@@ -294,14 +234,7 @@ RMQRESTParserApiDefinitions class >> populate: aModel withUsers: anArray [
 		
 		((aUser at: 'tags') substrings: ',') do:[:aRoleString | "// the tags are separated by ';'"
 			|role|			
-			role := aModel entityNamed: aRoleString withType: RMQRole
-			ifAbsent:[   
-				|newRole |
-				newRole := RMQRole new
-					tag: (aUser at: 'tags'). "// ici mettre aRoleString ?"
-				aModel add: newRole.
-				newRole ].
-			
+			role := aModel selectOrAddEntityNamed: aRoleString withType: RMQRole.
 			(element roles anySatisfy: [ :e | e = role ]) ifFalse: [
 			element roles add: role.
 				role user: element  " // updated by Nawel "
@@ -318,12 +251,6 @@ RMQRESTParserApiDefinitions class >> populate: aModel withVhosts: anArray [
 		
 		vhostName := (aVhost at: 'name').
 		
-		element := aModel entityNamed: vhostName withType: RMQVHost
-			ifAbsent:[  
-				|newVhost |
-				newVhost := RMQVHost new
-					pulseName: (aVhost at: 'name').
-				aModel add: newVhost.
-				newVhost ].
+		element := aModel selectOrAddEntityNamed: vhostName withType: RMQVHost.
 	].
 ]

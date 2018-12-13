@@ -76,6 +76,9 @@ RMQUser >> initialize [
 	usedChannels :=OrderedCollection new.
 	roles :=OrderedCollection new.
 	permissions :=OrderedCollection new.
+	initializedExchanges := OrderedCollection new.
+	initializedChannels  := OrderedCollection new.
+	initializedConnections  := OrderedCollection new.
 ]
 
 { #category : #accessing }
@@ -112,12 +115,6 @@ RMQUser >> initializedExchanges [
 { #category : #accessing }
 RMQUser >> initializedExchanges: anObject [
 	initializedExchanges := anObject
-]
-
-{ #category : #accessing }
-RMQUser >> name [
-	<MSEProperty: #name type: #String>
-	^ self userString
 ]
 
 { #category : #accessing }
@@ -210,17 +207,6 @@ RMQUser >> usedConnections [
 { #category : #accessing }
 RMQUser >> usedConnections: anObject [
 	usedConnections := anObject
-]
-
-{ #category : #accessing }
-RMQUser >> userString [
-	<MSEProperty: #user type: #String>
-	^ userString
-]
-
-{ #category : #accessing }
-RMQUser >> userString: anObject [
-	userString := anObject
 ]
 
 { #category : #accessing }

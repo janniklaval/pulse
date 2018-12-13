@@ -17,6 +17,11 @@ Type >> hash [
     ^ self class hash bitXor: self state hash
 ]
 
+{ #category : #accessing }
+Type >> name [
+	^ self class name, ' : ', self rmqState
+]
+
 { #category : #printing }
 Type >> printOn: aStream [
     super printOn: aStream.

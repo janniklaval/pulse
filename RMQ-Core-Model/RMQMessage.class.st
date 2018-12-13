@@ -1,6 +1,6 @@
 Class {
 	#name : #RMQMessage,
-	#superclass : #MooseEntity,
+	#superclass : #PulseEntity,
 	#instVars : [
 		'messageID',
 		'messageType',
@@ -73,12 +73,12 @@ RMQMessage >> initialize [
 { #category : #accessing }
 RMQMessage >> messageID [
 	<MSEProperty: #messageID type: #String>
-	^ messageID
+	^ self pulseName
 ]
 
 { #category : #accessing }
 RMQMessage >> messageID: anObject [
-	messageID := anObject
+	^self pulseName: anObject
 ]
 
 { #category : #accessing }

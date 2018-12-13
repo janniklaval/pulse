@@ -107,7 +107,7 @@ RMQRESTParserApiExchanges populate: model withJson: '[
 "
 Class {
 	#name : #RMQRESTParserApiExchanges,
-	#superclass : #RMQRESTParser,
+	#superclass : #RMQParser,
 	#category : #'RMQ-Core-Parser'
 }
 
@@ -122,14 +122,7 @@ RMQRESTParserApiExchanges class >> populate: aModel withJson: aString [
 	rmqObjects do: [ :anObject |
 		
 		exchangeName := (anObject at: 'name').
-		exchange := aModel entityNamed: exchangeName withType: RMQConnection 
-			ifAbsent:[ 
-				|newExchange |
-				newExchange := RMQExchange new
-					pulseName: exchangeName.
-				aModel add: newExchange.
-				newExchange ].
-		
+		exchange := aModel selectOrAddEntityNamed: exchangeName withType: RMQExchange.
 		
 		(anObject at: 'type') = 'direct' ifTrue: [ 			exchange type: (ExchangeType direct).
 			exchange type exchanges add: exchange].
@@ -141,24 +134,13 @@ RMQRESTParserApiExchanges class >> populate: aModel withJson: aString [
 			exchange type exchanges add: exchange].
 						
 			
-		vhost := aModel entityNamed: (anObject at: 'vhost') withType: RMQVHost
-			ifAbsent:[  
-				|newVhost |
-				newVhost := RMQVHost new
-					pulseName: (anObject at: 'vhost').
-				aModel add: newVhost.
-				newVhost ].
+		vhost := aModel selectOrAddEntityNamed: (anObject at: 'vhost') withType: RMQVHost.
 		exchange vhost: vhost.
 		vhost exchanges add: exchange.
 		
 		
-		user_who_performed_action := aModel entityNamed: (anObject at: 'user_who_performed_action') withType: RMQUser
-			ifAbsent:[   
-				|newUser |
-				newUser := RMQUser new
-					pulseName: (anObject at: 'user_who_performed_action').
-				aModel add: newUser.
-				newUser ].
+		user_who_performed_action := aModel selectOrAddEntityNamed: (anObject at: 'user_who_performed_action') withType: RMQUser.
+		
 		exchange user_who_performed_action:  user_who_performed_action.
 		user_who_performed_action initializedExchanges add: exchange.
 		

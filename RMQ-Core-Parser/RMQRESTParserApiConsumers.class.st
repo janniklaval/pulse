@@ -67,7 +67,7 @@ RMQRESTParserApiConsumers populate: model withJson: '[
 "
 Class {
 	#name : #RMQRESTParserApiConsumers,
-	#superclass : #RMQRESTParser,
+	#superclass : #RMQParser,
 	#category : #'RMQ-Core-Parser'
 }
 
@@ -84,7 +84,7 @@ RMQRESTParserApiConsumers class >> populate: aModel withJson: aString [
 		
 		consumerTag := (anObject at: 'consumer_tag').
 		
-		component := aModel detect: [:e | e consumerTag = consumerTag] ifNone:[ 
+		component := aModel allRMQComponents detect: [:e | e consumerTag = consumerTag] ifNone:[ 
 				|newComponent |
 				newComponent := RMQComponent new
 					consumerTag: consumerTag.
@@ -95,44 +95,20 @@ RMQRESTParserApiConsumers class >> populate: aModel withJson: aString [
 		
 		
 		queueName := ((anObject at: 'queue') at: 'name').
-		queue := aModel entityNamed: queueName withType: RMQQueue 
-			ifAbsent:[ 
-				|newQueue |
-				newQueue := RMQQueue new
-					pulseName: queueName.
-				aModel add: newQueue.
-				
-				newQueue ].
+		queue := aModel selectOrAddEntityNamed: queueName withType: RMQQueue.
 		
-		vhost := aModel entityNamed: (anObject at: 'vhost') withType: RMQVHost
-			ifAbsent:[  
-				|newVhost |
-				newVhost := RMQVHost new
-					pulseName: (anObject at: 'vhost').
-				aModel add: newVhost.
-				newVhost ].
+		vhost := aModel selectOrAddEntityNamed: ((anObject at: 'queue') at: 'vhost') withType: RMQVHost.
 		queue vhost: vhost.
 		vhost queues add: queue.
 		
 		
 		channelName := ((anObject at: 'channel_details') at: 'name').
+		channel := aModel selectOrAddEntityNamed: channelName withType: RMQChannel.
 		
-		channel := aModel entityNamed: channelName withType: RMQChannel
-			ifAbsent:[ 
-				|newChannel |
-				newChannel := RMQChannel new
-					pulseName: channelName.
-				aModel add: newChannel.
-				
-				newChannel ].
+		channel consumedQueues add: queue.
+		queue consumerChannels add: channel.
 		
-		user := aModel entityNamed: ((anObject at: 'channel_details') at: 'user') withType: RMQUser
-			ifAbsent:[   
-				|newUser |
-				newUser := RMQUser new
-					pulseName: ((anObject at: 'channel_details') at: 'user').
-				aModel add: newUser.
-				newUser ].
+		user := aModel selectOrAddEntityNamed: ((anObject at: 'channel_details') at: 'user') withType: RMQUser.
 		channel users add: user.
 		user usedChannels add: channel.
 		
@@ -147,14 +123,13 @@ RMQRESTParserApiConsumers class >> populate: aModel withJson: aString [
 				newNode ].
 		
 		
-		connection := aModel entityNamed: ((anObject at: 'channel_details') at: 'connection_name') withType: RMQConnection
-			ifAbsent:[  
-				|newConnection |
-				newConnection := RMQConnection new
-					pulseName: ((anObject at: 'channel_details') at: 'connection_name').
-				aModel add: newConnection.
-				newConnection ].
+		connection := aModel selectOrAddEntityNamed: ((anObject at: 'channel_details') at: 'connection_name') withType: RMQConnection.
 		connection peerHost: ((anObject at: 'channel_details') at: 'peer_host').
-		connection peerPort: ((anObject at: 'channel_details') at: 'peer_port').	
+		connection peerPort: ((anObject at: 'channel_details') at: 'peer_port').
+		
+		connection channels add: channel.
+		channel connection: connection.
+		connection users add: user.
+		user usedConnections add: connection.
 	]
 ]
