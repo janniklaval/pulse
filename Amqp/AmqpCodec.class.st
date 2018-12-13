@@ -143,6 +143,7 @@ AmqpCodec >> nextTablePut: d [
 AmqpCodec >> nextTableValue: type [
 	type = $S asciiValue ifTrue: [^ self nextLongstr].
 	type = $I asciiValue ifTrue: [^ self nextLong].
+	type = $l asciiValue ifTrue: [^ self nextLonglong]. "by Nawel"
 	type = $D asciiValue ifTrue: [| decimals raw |
 		decimals := self nextOctet.
 		raw := self nextLong.
