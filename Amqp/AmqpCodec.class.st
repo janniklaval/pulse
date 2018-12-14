@@ -12,6 +12,31 @@ AmqpCodec >> flush [
 	stream flush
 ]
 
+{ #category : #actions }
+AmqpCodec >> nextArray [
+	| buf array type val |
+	buf := self nextLongstrBytes.
+	array := Array new.
+	self withStream: buf readStream during: [
+		[stream peek notNil] whileTrue: [
+			type := self nextOctet.
+			val := self nextTableValue: type.
+			array add: val]].
+	^ array
+]
+
+{ #category : #'as yet unclassified' }
+AmqpCodec >> nextArrayPut: array [
+	| writeStream |
+	array ifNil: [self nextLongPut: 0. ^ array].
+	writeStream := WriteStream on: ByteArray new.
+	self withStream: writeStream during: [
+		array do: [:val |
+			self nextTableValuePut: val]].
+	self nextLongstrPut: writeStream contents.
+	^ array
+]
+
 { #category : #'as yet unclassified' }
 AmqpCodec >> nextBoolean [
 	^ self nextOctet bitAnd:  1
@@ -144,6 +169,7 @@ AmqpCodec >> nextTableValue: type [
 	type = $S asciiValue ifTrue: [^ self nextLongstr].
 	type = $I asciiValue ifTrue: [^ self nextLong].
 	type = $l asciiValue ifTrue: [^ self nextLonglong]. "by Nawel"
+	type = $A asciiValue ifTrue: [^ self nextArray]. "by Nawel"
 	type = $D asciiValue ifTrue: [| decimals raw |
 		decimals := self nextOctet.
 		raw := self nextLong.
