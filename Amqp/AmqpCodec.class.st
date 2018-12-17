@@ -168,8 +168,8 @@ AmqpCodec >> nextTablePut: d [
 AmqpCodec >> nextTableValue: type [
 	type = $S asciiValue ifTrue: [^ self nextLongstr].
 	type = $I asciiValue ifTrue: [^ self nextLong].
-	type = $l asciiValue ifTrue: [^ self nextLonglong]. "by Nawel"
-	type = $A asciiValue ifTrue: [^ self nextArray]. "by Nawel"
+	type = $l asciiValue ifTrue: [^ self nextLonglong]. "by Nawel 'l' long-long-uint = 8*OCTET"
+	type = $A asciiValue ifTrue: [^ self nextArray]. "by Nawel, from amqp grammer : 'A' field-array = long-int *field-value ; array of values"
 	type = $D asciiValue ifTrue: [| decimals raw |
 		decimals := self nextOctet.
 		raw := self nextLong.

@@ -432,11 +432,12 @@ RMQEventParser >> populate: aModel withQueueCreated: aDictionnary at: timestamp 
 		vhost queues add: queueObject.
 		
 		arguments := (aDictionnary at: 'arguments').
+		arguments isEmpty ifFalse: [
 		queueObject expiresAfter: (arguments at: 'x-expires' ifAbsent:[nil]);
 			maxLength: (arguments at: 'x-max-length' ifAbsent:[nil]);
 			maxLengthBytes: (arguments at: 'x-max-length-bytes' ifAbsent:[nil]);
 			maxPriority: (arguments at: 'x-max-priority' ifAbsent:[nil]);
-			messageTTL: (arguments at: 'x-message-ttl' ifAbsent:[nil]).
+			messageTTL: (arguments at: 'x-message-ttl' ifAbsent:[nil]).]
 		
 	
 			
