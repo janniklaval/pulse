@@ -46,21 +46,21 @@ RMQLogParser class >> populate: aModel withJson: aString [
 	
 	rmqObjects do: [:aRMQObject | 
 			| message connection queue user node exchange vhost channel routingKeys binding payload component delivMode routedQueues messageType|
-			payload := model selectOrAddEntityNamed: (aRMQObject at: 'payload') withType: RMQPayload.
+			payload := aModel selectOrAddEntityNamed: (aRMQObject at: 'payload') withType: RMQPayload.
 			
 			message := self populateMessage: aRMQObject payload: payload.
 			message timestamp: (aRMQObject at: 'timestamp').
 			
-			connection := model selectOrAddEntityNamed: (aRMQObject at: 'connection') withType: RMQConnection.
+			connection := aModel selectOrAddEntityNamed: (aRMQObject at: 'connection') withType: RMQConnection.
 			
-			queue := model selectOrAddEntityNamed: (aRMQObject at: 'queue') withType: RMQQueue.
+			queue := aModel selectOrAddEntityNamed: (aRMQObject at: 'queue') withType: RMQQueue.
 			
 			message queue ifNil:[
 				queue sendedMessages add: message.
 				message queue: queue.
 			].
 			
-			user := model selectOrAddEntityNamed: (aRMQObject at: 'user') withType: RMQUser.
+			user := aModel selectOrAddEntityNamed: (aRMQObject at: 'user') withType: RMQUser.
 			
 			user usedConnections 
 				detect: [:conn| conn = connection ]
@@ -69,15 +69,15 @@ RMQLogParser class >> populate: aModel withJson: aString [
 					user usedConnections add: connection.
 				].
 		
-			node := model selectOrAddEntityNamed: (aRMQObject at: 'node') withType: RMQNode.
+			node := aModel selectOrAddEntityNamed: (aRMQObject at: 'node') withType: RMQNode.
 			
 			
-			exchange := model selectOrAddEntityNamed: (aRMQObject at: 'exchange') withType: RMQExchange.
+			exchange := aModel selectOrAddEntityNamed: (aRMQObject at: 'exchange') withType: RMQExchange.
 			exchange messages add: message.
 			message exchange: exchange.
 			
 			
-			vhost := model selectOrAddEntityNamed: (aRMQObject at: 'vhost') withType: RMQVHost.
+			vhost := aModel selectOrAddEntityNamed: (aRMQObject at: 'vhost') withType: RMQVHost.
 			user vhosts 
 				detect: [:vh| vh = vhost ]
 				ifNone: [
@@ -102,7 +102,7 @@ RMQLogParser class >> populate: aModel withJson: aString [
 				vhost node: node.
 			].
 			
-			channel := model selectOrAddEntityNamed: (aRMQObject at: 'channel') withType: RMQChannel.
+			channel := aModel selectOrAddEntityNamed: (aRMQObject at: 'channel') withType: RMQChannel.
 			channel vhost ifNil:[
 				vhost channels add: vhost.
 				channel vhost: vhost.
@@ -146,11 +146,11 @@ RMQLogParser class >> populate: aModel withJson: aString [
 					aRoutingKey binding: binding.
 					
 					
-					model allRMQBindings
+					aModel allRMQBindings
 						detect: [ :el | (el source = binding source) and:[(el destination = binding destination) and:[el routingKey = binding routingKey]] ]
 							ifFound: [ :elementFound | 
 								]
-							ifNone: [ model add: binding.
+							ifNone: [ aModel add: binding.
 						].
 				].
 			].
@@ -161,7 +161,7 @@ RMQLogParser class >> populate: aModel withJson: aString [
 			message messageType: messageType.
 			messageType messages add: message.
 			
-			component := model selectOrAddEntityNamed: ((aRMQObject at: 'properties') at: 'app_id') withType: RMQComponent.
+			component := aModel selectOrAddEntityNamed: ((aRMQObject at: 'properties') at: 'app_id') withType: RMQComponent.
 			component senderMessages add: message.
 			message senderComponent:component.
 			
@@ -189,7 +189,7 @@ RMQLogParser class >> populate: aModel withJson: aString [
 				do:
 					[ :aHeader | self populateHeaders: aHeader ] ].
 	
-	MooseModel root add: model
+	MooseModel root add: aModel
 ]
 
 { #category : #parsing }

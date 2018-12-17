@@ -38,5 +38,5 @@ GuaranteeMode >> channels: anObject [
 GuaranteeMode >> initialize [
 
 	super initialize.
-	channels := OrderedCollection new.
+	channels := Set new.
 ]

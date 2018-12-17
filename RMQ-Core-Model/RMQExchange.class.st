@@ -105,12 +105,12 @@ RMQExchange >> durability: anObject [
 RMQExchange >> initialize [
 
 	super initialize.
-	sourceBindings := OrderedCollection new.
-	destinationBindings := OrderedCollection new.
-	components := OrderedCollection new.
-	messages := OrderedCollection new.
-	queues_for_dead_letter := OrderedCollection new.
-	alternate_exchange_for := OrderedCollection new.
+	sourceBindings := Set new.
+	destinationBindings := Set new.
+	components := Set new.
+	messages := Set new.
+	queues_for_dead_letter := Set new.
+	alternate_exchange_for := Set new.
 ]
 
 { #category : #accessing }

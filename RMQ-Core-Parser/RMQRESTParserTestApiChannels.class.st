@@ -219,6 +219,148 @@ RMQRESTParserTestApiChannels >> setUp [
 ]
 
 { #category : #'testing - simple' }
+RMQRESTParserTestApiChannels >> testExistingPopulate [
+
+	| vh ch1 ch2 u1 u2 c1 c2 node |
+	
+	self assert: model size = 10.
+	"channels"
+	self assert: model allRMQChannels size = 3.
+	ch1 := (model allRMQChannels detect: [:e | e name = '10.238.15.51:49677 -> 10.238.28.5:5672 (1)']).
+	ch2 := (model allRMQChannels detect: [:e | e name = '10.34.132.254:49779 -> 10.238.28.5:5672 (1)']).
+	
+	self assert: ch1 guaranteeMode name = 'GuaranteeMode : none'. 
+	self assert: (ch1 guaranteeMode channels anySatisfy: [ :e | e =ch1 ]).
+	self assert: ch2 guaranteeMode name = 'GuaranteeMode : none'. 
+	self assert: (ch2 guaranteeMode channels anySatisfy: [ :e | e =ch2 ]).
+	
+	self assert: ch1 rmqState name = 'State : running'.
+	self assert: (ch1 rmqState channels anySatisfy: [:e | e = ch1 ]).
+	self assert: ch1 idleSince = '2018-11-08 9:47:09'.	
+	
+	self assert: ch2 rmqState name = 'State : running'.
+	self assert: (ch2 rmqState channels anySatisfy: [:e | e = ch2 ]).
+	self assert: ch2 idleSince = '2018-11-08 9:47:09'.	
+		
+	"users"
+	self assert: model allRMQUsers size = 2.
+	u1 := (model allRMQUsers detect: [:e | e name = 'bus-blsenior']).
+	u2 := (model allRMQUsers detect: [:e | e name = 'bus-consolesaas']).
+	
+	"channels users"
+	self assert: (u1 initializedChannels anySatisfy: [ :e | e =ch1 ]).
+	self assert: (u2 initializedChannels anySatisfy: [ :e | e =ch2 ]).
+	
+	self assert: (ch1 user_who_performed_connection = u1 ).
+	self assert: (ch2 user_who_performed_connection =u2).
+	
+	"channels vhost"
+	vh := (model allRMQVHosts detect: [:e | e name = '/']).
+	self assert: (ch1 vhost = vh).
+	self assert: (ch2 vhost = vh).
+	self assert: (vh channels anySatisfy: [ :e | e =ch1 ]).
+	self assert: (vh channels anySatisfy: [ :e | e =ch2 ]).  
+
+	"node"
+	"node vhost"
+	node := (model allRMQNodes detect: [:e | e name = 'rabbit@CSLSAASRBS1']).
+	self assert: (vh node = node).
+	self assert: (node vhosts anySatisfy: [ :e | e =vh ]).
+	self assert: node vhosts size = 1.
+	
+	
+	"connection"
+	self assert: model allRMQConnections size = 3.
+	c1 := (model allRMQConnections detect: [:e | e name = '10.238.15.51:49677 -> 10.238.28.5:5672']).
+	c2 := (model allRMQConnections detect: [:e | e name = '10.34.132.254:49779 -> 10.238.28.5:5672']).
+	self assert: c1 peerHost = '10.238.15.51'. 
+	self assert: c1 peerPort = 49677.
+	self assert: c1 host = '10.238.28.5'. 
+	self assert: c1 port = 5672.
+	
+	"connection channels"
+	self assert: (c1 channels anySatisfy: [ :e | e =ch1 ]).
+	self assert: (c2 channels anySatisfy: [ :e | e =ch2 ]).
+	self assert: ch1 connection = c1.
+	self assert: ch2 connection = c2.	
+	
+	"connection users"
+	self assert: (c1 users anySatisfy: [ :e | e =u1 ]).
+	self assert: (c2 users anySatisfy: [ :e | e =u2 ]).
+	self assert: (u1 usedConnections anySatisfy: [ :e | e =c1 ]).
+	self assert: (u2 usedConnections anySatisfy: [ :e | e =c2 ]).
+	
+	RMQRESTParserApiChannels populate: model withJson: self data.
+	self assert: model size = 10.
+	"channels"
+	self assert: model allRMQChannels size = 3.
+	ch1 := (model allRMQChannels detect: [:e | e name = '10.238.15.51:49677 -> 10.238.28.5:5672 (1)']).
+	ch2 := (model allRMQChannels detect: [:e | e name = '10.34.132.254:49779 -> 10.238.28.5:5672 (1)']).
+	
+	self assert: ch1 guaranteeMode name = 'GuaranteeMode : none'. 
+	self assert: (ch1 guaranteeMode channels anySatisfy: [ :e | e =ch1 ]).
+	self assert: ch2 guaranteeMode name = 'GuaranteeMode : none'. 
+	self assert: (ch2 guaranteeMode channels anySatisfy: [ :e | e =ch2 ]).
+	
+	self assert: ch1 rmqState name = 'State : running'.
+	self assert: (ch1 rmqState channels anySatisfy: [:e | e = ch1 ]).
+	self assert: ch1 idleSince = '2018-11-08 9:47:09'.	
+	
+	self assert: ch2 rmqState name = 'State : running'.
+	self assert: (ch2 rmqState channels anySatisfy: [:e | e = ch2 ]).
+	self assert: ch2 idleSince = '2018-11-08 9:47:09'.	
+		
+	"users"
+	self assert: model allRMQUsers size = 2.
+	u1 := (model allRMQUsers detect: [:e | e name = 'bus-blsenior']).
+	u2 := (model allRMQUsers detect: [:e | e name = 'bus-consolesaas']).
+	
+	"channels users"
+	self assert: (u1 initializedChannels anySatisfy: [ :e | e =ch1 ]).
+	self assert: (u2 initializedChannels anySatisfy: [ :e | e =ch2 ]).
+	
+	self assert: (ch1 user_who_performed_connection = u1 ).
+	self assert: (ch2 user_who_performed_connection =u2).
+	
+	"channels vhost"
+	vh := (model allRMQVHosts detect: [:e | e name = '/']).
+	self assert: (ch1 vhost = vh).
+	self assert: (ch2 vhost = vh).
+	self assert: (vh channels anySatisfy: [ :e | e =ch1 ]).
+	self assert: (vh channels anySatisfy: [ :e | e =ch2 ]).  
+
+	"node"
+	"node vhost"
+	node := (model allRMQNodes detect: [:e | e name = 'rabbit@CSLSAASRBS1']).
+	self assert: (vh node = node).
+	self assert: (node vhosts anySatisfy: [ :e | e =vh ]).
+	self assert: node vhosts size = 1.
+	
+	
+	"connection"
+	self assert: model allRMQConnections size = 3.
+	c1 := (model allRMQConnections detect: [:e | e name = '10.238.15.51:49677 -> 10.238.28.5:5672']).
+	c2 := (model allRMQConnections detect: [:e | e name = '10.34.132.254:49779 -> 10.238.28.5:5672']).
+	self assert: c1 peerHost = '10.238.15.51'. 
+	self assert: c1 peerPort = 49677.
+	self assert: c1 host = '10.238.28.5'. 
+	self assert: c1 port = 5672.
+	
+	"connection channels"
+	self assert: (c1 channels anySatisfy: [ :e | e =ch1 ]).
+	self assert: (c2 channels anySatisfy: [ :e | e =ch2 ]).
+	self assert: ch1 connection = c1.
+	self assert: ch2 connection = c2.	
+	
+	"connection users"
+	self assert: (c1 users anySatisfy: [ :e | e =u1 ]).
+	self assert: (c2 users anySatisfy: [ :e | e =u2 ]).
+	self assert: (u1 usedConnections anySatisfy: [ :e | e =c1 ]).
+	self assert: (u2 usedConnections anySatisfy: [ :e | e =c2 ]).
+
+]
+
+{ #category : #'testing - simple' }
 RMQRESTParserTestApiChannels >> testPopulate [
 
 	| vh ch1 ch2 u1 u2 c1 c2 node |

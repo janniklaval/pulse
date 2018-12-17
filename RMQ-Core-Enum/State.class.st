@@ -52,9 +52,9 @@ State >> connections: anObject [
 State >> initialize [
 
 	super initialize.
-	channels := OrderedCollection new.
-	connections := OrderedCollection new.
-	queues := OrderedCollection new.
+	channels := Set new.
+	connections := Set new.
+	queues := Set new.
 	
 ]
 

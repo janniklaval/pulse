@@ -91,13 +91,13 @@ RMQVHost >> exchanges: anObject [
 RMQVHost >> initialize [
 
 	super initialize.
-	users := OrderedCollection new.
-	connections := OrderedCollection new.
-	queues := OrderedCollection new.
-	exchanges := OrderedCollection new.
-	channels := OrderedCollection new.
-	bindings := OrderedCollection new.
-	permissions := OrderedCollection new.
+	users := Set new.
+	connections := Set new.
+	queues := Set new.
+	exchanges := Set new.
+	channels := Set new.
+	bindings := Set new.
+	permissions := Set new.
 ]
 
 { #category : #accessing }

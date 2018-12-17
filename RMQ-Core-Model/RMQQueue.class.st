@@ -152,10 +152,10 @@ RMQQueue >> idleSince: anObject [
 RMQQueue >> initialize [
 
 	super initialize.
-	messages := OrderedCollection new.
-	sendedMessages := OrderedCollection new.
-	consumerChannels := OrderedCollection new.
-	destinationBindings := OrderedCollection new.
+	messages := Set new.
+	sendedMessages := Set new.
+	consumerChannels := Set new.
+	destinationBindings := Set new.
 ]
 
 { #category : #accessing }

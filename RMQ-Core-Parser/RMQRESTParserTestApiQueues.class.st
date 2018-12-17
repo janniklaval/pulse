@@ -1889,6 +1889,88 @@ RMQRESTParserTestApiQueues >> setUp [
 	
 ]
 
+{ #category : #'testing-double-insert' }
+RMQRESTParserTestApiQueues >> testExistingPopulate [
+
+	| t1 t2 vh node |
+	self assert: model size = 20.
+	self assert: model allRMQQueues size = 18.
+	self assert: (model allRMQQueues anySatisfy: [:e | e name = 'smalltalk']).
+	self assert: (model allRMQQueues anySatisfy: [:e | e name = 'amq.gen-obbNfBG_5XX6cl6cQqcjqQ']).
+	
+	t1 := model allRMQQueues detect: [:e | e name = 'smalltalk'].
+	t2 := model allRMQQueues detect: [:e | e name = 'amq.gen-obbNfBG_5XX6cl6cQqcjqQ'].
+
+	self assert: t1 autoDelete = false.
+	self assert: t2 autoDelete = false.
+	
+	vh := (model allRMQVHosts detect: [:e | e name = '/']).
+	self assert: (t1 vhost = vh).
+	self assert: (t2 vhost = vh).
+	self assert: (vh queues anySatisfy: [ :e | e =t1 ]).
+	self assert: (vh queues anySatisfy: [ :e | e =t2 ]).
+	self assert: (vh queues size = 18).	
+		
+	node := (model allRMQNodes detect: [:e | e name = 'rabbit@fceed0d94b94']).
+	self assert: (vh node = node).
+	self assert: (node vhosts anySatisfy: [ :e | e =vh ]).
+	self assert: node vhosts size = 1.
+		
+	self assert: t1 durability = true.
+	self assert: t2 durability = false.
+	
+	
+	self assert: t2 rmqState name = 'State : running'.
+	self assert: (t2 rmqState queues anySatisfy: [:e | e = t2 ]).
+	self assert: t2 exclusive = true.
+	self assert: t2 idleSince = '2018-11-15 13:53:03'.
+	
+	self assert: t1 rmqState name = 'State : running'.
+	self assert: (t2 rmqState queues anySatisfy: [:e | e = t2 ]).
+	self assert: t1 exclusive = false.
+	self assert: t1 idleSince = '2018-11-15 11:12:05'.
+	
+	RMQRESTParserApiQueues populate: model withJson: self data.
+	
+	self assert: model size = 20.
+	self assert: model allRMQQueues size = 18.
+	self assert: (model allRMQQueues anySatisfy: [:e | e name = 'smalltalk']).
+	self assert: (model allRMQQueues anySatisfy: [:e | e name = 'amq.gen-obbNfBG_5XX6cl6cQqcjqQ']).
+	
+	t1 := model allRMQQueues detect: [:e | e name = 'smalltalk'].
+	t2 := model allRMQQueues detect: [:e | e name = 'amq.gen-obbNfBG_5XX6cl6cQqcjqQ'].
+
+	self assert: t1 autoDelete = false.
+	self assert: t2 autoDelete = false.
+	
+	vh := (model allRMQVHosts detect: [:e | e name = '/']).
+	self assert: (t1 vhost = vh).
+	self assert: (t2 vhost = vh).
+	self assert: (vh queues anySatisfy: [ :e | e =t1 ]).
+	self assert: (vh queues anySatisfy: [ :e | e =t2 ]).
+	self assert: (vh queues size = 18).	
+		
+	node := (model allRMQNodes detect: [:e | e name = 'rabbit@fceed0d94b94']).
+	self assert: (vh node = node).
+	self assert: (node vhosts anySatisfy: [ :e | e =vh ]).
+	self assert: node vhosts size = 1.
+		
+	self assert: t1 durability = true.
+	self assert: t2 durability = false.
+	
+	
+	self assert: t2 rmqState name = 'State : running'.
+	self assert: (t2 rmqState queues anySatisfy: [:e | e = t2 ]).
+	self assert: t2 exclusive = true.
+	self assert: t2 idleSince = '2018-11-15 13:53:03'.
+	
+	self assert: t1 rmqState name = 'State : running'.
+	self assert: (t2 rmqState queues anySatisfy: [:e | e = t2 ]).
+	self assert: t1 exclusive = false.
+	self assert: t1 idleSince = '2018-11-15 11:12:05'.
+	
+]
+
 { #category : #'testing - simple' }
 RMQRESTParserTestApiQueues >> testPopulate [
 

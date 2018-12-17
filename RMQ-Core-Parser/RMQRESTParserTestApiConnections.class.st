@@ -414,6 +414,119 @@ RMQRESTParserTestApiConnections >> setUp [
 ]
 
 { #category : #'testing - simple' }
+RMQRESTParserTestApiConnections >> testExistingPopulate [
+
+	| vh u1 u2 c1 c2 node |
+	
+	self assert: model size = 10.
+	"connection"
+	self assert: model allRMQConnections size = 6.
+	c1 := (model allRMQConnections detect: [:e | e name = '10.238.15.51:49677 -> 10.238.28.5:5672']).
+	c2 := (model allRMQConnections detect: [:e | e name = '10.34.132.254:49779 -> 10.238.28.5:5672']).
+	self assert: c1 peerHost = '10.238.15.51'. 
+	self assert: c1 peerPort = 49677.
+	self assert: c1 host = '10.238.28.5'. 
+	self assert: c1 port = 5672.
+	self assert: c1 connectedAt = 1539017432474.
+	
+	self assert: c1 sslProtocol = nil.
+	self assert: c1 ssl = false.
+	self assert: c1 sslHash = nil.
+	self assert: c1 protocol = 'AMQP 0-9-1'.
+	
+	
+	self assert: c1 authMechanism name = 'AuthMechanism : plain'. 
+	self assert: (c1 authMechanism connections anySatisfy: [ :e | e =c1 ]).
+	self assert: c2 authMechanism name = 'AuthMechanism : plain'. 
+	self assert: (c2 authMechanism connections anySatisfy: [ :e | e =c2 ]).
+	
+	"vhost"
+	vh := (model allRMQVHosts detect: [:e | e name = '/']).
+	self assert: (c1 vhost = vh).
+	self assert: (c2 vhost = vh).
+	self assert: (vh connections anySatisfy: [ :e | e =c1 ]).
+	self assert: (vh connections anySatisfy: [ :e | e =c2 ]). 
+	
+	"node"
+	"node vhost"
+	node := (model allRMQNodes detect: [:e | e name = 'rabbit@CSLSAASRBS1']).
+	self assert: (vh node = node).
+	self assert: (node vhosts anySatisfy: [ :e | e =vh ]).
+	self assert: node vhosts size = 1.
+	
+	"users"
+	self assert: model allRMQUsers size = 2.
+	u1 := (model allRMQUsers detect: [:e | e name = 'bus-blsenior']).
+	u2 := (model allRMQUsers detect: [:e | e name = 'bus-consolesaas']).
+	
+	"connection users"
+	self assert: (c1 users anySatisfy: [ :e | e =u1 ]).
+	self assert: (c2 users anySatisfy: [ :e | e =u2 ]).
+	self assert: (u1 usedConnections anySatisfy: [ :e | e =c1 ]).
+	self assert: (u2 usedConnections anySatisfy: [ :e | e =c2 ]).
+	
+	self assert: c1 rmqState name = 'State : running'.
+	self assert: (c1 rmqState connections anySatisfy: [:e | e = c1 ]).
+	self assert: c2 rmqState name = 'State : running'.
+	self assert: (c2 rmqState connections anySatisfy: [:e | e = c2 ]).	
+	
+	RMQRESTParserApiConnections populate: model withJson: self data.
+	
+	self assert: model size = 10.
+	"connection"
+	self assert: model allRMQConnections size = 6.
+	c1 := (model allRMQConnections detect: [:e | e name = '10.238.15.51:49677 -> 10.238.28.5:5672']).
+	c2 := (model allRMQConnections detect: [:e | e name = '10.34.132.254:49779 -> 10.238.28.5:5672']).
+	self assert: c1 peerHost = '10.238.15.51'. 
+	self assert: c1 peerPort = 49677.
+	self assert: c1 host = '10.238.28.5'. 
+	self assert: c1 port = 5672.
+	self assert: c1 connectedAt = 1539017432474.
+	
+	self assert: c1 sslProtocol = nil.
+	self assert: c1 ssl = false.
+	self assert: c1 sslHash = nil.
+	self assert: c1 protocol = 'AMQP 0-9-1'.
+	
+	
+	self assert: c1 authMechanism name = 'AuthMechanism : plain'. 
+	self assert: (c1 authMechanism connections anySatisfy: [ :e | e =c1 ]).
+	self assert: c2 authMechanism name = 'AuthMechanism : plain'. 
+	self assert: (c2 authMechanism connections anySatisfy: [ :e | e =c2 ]).
+	
+	"vhost"
+	vh := (model allRMQVHosts detect: [:e | e name = '/']).
+	self assert: (c1 vhost = vh).
+	self assert: (c2 vhost = vh).
+	self assert: (vh connections anySatisfy: [ :e | e =c1 ]).
+	self assert: (vh connections anySatisfy: [ :e | e =c2 ]). 
+	
+	"node"
+	"node vhost"
+	node := (model allRMQNodes detect: [:e | e name = 'rabbit@CSLSAASRBS1']).
+	self assert: (vh node = node).
+	self assert: (node vhosts anySatisfy: [ :e | e =vh ]).
+	self assert: node vhosts size = 1.
+	
+	"users"
+	self assert: model allRMQUsers size = 2.
+	u1 := (model allRMQUsers detect: [:e | e name = 'bus-blsenior']).
+	u2 := (model allRMQUsers detect: [:e | e name = 'bus-consolesaas']).
+	
+	"connection users"
+	self assert: (c1 users anySatisfy: [ :e | e =u1 ]).
+	self assert: (c2 users anySatisfy: [ :e | e =u2 ]).
+	self assert: (u1 usedConnections anySatisfy: [ :e | e =c1 ]).
+	self assert: (u2 usedConnections anySatisfy: [ :e | e =c2 ]).
+	
+	self assert: c1 rmqState name = 'State : running'.
+	self assert: (c1 rmqState connections anySatisfy: [:e | e = c1 ]).
+	self assert: c2 rmqState name = 'State : running'.
+	self assert: (c2 rmqState connections anySatisfy: [:e | e = c2 ]).	
+
+]
+
+{ #category : #'testing - simple' }
 RMQRESTParserTestApiConnections >> testPopulate [
 
 	| vh u1 u2 c1 c2 node |

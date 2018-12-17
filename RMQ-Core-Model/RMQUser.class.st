@@ -71,14 +71,14 @@ RMQUser >> hashingAlgorithm: anObject [
 RMQUser >> initialize [
 
 	super initialize.
-	usedConnections := OrderedCollection new.
-	vhosts :=OrderedCollection new.
-	usedChannels :=OrderedCollection new.
-	roles :=OrderedCollection new.
-	permissions :=OrderedCollection new.
-	initializedExchanges := OrderedCollection new.
-	initializedChannels  := OrderedCollection new.
-	initializedConnections  := OrderedCollection new.
+	usedConnections := Set new.
+	vhosts :=Set new.
+	usedChannels :=Set new.
+	roles :=Set new.
+	permissions :=Set new.
+	initializedExchanges := Set new.
+	initializedChannels  := Set new.
+	initializedConnections  := Set new.
 ]
 
 { #category : #accessing }

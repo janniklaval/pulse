@@ -20,7 +20,7 @@ DeliveryMode class >> persistent [
 { #category : #accessing }
 DeliveryMode >> initialize [
 	super initialize.
-	messages := OrderedCollection new.
+	messages := Set new.
 ]
 
 { #category : #accessing }

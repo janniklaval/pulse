@@ -149,10 +149,10 @@ RMQComponent >> guid: anObject [
 RMQComponent >> initialize [
 
 	super initialize.
-	senderMessages := OrderedCollection new.
-	subscribedChannels := OrderedCollection new.
-	exchanges := OrderedCollection new.
-	tenants := OrderedCollection new.
+	senderMessages := Set new.
+	subscribedChannels := Set new.
+	exchanges := Set new.
+	tenants := Set new.
 ]
 
 { #category : #accessing }

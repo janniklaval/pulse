@@ -13,7 +13,7 @@ Class {
 RMQRole >> initialize [
 
 	super initialize.
-	users := OrderedCollection new.
+	users := Set new.
 ]
 
 { #category : #accessing }

@@ -43,6 +43,6 @@ ExchangeType >> exchanges: anObject [
 ExchangeType >> initialize [
 
 	super initialize.
-	exchanges := OrderedCollection new.
+	exchanges := Set new.
 	
 ]
