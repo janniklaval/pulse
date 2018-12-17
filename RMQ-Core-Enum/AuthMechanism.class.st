@@ -38,5 +38,5 @@ AuthMechanism >> connections: anObject [
 AuthMechanism >> initialize [
 
 	super initialize.
-	connections := OrderedCollection new.
+	connections := Set new.
 ]

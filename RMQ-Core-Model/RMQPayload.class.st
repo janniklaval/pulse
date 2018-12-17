@@ -23,7 +23,7 @@ RMQPayload >> encoding: anObject [
 { #category : #accessing }
 RMQPayload >> initialize [
 	super initialize.
-	messages := OrderedCollection new.
+	messages := Set new.
 ]
 
 { #category : #accessing }

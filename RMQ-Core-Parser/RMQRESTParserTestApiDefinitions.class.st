@@ -251,7 +251,7 @@ RMQRESTParserApiDefinitions populate: model withQueues: (objects at: 'queues').
 { #category : #'testing-double-insert' }
 RMQRESTParserTestApiDefinitions >> testPopulateExistingUser [
 
-	| user |
+	| user any |
 	RMQRESTParserApiDefinitions populate: model withUsers: (objects at: 'users').
 	RMQRESTParserApiDefinitions populate: model withUsers: (objects at: 'users').
 	
@@ -263,13 +263,14 @@ RMQRESTParserTestApiDefinitions >> testPopulateExistingUser [
 	self assert: user passwordHash = 'RgD5L5W9tmsqQBlVt+VciTra/o4TlfiZALWegc0vH8zVb4PI'.
 	self assert: user hashingAlgorithm = 'rabbit_password_hashing_sha256'.
 	
+	any := model allRMQRoles detect: [:e | e name = 'administrator'].
 	self assert: model allRMQRoles size = 3.
-	self assert: model allRMQRoles first name = 'administrator'.
+	self assert: any name = 'administrator'.
 	
 	self assert: user roles size = 1.
-	self assert: model allRMQRoles first users size = 2.
-	self assert: user roles first = model allRMQRoles first. 
-	self assert: model allRMQRoles first users second = model allRMQUsers first.
+	self assert: any users size = 2.
+	self assert: (user roles anySatisfy: [:e | e = any]). 
+	self assert: (any users anySatisfy: [:e | e = user]).
 
 ]
 
@@ -392,12 +393,11 @@ RMQRESTParserTestApiDefinitions >> testPopulateUser [
 	self assert: t3 roles size = 1.
 	self assert: t4 roles size = 1.
 	
-	self assert: (t1 roles anySatisfy: [:e | e users first = t2]).
-	self assert: (t1 roles anySatisfy: [:e | e users second = t1]).
-	self assert: t2 roles first = t1 roles first.
+	self assert: (t1 roles anyOne users size = 2).
+	self assert: t2 roles anyOne = t1 roles anyOne.
 	
-	self assert: (t3 roles allSatisfy: [:e | e users first = t3]).
-	self assert: (t4 roles allSatisfy: [:e | e users first = t4]).
+	self assert: (t3 roles anyOne users size = 1).
+	self assert: (t4 roles anyOne users size = 1).
 ]
 
 { #category : #'testing - simple' }

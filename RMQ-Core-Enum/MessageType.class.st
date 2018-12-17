@@ -40,7 +40,7 @@ MessageType class >> unacknowledged [
 { #category : #accessing }
 MessageType >> initialize [
 	super initialize.
-	messages := OrderedCollection new.
+	messages := Set new.
 ]
 
 { #category : #accessing }

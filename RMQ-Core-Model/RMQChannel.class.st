@@ -102,9 +102,9 @@ RMQChannel >> idleSince: anObject [
 RMQChannel >> initialize [
 
 	super initialize.
-	users := OrderedCollection new.
-	consumedQueues := OrderedCollection new.
-	subscribedComponents := OrderedCollection new.
+	users := Set new.
+	consumedQueues := Set new.
+	subscribedComponents := Set new.
 	guaranteeMode := GuaranteeMode none.
 	guaranteeMode channels add: self.
 	

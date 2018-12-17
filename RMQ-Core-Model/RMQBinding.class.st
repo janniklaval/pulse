@@ -39,12 +39,6 @@ RMQBinding >> destination: anObject [
 	destination := anObject
 ]
 
-{ #category : #initialization }
-RMQBinding >> initialize [
-	
-	super initialize.
-]
-
 { #category : #accessing }
 RMQBinding >> pulseName [
 

@@ -107,8 +107,8 @@ RMQConnection >> host: anObject [
 RMQConnection >> initialize [
 
 	super initialize.
-	users := OrderedCollection new.
-	channels := OrderedCollection new.
+	users := Set new.
+	channels := Set new.
 ]
 
 { #category : #accessing }

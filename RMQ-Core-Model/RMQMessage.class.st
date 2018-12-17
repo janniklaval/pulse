@@ -67,7 +67,7 @@ RMQMessage >> exchangeFormat: anObject [
 RMQMessage >> initialize [
 
 	super initialize.
-	routedQueues := OrderedCollection new.
+	routedQueues := Set new.
 ]
 
 { #category : #accessing }

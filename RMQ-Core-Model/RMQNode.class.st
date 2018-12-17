@@ -59,7 +59,7 @@ RMQNode >> host: anObject [
 RMQNode >> initialize [
 
 	super initialize.
-	vhosts := OrderedCollection new.
+	vhosts := Set new.
 ]
 
 { #category : #accessing }

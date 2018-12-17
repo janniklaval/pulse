@@ -40,7 +40,7 @@ PermissionType class >> write [
 PermissionType >> initialize [
 
 	super initialize.
-	permissions := OrderedCollection new.
+	permissions := Set new.
 ]
 
 { #category : #accessing }
