@@ -409,7 +409,7 @@ RMQEventParser >> populate: aModel withQueueCreated: aDictionnary at: timestamp 
 
       |queueName queueObject vhost arguments|
 
-		queueName := (aDictionnary at: 'name').
+		queueName := (aDictionnary at: 'name') trimLeft: [ :e | e = '"' ] right: [ :e | e = '"' ].
 		
 		"if the queue does not exist, create it"
 		queueObject := aModel selectOrAddEntityNamed: queueName withType: RMQQueue. "ici on peut avoir une liste ! à revoir dans ex: populate:withQueues: dans RMQRestParser. ++ est ce que cette méthode est définie de façon à rendre une liste ? non juste une entité.  sinon le nom de la resources dans rabbitmq ne doit pas être l'identifiant de l'objet dans le modèle, oui à voir "
