@@ -11,17 +11,6 @@ Class {
 }
 
 { #category : #accessing }
-RMQAuthentification >> authentificationString [
-	<MSEProperty: #authentification type: #String>
-	^ authentificationString
-]
-
-{ #category : #accessing }
-RMQAuthentification >> authentificationString: anObject [
-	authentificationString := anObject
-]
-
-{ #category : #accessing }
 RMQAuthentification >> failureError [
 	<MSEProperty: #failureError type: #Number>
 	^ failureError

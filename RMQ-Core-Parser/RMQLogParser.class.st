@@ -169,7 +169,7 @@ RMQLogParser class >> populate: aModel withJson: aString [
 				detect: [:ch| ch = channel ]
 				ifNone: [
 					component subscribedChannels add: channel.
-					channel subscribedComponents add: component.
+					channel subscribedComponent: component.
 				].
 			
 			component exchanges 

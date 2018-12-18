@@ -11,12 +11,6 @@ Class {
 }
 
 { #category : #parsing }
-RMQEventParser class >> parseChannelCreated: dic [
-
-
-]
-
-{ #category : #parsing }
 RMQEventParser >> populate: aModel withBindingCreated: aDictionnary at: timestamp [
 "aDictionnary : destination_kind source_kind, arguments (aDictionnary), destination_name, routing_key, source_name"
 "todo : set the arguments"
@@ -338,7 +332,7 @@ RMQEventParser >> populate: aModel withExchangeDeleted: aDictionnary at: timesta
 		exchangeObject := aModel entityNamed: (aDictionnary at: 'name') withType: RMQExchange."ici on peut avoir une liste ! à revoir dans ex: populate: aModel withQueues: anArray dans RMQRestParser "
 		
 		exchangeObject ifNotNil: [ 
-			  (exchangeObject vhost name = (aDictionnary at: 'vhost')) ifTrue: [ exchangeObject deletionDate: timestamp ]	  
+			  (exchangeObject vhost pulseName = (aDictionnary at: 'vhost')) ifTrue: [ exchangeObject deletionDate: timestamp ]	  
 			  ]
 	
 			
@@ -368,8 +362,8 @@ RMQEventParser >> populate: aModel withPermissionCreated: aDictionnary at: times
 
          "add the new permission to the model if it doest not exist"
 		permissionObject :=	aModel allRMQPermissions
-					detect: [ :el | el vhost name = vhostName
-								and: [ el user name = userName and: [ el configureValue = configureValue and: [ el writeValue = writeValue and: [el readValue = readValue] ] ] ] ]
+					detect: [ :el | el vhost pulseName = vhostName
+								and: [ el user pulseName = userName and: [ el configureValue = configureValue and: [ el writeValue = writeValue and: [el readValue = readValue] ] ] ] ]
 						ifFound: [ :elementFound | permissionObject := elementFound ]
 						ifNone: [ | newPermission |
 							newPermission := RMQPermission new
@@ -403,7 +397,7 @@ RMQEventParser >> populate: aModel withPermissionDeleted: aDictionnary at: times
 		
 		"a user has only one permission per vhost at a time"
 			aModel allRMQPermissions
-					detect: [ :el | el vhost name = vhostName and: [ el user name = userName  ] ]
+					detect: [ :el | el vhost pulseName = vhostName and: [ el user name = userName  ] ]
 						ifFound: [ :elementFound | permissionObject := elementFound ].
 					
 				permissionObject deletionDate: timestamp. 
@@ -454,7 +448,7 @@ RMQEventParser >> populate: aModel withQueueDeleted: aDictionnary at: timestamp 
 		
 		queueObject := aModel entityNamed: (aDictionnary at: 'name') withType: RMQQueue."ici on peut avoir une liste ! à revoir dans ex: populate: aModel withQueues: anArray dans RMQRestParser "
 		
-		queueObject ifNotNil:[ (queueObject vhost name = (aDictionnary at: 'vhost')) ifTrue: [ queueObject deletionDate: timestamp ]]
+		queueObject ifNotNil:[ (queueObject vhost pulseName = (aDictionnary at: 'vhost')) ifTrue: [ queueObject deletionDate: timestamp ]]
 	
 			
 		

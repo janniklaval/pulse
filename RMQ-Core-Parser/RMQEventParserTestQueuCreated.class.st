@@ -3,15 +3,14 @@ Class {
 	#superclass : #TestCase,
 	#instVars : [
 		'model',
-		'parser'
+		'parser',
+		'consumer'
 	],
 	#category : #'RMQ-Core-Parser'
 }
 
 { #category : #initialization }
 RMQEventParserTestQueuCreated >> setUp [
-
-| consumer |
 
 	model := PulseModel new.
 	model name: 'test'.
@@ -22,7 +21,8 @@ RMQEventParserTestQueuCreated >> setUp [
 	consumer model: model. 
 	consumer parser: parser.
 	
-	consumer consumeQueue: 'events.queue.created'; start.
+	consumer consumeQueue: 'events.queue.created'; start. 
+	10 seconds wait.
 
 ]
 

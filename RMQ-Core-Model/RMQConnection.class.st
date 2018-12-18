@@ -107,7 +107,7 @@ RMQConnection >> host: anObject [
 RMQConnection >> initialize [
 
 	super initialize.
-	users := Set new.
+	"users := Set new."
 	channels := Set new.
 ]
 

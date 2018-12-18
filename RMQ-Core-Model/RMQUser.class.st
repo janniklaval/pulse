@@ -175,7 +175,7 @@ RMQUser >> permissions: anObject [
 
 { #category : #accessing }
 RMQUser >> roles [
-	<MSEProperty: #roles type: #RMQRole opposite:#users>
+	<MSEProperty: #roles type: #RMQRole opposite:#user>
 	<multivalued>
 	^ roles
 ]
@@ -187,7 +187,7 @@ RMQUser >> roles: anObject [
 
 { #category : #accessing }
 RMQUser >> usedChannels [
-	<MSEProperty: #usedChannels type: #RMQChannel opposite:#users>
+	<MSEProperty: #usedChannels type: #RMQChannel opposite:#user>
 	<multivalued>
 	^ usedChannels
 ]
@@ -199,7 +199,7 @@ RMQUser >> usedChannels: anObject [
 
 { #category : #accessing }
 RMQUser >> usedConnections [
-	<MSEProperty: #usedConnections type: #RMQConnection opposite:#users>
+	<MSEProperty: #usedConnections type: #RMQConnection opposite:#user>
 	<multivalued>
 	^ usedConnections
 ]

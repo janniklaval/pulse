@@ -8,14 +8,14 @@ Class {
 		'idleSince',
 		'guaranteeMode',
 		'rmqState',
-		'subscribedComponents',
 		'vhost',
 		'user',
 		'user_who_performed_connection',
 		'creationDate',
 		'closingDate',
 		'consumedQueues',
-		'pid'
+		'pid',
+		'subscribedComponent'
 	],
 	#category : #'RMQ-Core-Model'
 }
@@ -102,17 +102,15 @@ RMQChannel >> idleSince: anObject [
 RMQChannel >> initialize [
 
 	super initialize.
-	users := Set new.
+	"users := Set new."
 	consumedQueues := Set new.
-	subscribedComponents := Set new.
+	"subscribedComponents := Set new."
 	guaranteeMode := GuaranteeMode none.
 	guaranteeMode channels add: self.
 	
 	rmqState := State idle.
 	rmqState channels add: self.
 ]
-
-{ #category : #accessing }
 
 { #category : #accessing }
 RMQChannel >> pid [
@@ -153,20 +151,19 @@ RMQChannel >> rmqState: anObject [
 ]
 
 { #category : #accessing }
-RMQChannel >> subscribedComponents [
-	<MSEProperty: #subscribedComponents type: #RMQComponent opposite:#subscribedChannels>
-	<multivalued>
-	^ subscribedComponents
+RMQChannel >> subscribedComponent [
+	<MSEProperty: #subscribedComponent type: #RMQComponent opposite:#subscribedChannels>
+	^ subscribedComponent
 ]
 
 { #category : #accessing }
-RMQChannel >> subscribedComponents: anObject [
-	subscribedComponents := anObject
+RMQChannel >> subscribedComponent: anObject [
+	subscribedComponent := anObject
 ]
 
 { #category : #accessing }
 RMQChannel >> user [
-	<MSEProperty: #users type: #RMQUser opposite:#usedChannels>
+	<MSEProperty: #user type: #RMQUser opposite:#usedChannels>
 	^ user
 ]
 

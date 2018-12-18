@@ -232,12 +232,12 @@ RMQRESTParserApiDefinitions class >> populate: aModel withUsers: anArray [
 		
 		
 		
-		((aUser at: 'tags') substrings: ',') do:[:aRoleString | "// the tags are separated by ';'"
+		((aUser at: 'tags') substrings: ';') do:[:aRoleString | 
 			|role|			
 			role := aModel selectOrAddEntityNamed: aRoleString withType: RMQRole.
 			(element roles anySatisfy: [ :e | e = role ]) ifFalse: [
 			element roles add: role.
-				role user: element  " // updated by Nawel "
+				role user: element  
 			].
 			
 		].
