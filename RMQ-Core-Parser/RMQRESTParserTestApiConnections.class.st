@@ -460,8 +460,8 @@ RMQRESTParserTestApiConnections >> testExistingPopulate [
 	u2 := (model allRMQUsers detect: [:e | e name = 'bus-consolesaas']).
 	
 	"connection users"
-	self assert: (c1 users anySatisfy: [ :e | e =u1 ]).
-	self assert: (c2 users anySatisfy: [ :e | e =u2 ]).
+	self assert: (c1 user =u1 ).
+	self assert: (c2 user =u2).
 	self assert: (u1 usedConnections anySatisfy: [ :e | e =c1 ]).
 	self assert: (u2 usedConnections anySatisfy: [ :e | e =c2 ]).
 	
@@ -514,8 +514,8 @@ RMQRESTParserTestApiConnections >> testExistingPopulate [
 	u2 := (model allRMQUsers detect: [:e | e name = 'bus-consolesaas']).
 	
 	"connection users"
-	self assert: (c1 users anySatisfy: [ :e | e =u1 ]).
-	self assert: (c2 users anySatisfy: [ :e | e =u2 ]).
+	self assert: (c1 user =u1).
+	self assert: (c2 user =u2 ).
 	self assert: (u1 usedConnections anySatisfy: [ :e | e =c1 ]).
 	self assert: (u2 usedConnections anySatisfy: [ :e | e =c2 ]).
 	
@@ -572,8 +572,8 @@ RMQRESTParserTestApiConnections >> testPopulate [
 	u2 := (model allRMQUsers detect: [:e | e name = 'bus-consolesaas']).
 	
 	"connection users"
-	self assert: (c1 users anySatisfy: [ :e | e =u1 ]).
-	self assert: (c2 users anySatisfy: [ :e | e =u2 ]).
+	self assert: (c1 user =u1 ).
+	self assert: (c2 user =u2 ).
 	self assert: (u1 usedConnections anySatisfy: [ :e | e =c1 ]).
 	self assert: (u2 usedConnections anySatisfy: [ :e | e =c2 ]).
 	

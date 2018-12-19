@@ -131,8 +131,8 @@ RMQRESTParserTestApiConsumers >> testExistingPopulate [
 	self assert: (u1 usedChannels anySatisfy: [ :e | e =ch1 ]).
 	self assert: (u2 usedChannels anySatisfy: [ :e | e =ch2 ]).
 	
-	self assert: (ch1 users anySatisfy: [ :e | e =u1 ]).
-	self assert: (ch2 users anySatisfy: [ :e | e =u2 ]).
+	self assert: (ch1 user =u1).
+	self assert: (ch2 user=u2 ).
 	
 	"connection"
 	self assert: model allRMQConnections size = 3.
@@ -148,8 +148,8 @@ RMQRESTParserTestApiConsumers >> testExistingPopulate [
 	self assert: ch2 connection = c2.	
 	
 	"connection users"
-	self assert: (c1 users anySatisfy: [ :e | e =u1 ]).
-	self assert: (c2 users anySatisfy: [ :e | e =u2 ]).
+	self assert: (c1 user =u1 ).
+	self assert: (c2 user =u2 ).
 	self assert: (u1 usedConnections anySatisfy: [ :e | e =c1 ]).
 	self assert: (u2 usedConnections anySatisfy: [ :e | e =c2 ]).
 	
@@ -206,8 +206,8 @@ RMQRESTParserTestApiConsumers >> testExistingPopulate [
 	self assert: (u1 usedChannels anySatisfy: [ :e | e =ch1 ]).
 	self assert: (u2 usedChannels anySatisfy: [ :e | e =ch2 ]).
 	
-	self assert: (ch1 users anySatisfy: [ :e | e =u1 ]).
-	self assert: (ch2 users anySatisfy: [ :e | e =u2 ]).
+	self assert: (ch1 user =u1 ).
+	self assert: (ch2 user=u2 ).
 	
 	"connection"
 	self assert: model allRMQConnections size = 3.
@@ -223,8 +223,8 @@ RMQRESTParserTestApiConsumers >> testExistingPopulate [
 	self assert: ch2 connection = c2.	
 	
 	"connection users"
-	self assert: (c1 users anySatisfy: [ :e | e =u1 ]).
-	self assert: (c2 users anySatisfy: [ :e | e =u2 ]).
+	self assert: (c1 user =u1 ).
+	self assert: (c2 user =u2 ).
 	self assert: (u1 usedConnections anySatisfy: [ :e | e =c1 ]).
 	self assert: (u2 usedConnections anySatisfy: [ :e | e =c2 ]).
 	
@@ -286,8 +286,8 @@ RMQRESTParserTestApiConsumers >> testPopulate [
 	self assert: (u1 usedChannels anySatisfy: [ :e | e =ch1 ]).
 	self assert: (u2 usedChannels anySatisfy: [ :e | e =ch2 ]).
 	
-	self assert: (ch1 users anySatisfy: [ :e | e =u1 ]).
-	self assert: (ch2 users anySatisfy: [ :e | e =u2 ]).
+	self assert: (ch1 user =u1).
+	self assert: (ch2 user =u2).
 	
 	"connection"
 	self assert: model allRMQConnections size = 3.
@@ -303,8 +303,8 @@ RMQRESTParserTestApiConsumers >> testPopulate [
 	self assert: ch2 connection = c2.	
 	
 	"connection users"
-	self assert: (c1 users anySatisfy: [ :e | e =u1 ]).
-	self assert: (c2 users anySatisfy: [ :e | e =u2 ]).
+	self assert: (c1 user =u1 ).
+	self assert: (c2 user =u2 ).
 	self assert: (u1 usedConnections anySatisfy: [ :e | e =c1 ]).
 	self assert: (u2 usedConnections anySatisfy: [ :e | e =c2 ]).
 	

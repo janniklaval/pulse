@@ -41,7 +41,6 @@ RMQRole >> tag: anObject [
 { #category : #accessing }
 RMQRole >> users [
 	<MSEProperty: #users type: #RMQUser opposite:#roles>
-	<multivalued>
 	^ users
 ]
 

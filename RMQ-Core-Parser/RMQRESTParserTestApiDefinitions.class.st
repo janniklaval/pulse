@@ -298,11 +298,11 @@ RMQRESTParserTestApiDefinitions >> testPopulatePermission [
 	| p1 p2 vh1 vh2 user |
 	RMQRESTParserApiDefinitions populate: model withPermissions: (objects at: 'permissions').
 	
-	self assert: model allRMQPermissions size = 6.
+	self assert: model allRMQPermissions size = 2.
 	
 	
-	p1 := model allRMQPermissions detect:[:e | e user name = 'guest' and:[e type rmqState = 'configure'and:[e vhost name = '/']]].
-	p2 := model allRMQPermissions detect:[:e | e user name = 'guest' and:[e type rmqState = 'read'and:[e vhost name = '/2']]].
+	p1 := model allRMQPermissions detect:[:e | e user name = 'guest' and:["e type rmqState = 'configure'and:["e vhost name = '/']].
+	p2 := model allRMQPermissions detect:[:e | e user name = 'guest' and:["e type rmqState = 'read'and:["e vhost name = '/2']].
 	
 	vh1 := (model allRMQVHosts detect: [:e | e name = '/']).
 	vh2 := (model allRMQVHosts detect: [:e | e name = '/2']).
@@ -317,7 +317,7 @@ RMQRESTParserTestApiDefinitions >> testPopulatePermission [
 	
 	self assert: p1 user = user.
 	self assert: p2 user = user.
-	self assert: (user permissions size = 6).
+	self assert: (user permissions size = 2).
 	self assert: (user permissions anySatisfy: [ :e | e =p1 ]).
 	self assert: (user permissions anySatisfy: [ :e | e =p2 ]).
 ]

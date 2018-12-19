@@ -450,7 +450,7 @@ RMQRESTParserApiConnections class >> populate: aModel withJson: aString [
 				newNode ].
 			
 		user := aModel selectOrAddEntityNamed:  (anObject at: 'user') withType: RMQUser.
-		connection users add: user.
+		connection user: user.
 		user usedConnections add: connection.
 		
 		

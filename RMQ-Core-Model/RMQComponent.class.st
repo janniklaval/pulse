@@ -213,7 +213,7 @@ RMQComponent >> senderMessages: anObject [
 
 { #category : #accessing }
 RMQComponent >> subscribedChannels [
-	<MSEProperty: #subscribedChannels type: #RMQChannel opposite:#subscribedComponents>
+	<MSEProperty: #subscribedChannels type: #RMQChannel opposite:#subscribedComponent>
 	<multivalued>
 	^ subscribedChannels
 ]
