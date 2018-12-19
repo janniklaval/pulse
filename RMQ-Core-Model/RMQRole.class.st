@@ -39,9 +39,9 @@ RMQRole >> tag: anObject [
 ]
 
 { #category : #accessing }
-RMQRole >> user [
-	<MSEProperty: #user type: #RMQUser opposite:#roles>
-	^ user
+RMQRole >> users [
+	<MSEProperty: #users type: #RMQUser opposite:#roles>
+	^ users
 ]
 
 { #category : #accessing }

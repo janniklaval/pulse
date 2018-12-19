@@ -129,7 +129,7 @@ RMQRESTParserApiConsumers class >> populate: aModel withJson: aString [
 		
 		connection channels add: channel.
 		channel connection: connection.
-		connection users add: user.
+		connection user: user.
 		user usedConnections add: connection.
 	]
 ]
