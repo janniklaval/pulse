@@ -2,7 +2,7 @@ Class {
 	#name : #RMQRole,
 	#superclass : #PulseEntity,
 	#instVars : [
-		'user',
+		'users',
 		'tag',
 		'settingDate'
 	],
@@ -13,7 +13,7 @@ Class {
 RMQRole >> initialize [
 
 	super initialize.
-	"users := Set new."
+	users := Set new.
 ]
 
 { #category : #accessing }
@@ -45,6 +45,6 @@ RMQRole >> users [
 ]
 
 { #category : #accessing }
-RMQRole >> user: anObject [
-	user := anObject
+RMQRole >> users: anObject [
+	users := anObject
 ]

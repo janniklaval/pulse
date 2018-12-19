@@ -19,6 +19,13 @@ BaselineOfRMQ >> baseline: spec [
 			"with: [ spec
 						repository: 'http://www.squeaksource.com/AMQP' ]".
 		
+		spec configuration: 'Orion'
+			with: [ spec
+					className: 'ConfigurationOfOrion';
+					loads: #('03-baseline');
+					file: 'ConfigurationOfOrion';
+					repository: 'http://smalltalkhub.com/mc/Moose/Orion/main' ].
+		
 		spec
  			group: 'default' with: #( 'RMQ-Core-Enum' 'RMQ-Core-Model' 'RMQ-Core-Parser' 'RMQ-Core-Visualization' 'Amqp' ).
 	].
