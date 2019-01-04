@@ -135,11 +135,6 @@ RMQChannel >> prefetchCount: anObject [
 ]
 
 { #category : #accessing }
-RMQChannel >> reationDate: anObject [
-	reationDate := anObject
-]
-
-{ #category : #accessing }
 RMQChannel >> rmqState [
 	<MSEProperty: #rmqState type: #State opposite: #channels>
 	^ rmqState

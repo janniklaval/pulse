@@ -79,6 +79,7 @@ RMQUser >> initialize [
 	initializedExchanges := Set new.
 	initializedChannels  := Set new.
 	initializedConnections  := Set new.
+	authentifications := Set new. 
 ]
 
 { #category : #accessing }
