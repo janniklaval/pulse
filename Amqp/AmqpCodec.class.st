@@ -21,7 +21,7 @@ AmqpCodec >> nextArray [
 		[stream peek notNil] whileTrue: [
 			type := self nextOctet.
 			val := self nextTableValue: type.
-			array add: val]].
+			array := val]]. "add: val pas bon -> at: array (size +1) put: val ??"
 	^ array
 ]
 
