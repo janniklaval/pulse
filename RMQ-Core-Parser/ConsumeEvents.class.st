@@ -11,6 +11,13 @@ Class {
 }
 
 { #category : #amqp }
+ConsumeEvents >> bindQueue: qname withExchange: exname routingKey: key [
+
+channel 
+		queueBind: qname exchange: exname routingKey: key. 
+]
+
+{ #category : #amqp }
 ConsumeEvents >> consumeQueue [
 "// for tests "
 ": key
@@ -39,18 +46,77 @@ ConsumeEvents >> consumeQueue: key [
 		passive: false
 		arguments: nil) method queue.
    channel queueBind: queueName exchange: self definedExchange routingKey: key."
-   consumerTag := channel consumeFrom: key callback: self selector: #handleDeliveryQueueCreated:.
+   consumerTag := channel consumeFrom: key callback: self selector: #handleDelivery:.
 
 ]
 
 { #category : #amqp }
+ConsumeEvents >> createExchange: exchangeName type: typeName [
+
+channel 
+	exchangeDeclare: exchangeName type: typeName
+]
+
+{ #category : #amqp }
+ConsumeEvents >> createQueue: qname [ 
+
+channel 
+		queueDeclare: qname
+		durable: false
+		exclusive: false
+		autoDelete: false
+		passive: false
+		arguments: nil.
+]
+
+{ #category : #amqp }
+ConsumeEvents >> deleteExchange: exname [ 
+
+channel 
+		exchangeDelete: exname.
+]
+
+{ #category : #amqp }
+ConsumeEvents >> deleteQueue: qname [ 
+
+channel 
+		queueDelete: qname.
+]
+
+{ #category : #amqp }
 ConsumeEvents >> handleDelivery: delivery [
-"// for tests"
-	| str |
-	str := 'headers: ', delivery properties headers printString, 'timestamp: ', delivery properties timestamp printString.
-	 "delivery properties headers printString , delivery properties messageId printString. "
-	Transcript cr; nextPutAll: 'Received delivery: ', str; flush.
-	channel basicAck: delivery method deliveryTag. 
+
+	| routingKey headersDictionnary timestamp  |
+	
+	routingKey := (delivery method routingKey) trimLeft: [ :e | e = '"' ] right: [ :e | e = '"' ]. 
+	headersDictionnary := delivery properties headers. 
+	timestamp := delivery properties timestamp. 
+	
+	(routingKey = 'queue.created') ifTrue: [ self parser populate: self model withQueueCreated: headersDictionnary at: timestamp ]. 
+	(routingKey = 'queue.deleted') ifTrue: [ self parser populate: self model withQueueDeleted: headersDictionnary at: timestamp ]. 
+	(routingKey = 'exchange.created') ifTrue: [ self parser populate: self model withExchangeCreated: headersDictionnary at: timestamp ]. 
+	(routingKey = 'exchange.deleted') ifTrue: [ self parser populate: self model withExchangeDeleted: headersDictionnary at: timestamp ]. 
+	(routingKey = 'binding.created') ifTrue: [ self  parser populate: self model withBindingCreated: headersDictionnary at: timestamp ]. 
+	(routingKey = 'binding.deleted') ifTrue: [ self parser populate: self model withBindingDeleted: headersDictionnary at: timestamp ]. 
+	(routingKey = 'connection.created') ifTrue: [ self parser populate: self model withConnectionCreated: headersDictionnary at: timestamp ]. 
+	(routingKey = 'connection.closed') ifTrue: [ self parser populate: self model withConnectionClosed: headersDictionnary at: timestamp ]. 
+	(routingKey = 'channel.created') ifTrue: [ self parser populate: self model withChannelCreated: headersDictionnary at: timestamp ]. 
+	(routingKey = 'channel.closed') ifTrue: [ self parser populate: self model withChannelClosed: headersDictionnary at: timestamp ]. 
+	(routingKey = 'consumer.created') ifTrue: [ self parser populate: self model withConsumerCreated: headersDictionnary at: timestamp ]. 
+	(routingKey = 'consumer.deleted') ifTrue: [ self parser populate: self model withConsumerDeleted: headersDictionnary at: timestamp ]. 
+	(routingKey = 'vhost.created') ifTrue: [ self parser populate: self model withVhostCreated:  headersDictionnary at: timestamp ]. 
+	(routingKey = 'vhost.deleted') ifTrue: [ self parser populate: self model withVhostDeleted: headersDictionnary at: timestamp ]. 
+	(routingKey = 'user.created') ifTrue: [ self parser populate: self model withUserCreated: headersDictionnary at: timestamp ]. 
+	(routingKey = 'user.deleted') ifTrue: [ self parser populate: self model withUserDeleted: headersDictionnary at: timestamp ]. 
+	(routingKey = 'user.authentication.success') ifTrue: [ self parser populate: self model withUserAuthenticationSucceeded: headersDictionnary at: timestamp ]. 
+	(routingKey = 'user.authentication.failure') ifTrue: [ self parser populate: self model withUserAuthenticationFailed: headersDictionnary at: timestamp ]. 
+	(routingKey = 'user.password.changed') ifTrue: [ self parser populate: self model withUserPasswordChanged: headersDictionnary at: timestamp ].
+	(routingKey = 'user.password.cleared') ifTrue: [ self parser populate: self model withUserPasswordCleared: headersDictionnary at: timestamp ].
+	(routingKey = 'user.tags.set') ifTrue: [ self parser populate: self model withUserTagsSet: headersDictionnary at: timestamp ]. 
+	(routingKey = 'permission.created') ifTrue: [ self parser populate: self model withPermissionCreated: headersDictionnary at: timestamp ]. 
+	(routingKey = 'permission.deleted') ifTrue: [ self parser populate: self model withPermissionDeleted: headersDictionnary at: timestamp ]. 
+	
+	channel basicAck: delivery method deliveryTag.  
 ]
 
 { #category : #amqp }
@@ -117,6 +183,16 @@ ConsumeEvents >> handleDeliveryQueueCreated: delivery [
 	channel basicAck: delivery method deliveryTag. 
 ]
 
+{ #category : #amqp }
+ConsumeEvents >> handleDeliveryTest: delivery [
+"// for tests"
+	| str |
+	str := 'headers: ', delivery properties headers printString, 'timestamp: ', delivery properties timestamp printString.
+	 "delivery properties headers printString , delivery properties messageId printString. "
+	Transcript cr; nextPutAll: 'Received delivery: ', str; flush.
+	channel basicAck: delivery method deliveryTag. 
+]
+
 { #category : #initialization }
 ConsumeEvents >> initialize [
 	super initialize.
@@ -147,4 +223,11 @@ ConsumeEvents >> parser [
 { #category : #accessing }
 ConsumeEvents >> parser: anObject [
 	parser := anObject
+]
+
+{ #category : #amqp }
+ConsumeEvents >> purgeQueue: qname [ 
+
+channel 
+		queuePurge: qname.
 ]

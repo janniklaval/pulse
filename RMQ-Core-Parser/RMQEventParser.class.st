@@ -17,9 +17,11 @@ RMQEventParser >> populate: aModel withBindingCreated: aDictionnary at: timestam
 	
 	| bindingObject source destination routingKey destType sourceName destinationName newBinding |
 		
-	destType := (aDictionnary at: 'destination_kind').
-	sourceName := (aDictionnary at: 'source_name').
-	destinationName := (aDictionnary at: 'destination_name').
+	destType := (aDictionnary at: 'destination_kind') trimLeft: [ :e | e = '"' ] right: [ :e | e = '"' ].
+	sourceName := (aDictionnary at: 'source_name') trimLeft: [ :e | e = '"' ] right: [ :e | e = '"' ].
+	destinationName := (aDictionnary at: 'destination_name') trimLeft: [ :e | e = '"' ] right: [ :e | e = '"' ].
+	
+	"Transcript cr; nextPutAll: 'destType: ', destType, ' sourceName: ' ,sourceName, ' destinationName: ', destinationName ; flush."
 	
 	
    source:= aModel selectOrAddEntityNamed: sourceName withType: RMQExchange.
@@ -121,7 +123,7 @@ RMQEventParser >> populate: aModel withChannelCreated: aDictionnary at: timestam
    "todo : set the related connection's pid "
       | channelObject vhost user connection|
       
-		channelObject := aModel selectOrAddEntityNamed: (aDictionnary at: 'name') withType: RMQExchange.
+		channelObject := aModel selectOrAddEntityNamed: (aDictionnary at: 'name') withType: RMQChannel.
 		
 		channelObject creationDate: timestamp.
 		channelObject pid: (aDictionnary at: 'pid').
@@ -136,7 +138,7 @@ RMQEventParser >> populate: aModel withChannelCreated: aDictionnary at: timestam
 
      "if the pid is unique"
      connection :=	aModel allRMQConnections
-					detect: [ :element | element pid = aDictionnary at: 'connection' ]
+					detect: [ :element | element pid = (aDictionnary at: 'connection') ]
 					ifFound: [ :elementFound | 
 			                 elementFound ]
 		          ifNone: [  ]. "// créer la connection ??"
@@ -157,7 +159,7 @@ RMQEventParser >> populate: aModel withConnectionClosed: aDictionnary at: timest
 
      | connectionObject  |
      
-     connectionObject := aModel allRMQBindings
+     connectionObject := aModel allRMQConnections
 	  detect: [ :element | element pid = (aDictionnary at: 'pid') ]
 	  ifFound: [ :elementFound | 
 			elementFound ].
@@ -190,7 +192,7 @@ aDictionnary (timestamp_in_ms:	1544196873787, pid:	<rabbit@fceed0d94b94.3.12113.
 		connectionObject := aModel entityNamed: connectionName withType: RMQConnection
 	   ifAbsent:[ 
 		| newConnection |
-				newConnection := RMQExchange new
+				newConnection := RMQConnection new
 					pulseName: connectionName.
 				
 	  newConnection pid: (aDictionnary at: 'pid').
@@ -227,7 +229,7 @@ aDictionnary (timestamp_in_ms:	1544196873787, pid:	<rabbit@fceed0d94b94.3.12113.
 		
 	 "create user if needed and link to  user "
 	 vhost :=	aModel selectOrAddEntityNamed: (aDictionnary at: 'vhost') withType: RMQVHost.
-    (vhost usedConnections anySatisfy: [ :e | e = connectionObject ]) ifFalse: [
+    (vhost connections anySatisfy: [ :e | e = connectionObject ]) ifFalse: [
 			  vhost connections add: connectionObject.
 			  connectionObject vhost: vhost 
 			].
@@ -237,14 +239,14 @@ aDictionnary (timestamp_in_ms:	1544196873787, pid:	<rabbit@fceed0d94b94.3.12113.
 RMQEventParser >> populate: aModel withConsumerCreated: aDictionnary at: timestamp [
    "aDictionnary ( vhost, consumer_tag, channel(pid), exclusive, arguments, ack_required, queue)"
 
-      | componentObject newComponent  vhost channel |
+      | componentObject newComponent  vhost channel newChannel relatedQueue |
 
-		vhost:= aModel entityNamed: (aDictionnary at: 'vhost') withType: RMQVHost.
+		vhost:= aModel selectOrAddEntityNamed: (aDictionnary at: 'vhost') withType: RMQVHost.
 		
 		"// find the consumer with the right channel and vhost"
 	   componentObject := aModel allRMQComponents
 		detect: [ :element | element consumerTag = (aDictionnary at: 'consumer_tag') 
-			and: [ element subscribedChannels anySatisfy: [ :el | el pid = aDictionnary at: 'channel' and: [ el  vhost = vhost] ] ]		
+			and: [ element subscribedChannels anySatisfy: [ :el | el pid = (aDictionnary at: 'channel') and: [ el  vhost = vhost] ] ]		
 			 ]
 		ifFound: [ :elementFound | 
 			elementFound ]
@@ -256,13 +258,22 @@ RMQEventParser >> populate: aModel withConsumerCreated: aDictionnary at: timesta
 			
 		componentObject creationDate: timestamp. 
 		
-		"trouver la channel et la lier au consumer "
+		relatedQueue := aModel selectOrAddEntityNamed: (aDictionnary at: 'queue') withType: RMQQueue. . 
+		
+		"trouver la channel et la lier au consumer sinon la créer, set son subscribedComponent, pid, consumedQueues et vhost"
 		channel :=	aModel allRMQChannels
-					detect: [ :el | el pid = aDictionnary at: 'channel' and: [ el  vhost = vhost] ]
+					detect: [ :el | el pid = (aDictionnary at: 'channel') and: [ el  vhost = vhost] ]
 					ifFound: [ :elementFound | 
 			                 elementFound ]
-		          ifNone: [  ]. "// créer la channel ??"
-		componentObject connection: channel. 
+		          ifNone: [ newChannel := RMQChannel new.
+			                 newChannel subscribedComponent: componentObject.
+			                 newChannel pid: (aDictionnary at: 'channel').
+			                 newChannel consumedQueues add: relatedQueue. 
+			                 newChannel vhost: vhost.
+			                 aModel add: newChannel.
+			                 newChannel  ]. 
+		
+		componentObject subscribedChannels add: channel. 
 
 
 ]
@@ -278,7 +289,7 @@ RMQEventParser >> populate: aModel withConsumerDeleted: aDictionnary at: timesta
 	   componentObject := aModel allRMQComponents
 		detect: [ :element | element consumerTag = (aDictionnary at: 'consumer_tag') 
 			"and the channels of the consumer are on the right vhost"
-			and: [ element subscribedChannels anySatisfy: [ :el | el pid = aDictionnary at: 'channel' and: [ el  vhost = vhost] ] ]				
+			and: [ element subscribedChannels anySatisfy: [ :el | el pid = (aDictionnary at: 'channel') and: [ el  vhost = vhost] ] ]				
 			 ]
 		ifFound: [ :elementFound | 
 			elementFound ].
@@ -314,26 +325,29 @@ RMQEventParser >> populate: aModel withExchangeCreated: aDictionnary at: timesta
 		
 		
 		args := (aDictionnary at: 'arguments').
-		
+		args isEmpty ifFalse:[
 	   altExchName := (args at: 'alternate-exchange' ifAbsent:[nil]).
 		altExchName ifNotNil:[
 			altExch := aModel selectOrAddEntityNamed: altExchName withType: RMQExchange.
 			exchangeObject my_alternate_exchange: altExch.
 			altExch alternate_exchange_for add: exchangeObject.
-		].
+		].]
 ]
 
 { #category : #parsing }
 RMQEventParser >> populate: aModel withExchangeDeleted: aDictionnary at: timestamp [
-   "a Dictionary( 'vhost'->'/' 'name'->'echangename' )"
+   "a Dictionary( 'vhost'->'/' 'name'->'exchangename' )"
 
-      | exchangeObject |
+      | exchangeObject exchangeName vhostName |
 		
-		exchangeObject := aModel entityNamed: (aDictionnary at: 'name') withType: RMQExchange."ici on peut avoir une liste ! à revoir dans ex: populate: aModel withQueues: anArray dans RMQRestParser "
+		exchangeName := (aDictionnary at: 'name') trimLeft: [ :e | e = '"' ] right: [ :e | e = '"' ].
+		vhostName := (aDictionnary at: 'vhost') trimLeft: [ :e | e = '"' ] right: [ :e | e = '"' ]. 
+		"exchangeObject := aModel entityNamed: (aDictionnary at: 'name') withType: RMQExchange.""ici on peut avoir une liste ! à revoir dans ex: populate: aModel withQueues: anArray dans RMQRestParser "
+		"avec detect"
+		 aModel allRMQExchanges detect:[ :el | el pulseName =  exchangeName and:[ el vhost pulseName = vhostName] ]
+		                        ifFound: [ :elementFound | exchangeObject := elementFound ].  
 		
-		exchangeObject ifNotNil: [ 
-			  (exchangeObject vhost pulseName = (aDictionnary at: 'vhost')) ifTrue: [ exchangeObject deletionDate: timestamp ]	  
-			  ]
+		exchangeObject ifNotNil: [ (exchangeObject vhost name = vhostName) ifTrue: [ exchangeObject deletionDate: timestamp. ] ]
 	
 			
 		
@@ -444,11 +458,15 @@ RMQEventParser >> populate: aModel withQueueCreated: aDictionnary at: timestamp 
 RMQEventParser >> populate: aModel withQueueDeleted: aDictionnary at: timestamp [
    "a Dictionary( 'vhost'->'/' 'name'->'Queue' )"
 
-      |queueObject|
+      |queueObject vhostName queueName |
 		
-		queueObject := aModel entityNamed: (aDictionnary at: 'name') withType: RMQQueue."ici on peut avoir une liste ! à revoir dans ex: populate: aModel withQueues: anArray dans RMQRestParser "
+      queueName := (aDictionnary at: 'name') trimLeft: [ :e | e = '"' ] right: [ :e | e = '"' ].
+		vhostName := (aDictionnary at: 'vhost') trimLeft: [ :e | e = '"' ] right: [ :e | e = '"' ]. 
+		"queueObject := aModel entityNamed: (aDictionnary at: 'name') withType: RMQQueue.""ici on peut avoir une liste ! à revoir dans ex: populate: aModel withQueues: anArray dans RMQRestParser "
+		aModel allRMQQueues detect:[ :el | el pulseName = queueName and:[ el vhost pulseName =  vhostName] ]
+		                        ifFound: [ :elementFound | queueObject := elementFound ].  
 		
-		queueObject ifNotNil:[ (queueObject vhost pulseName = (aDictionnary at: 'vhost')) ifTrue: [ queueObject deletionDate: timestamp ]]
+		queueObject ifNotNil:[ (queueObject vhost pulseName = vhostName) ifTrue: [ queueObject deletionDate: timestamp ]]
 	
 			
 		
@@ -484,7 +502,7 @@ error:	117...   // the error is in ascii"
   user authentifications add: authentificationObject.
 
   "set the authentification state"
-  authentificationObject success: False. 
+  authentificationObject success: false. 
   authentificationObject failureError: (aDictionnary at: 'error').
   authentificationObject timestamp: timestamp. 
 
@@ -498,7 +516,7 @@ error:	117...   // the error is in ascii"
 	connection := aModel entityNamed: connectionName withType: RMQConnection
 	ifAbsent:[ 
 		| newConnection |
-				newConnection := RMQExchange new
+				newConnection := RMQConnection new
 					pulseName: connectionName.
 				
 	  newConnection connectionType: (aDictionnary at: 'connection_type').
@@ -539,7 +557,7 @@ aDictionnary (connection_type:	direct, name:	admin, timestamp_in_ms:	15284543543
   user authentifications add: authentificationObject.
 
   "set the authentification state"
-  authentificationObject success: True. 
+  authentificationObject success: true. 
   authentificationObject timestamp: timestamp. 
 
   aModel add: authentificationObject. 
@@ -552,7 +570,7 @@ aDictionnary (connection_type:	direct, name:	admin, timestamp_in_ms:	15284543543
 	connection := aModel entityNamed: connectionName withType: RMQConnection
 	ifAbsent:[ 
 		| newConnection |
-				newConnection := RMQExchange new
+				newConnection := RMQConnection new
 					pulseName: connectionName.
 				
 	  newConnection connectionType: (aDictionnary at: 'connection_type').
@@ -671,7 +689,12 @@ RMQEventParser >> populate: aModel withVhostDeleted: aDictionnary at: timestamp 
  "timestamp_in_ms:	1544113907521, name:	testtest"
     | vhostObject |
 		
-		vhostObject := aModel entityNamed: (aDictionnary at: 'name') withType: RMQVHost.
+		"vhostObject := aModel entityNamed: (aDictionnary at: 'name') withType: RMQVHost."
+		
+	  aModel allRMQVHosts
+					detect: [ :el | el pulseName = (aDictionnary at: 'name')  ]
+						ifFound: [ :elementFound | vhostObject := elementFound ]. 
+						
 		vhostObject ifNotNil: [ vhostObject deletionDate: timestamp. ]
 	
 ]
