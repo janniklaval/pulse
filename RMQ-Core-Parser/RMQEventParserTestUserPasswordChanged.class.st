@@ -36,6 +36,6 @@ RMQEventParserTestUserPasswordChanged >> setUp [
 { #category : #tests }
 RMQEventParserTestUserPasswordChanged >> testModelPopulation [
 
-	self assert: (model allRMQUsers anySatisfy: [:element | element name = 'testuser' and:[ element creationDate isNotNil ] ]).
+	self assert: (model allRMQUsers anySatisfy: [:element | element name = 'testuser' and:[ element passwordChangingDate isNotNil ] ]).
 
 ]
