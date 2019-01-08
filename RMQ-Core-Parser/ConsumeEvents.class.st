@@ -231,3 +231,10 @@ ConsumeEvents >> purgeQueue: qname [
 channel 
 		queuePurge: qname.
 ]
+
+{ #category : #amqp }
+ConsumeEvents >> unbindQueue: qname withExchange: exname routingKey: key [
+
+channel 
+		queueUnbind: qname exchange: exname routingKey: key. 
+]

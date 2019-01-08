@@ -30,25 +30,25 @@ RMQEventParserTestBindingCreated >> setUp [
 	"consumer purgeQueue: 'events.binding.created'."
 	
 	"cretate an exchange, a queue and bind them"
-	"consumer createExchange: 'test.create.exchangeforbinding'  type: 'topic'.
+	consumer createExchange: 'test.create.exchangeforbinding'  type: 'topic'.
 	consumer createQueue: 'test.create.queueforbinding'.
-	consumer bindQueue: 'test.create.queueforbinding' withExchange: 'test.create.exchangeforbinding' routingKey: 'key'. "
+	consumer bindQueue: 'test.create.queueforbinding' withExchange: 'test.create.exchangeforbinding' routingKey: 'key'. 
+	1 seconds wait.
+	
+	"delete the created resource"
+	consumer deleteExchange: 'test.create.exchangeforbinding'.
+	consumer deleteQueue: 'test.create.queueforbinding'. 
+	1 seconds wait.
 	
 	"consume from the events queue"
 	consumer consumeQueue: 'events.binding.created'; start. 
-	"3 seconds wait."
-	
-	"delete the created resource"
-	"consumer deleteExchange: 'test.create.exchangeforbinding'.
-	consumer deleteQueue: 'test.create.queueforbinding'. "
-
+	2 seconds wait.
 ]
 
 { #category : #tests }
 RMQEventParserTestBindingCreated >> testModelPopulation [
 
-	self assert: (model allRMQExchanges anySatisfy: [:element | element name = 'amq.rabbitmq.event']).
-	self assert: (model allRMQQueues anySatisfy: [:element | element name = 'events.consumer.created']).
-	self assert: (model allRMQBindings anySatisfy: [ :el | el source = 'amq.rabbitmq.event' and: [ el destination = 'events.consumer.created' ] ]).
-	"and:[ element creationDate isNotNil ]"
+	self assert: (model allRMQExchanges anySatisfy: [:element | element name = 'test.create.exchangeforbinding']).
+	self assert: (model allRMQQueues anySatisfy: [:element | element name = 'test.create.queueforbinding']).
+	self assert: (model allRMQBindingWithQueues anySatisfy: [ :el | el source name = 'test.create.exchangeforbinding' and: [ el destination name = 'test.create.queueforbinding' and:[ el creationDate isNotNil ]] ]).
 ]
