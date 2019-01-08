@@ -14,7 +14,7 @@ ExchangeType class >> direct [
 
 { #category : #accessing }
 ExchangeType class >> fanout [
-	^ self new rmqState: #fanout
+	^  self new rmqState: #fanout
 ]
 
 { #category : #accessing }

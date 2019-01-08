@@ -109,15 +109,15 @@ RMQRESTParserApiConsumers class >> populate: aModel withJson: aString [
 		queue consumerChannels add: channel.
 		
 		user := aModel selectOrAddEntityNamed: ((anObject at: 'channel_details') at: 'user') withType: RMQUser.
-		channel users add: user.
+		channel user: user.
 		user usedChannels add: channel.
 		
 		node := aModel entityNamed: ((anObject at: 'channel_details') at: 'node') withType: RMQNode
 			ifAbsent:[  
 				|newNode |
 				newNode := RMQNode new
-					pulseName: ((anObject at: 'channel_details') at: 'node').
-				aModel add: newNode.
+					pulseName: ((anObject at: 'channel_details') at: 'node');
+					mooseModel: aModel.
 				vhost node: newNode.
 				newNode vhosts add: vhost.
 				newNode ].
@@ -129,7 +129,7 @@ RMQRESTParserApiConsumers class >> populate: aModel withJson: aString [
 		
 		connection channels add: channel.
 		channel connection: connection.
-		connection users add: user.
+		connection user: user.
 		user usedConnections add: connection.
 	]
 ]

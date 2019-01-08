@@ -10,12 +10,12 @@ Class {
 
 { #category : #accessing }
 Durability class >> durable [
-	^ self new state: #durable
+	^self new rmqState: #durable	
 ]
 
 { #category : #accessing }
 Durability class >> transient [
-	^ self new state: #transient
+	^ self new rmqState: #transient
 ]
 
 { #category : #accessing }

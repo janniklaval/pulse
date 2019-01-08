@@ -2,23 +2,23 @@ Class {
 	#name : #RMQAuthentification,
 	#superclass : #PulseEntity,
 	#instVars : [
-		'authentificationString',
 		'success',
 		'timestamp',
-		'user'
+		'user',
+		'failureError'
 	],
 	#category : #'RMQ-Core-Model'
 }
 
 { #category : #accessing }
-RMQAuthentification >> authentificationString [
-	<MSEProperty: #authentification type: #String>
-	^ authentificationString
+RMQAuthentification >> failureError [
+	<MSEProperty: #failureError type: #Number>
+	^ failureError
 ]
 
 { #category : #accessing }
-RMQAuthentification >> authentificationString: anObject [
-	authentificationString := anObject
+RMQAuthentification >> failureError: anObject [
+	failureError := anObject
 ]
 
 { #category : #accessing }
@@ -45,7 +45,7 @@ RMQAuthentification >> timestamp: anObject [
 
 { #category : #accessing }
 RMQAuthentification >> user [
-	<MSEProperty: #user type: #RMQUser opposite: #authentification>
+	<MSEProperty: #user type: #RMQUser opposite: #authentifications>
 	^ user
 ]
 

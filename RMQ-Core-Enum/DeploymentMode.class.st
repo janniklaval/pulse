@@ -10,6 +10,7 @@ Class {
 { #category : #'as yet unclassified' }
 DeploymentMode class >> cloud [
 	^ self new rmqState: #cloud
+	
 ]
 
 { #category : #'as yet unclassified' }

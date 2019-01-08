@@ -27,7 +27,8 @@ RMQMessage >> deliveryMode [
 
 { #category : #accessing }
 RMQMessage >> deliveryMode: anObject [
-	deliveryMode := anObject
+	deliveryMode := self selectEnum: anObject. 
+	deliveryMode messages add: self.
 ]
 
 { #category : #accessing }
@@ -89,7 +90,8 @@ RMQMessage >> messageType [
 
 { #category : #accessing }
 RMQMessage >> messageType: anObject [
-	messageType := anObject
+	messageType := self selectEnum: anObject. 
+	messageType messages add: self.
 ]
 
 { #category : #accessing }

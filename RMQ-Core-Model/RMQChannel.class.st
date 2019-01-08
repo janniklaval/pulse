@@ -8,13 +8,14 @@ Class {
 		'idleSince',
 		'guaranteeMode',
 		'rmqState',
-		'subscribedComponents',
 		'vhost',
-		'users',
+		'user',
 		'user_who_performed_connection',
 		'creationDate',
 		'closingDate',
-		'consumedQueues'
+		'consumedQueues',
+		'pid',
+		'subscribedComponent'
 	],
 	#category : #'RMQ-Core-Model'
 }
@@ -78,12 +79,13 @@ RMQChannel >> globalPrefetchCount: anObject [
 { #category : #accessing }
 RMQChannel >> guaranteeMode [
 	<MSEProperty: #guaranteeMode type: #GuaranteeMode opposite: #channels>
-	^ guaranteeMode
+	^ guaranteeMode ifNil: [ self guaranteeMode: GuaranteeMode none.  guaranteeMode]
 ]
 
 { #category : #accessing }
 RMQChannel >> guaranteeMode: anObject [
-	guaranteeMode := anObject
+	guaranteeMode := self selectEnum: anObject. 
+	guaranteeMode channels add: self.
 ]
 
 { #category : #accessing }
@@ -101,14 +103,23 @@ RMQChannel >> idleSince: anObject [
 RMQChannel >> initialize [
 
 	super initialize.
-	users := Set new.
+	"users := Set new."
 	consumedQueues := Set new.
-	subscribedComponents := Set new.
-	guaranteeMode := GuaranteeMode none.
-	guaranteeMode channels add: self.
+	"subscribedComponents := Set new."
 	
 	rmqState := State idle.
 	rmqState channels add: self.
+]
+
+{ #category : #accessing }
+RMQChannel >> pid [
+	<MSEProperty: #pid type: #String>
+	^ pid
+]
+
+{ #category : #accessing }
+RMQChannel >> pid: anObject [
+	pid := anObject
 ]
 
 { #category : #accessing }
@@ -123,31 +134,37 @@ RMQChannel >> prefetchCount: anObject [
 ]
 
 { #category : #accessing }
-RMQChannel >> reationDate: anObject [
-	reationDate := anObject
-]
-
-{ #category : #accessing }
 RMQChannel >> rmqState [
 	<MSEProperty: #rmqState type: #State opposite: #channels>
-	^ rmqState
+	^ rmqState ifNil: [ self rmqState: State idle.  rmqState]
 ]
 
 { #category : #accessing }
 RMQChannel >> rmqState: anObject [
-	rmqState := anObject
+	rmqState := self selectEnum: anObject. 
+	rmqState channels add: self.
 ]
 
 { #category : #accessing }
-RMQChannel >> subscribedComponents [
-	<MSEProperty: #subscribedComponents type: #RMQComponent opposite:#subscribedChannels>
-	<multivalued>
-	^ subscribedComponents
+RMQChannel >> subscribedComponent [
+	<MSEProperty: #subscribedComponent type: #RMQComponent opposite:#subscribedChannels>
+	^ subscribedComponent
 ]
 
 { #category : #accessing }
-RMQChannel >> subscribedComponents: anObject [
-	subscribedComponents := anObject
+RMQChannel >> subscribedComponent: anObject [
+	subscribedComponent := anObject
+]
+
+{ #category : #accessing }
+RMQChannel >> user [
+	<MSEProperty: #user type: #RMQUser opposite:#usedChannels>
+	^ user
+]
+
+{ #category : #accessing }
+RMQChannel >> user: anObject [
+	user := anObject
 ]
 
 { #category : #accessing }
@@ -159,18 +176,6 @@ RMQChannel >> user_who_performed_connection [
 { #category : #accessing }
 RMQChannel >> user_who_performed_connection: anObject [
 	user_who_performed_connection := anObject
-]
-
-{ #category : #accessing }
-RMQChannel >> users [
-	<MSEProperty: #users type: #RMQUser opposite:#usedChannels>
-	<multivalued>
-	^ users
-]
-
-{ #category : #accessing }
-RMQChannel >> users: anObject [
-	users := anObject
 ]
 
 { #category : #accessing }

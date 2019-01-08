@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'model'
 	],
-	#category : #'RMQ-Core-Parser'
+	#category : #'RMQ-Core-Parser-Tests'
 }
 
 { #category : #accessing }
@@ -418,7 +418,7 @@ RMQRESTParserTestApiConnections >> testExistingPopulate [
 
 	| vh u1 u2 c1 c2 node |
 	
-	self assert: model size = 10.
+	self assert: model size = 12.
 	"connection"
 	self assert: model allRMQConnections size = 6.
 	c1 := (model allRMQConnections detect: [:e | e name = '10.238.15.51:49677 -> 10.238.28.5:5672']).
@@ -435,9 +435,9 @@ RMQRESTParserTestApiConnections >> testExistingPopulate [
 	self assert: c1 protocol = 'AMQP 0-9-1'.
 	
 	
-	self assert: c1 authMechanism name = 'AuthMechanism : plain'. 
+	self assert: c1 authMechanism name = 'plain'. 
 	self assert: (c1 authMechanism connections anySatisfy: [ :e | e =c1 ]).
-	self assert: c2 authMechanism name = 'AuthMechanism : plain'. 
+	self assert: c2 authMechanism name = 'plain'. 
 	self assert: (c2 authMechanism connections anySatisfy: [ :e | e =c2 ]).
 	
 	"vhost"
@@ -460,19 +460,20 @@ RMQRESTParserTestApiConnections >> testExistingPopulate [
 	u2 := (model allRMQUsers detect: [:e | e name = 'bus-consolesaas']).
 	
 	"connection users"
-	self assert: (c1 users anySatisfy: [ :e | e =u1 ]).
-	self assert: (c2 users anySatisfy: [ :e | e =u2 ]).
+	self assert: (c1 user =u1 ).
+	self assert: (c2 user =u2).
 	self assert: (u1 usedConnections anySatisfy: [ :e | e =c1 ]).
 	self assert: (u2 usedConnections anySatisfy: [ :e | e =c2 ]).
 	
-	self assert: c1 rmqState name = 'State : running'.
+	self assert: c1 rmqState name = 'running'.
 	self assert: (c1 rmqState connections anySatisfy: [:e | e = c1 ]).
-	self assert: c2 rmqState name = 'State : running'.
+	self assert: c2 rmqState name = 'running'.
 	self assert: (c2 rmqState connections anySatisfy: [:e | e = c2 ]).	
 	
+	self assert: model size = 12.
 	RMQRESTParserApiConnections populate: model withJson: self data.
+	self assert: model size = 12.
 	
-	self assert: model size = 10.
 	"connection"
 	self assert: model allRMQConnections size = 6.
 	c1 := (model allRMQConnections detect: [:e | e name = '10.238.15.51:49677 -> 10.238.28.5:5672']).
@@ -489,9 +490,9 @@ RMQRESTParserTestApiConnections >> testExistingPopulate [
 	self assert: c1 protocol = 'AMQP 0-9-1'.
 	
 	
-	self assert: c1 authMechanism name = 'AuthMechanism : plain'. 
+	self assert: c1 authMechanism name = 'plain'. 
 	self assert: (c1 authMechanism connections anySatisfy: [ :e | e =c1 ]).
-	self assert: c2 authMechanism name = 'AuthMechanism : plain'. 
+	self assert: c2 authMechanism name = 'plain'. 
 	self assert: (c2 authMechanism connections anySatisfy: [ :e | e =c2 ]).
 	
 	"vhost"
@@ -514,16 +515,16 @@ RMQRESTParserTestApiConnections >> testExistingPopulate [
 	u2 := (model allRMQUsers detect: [:e | e name = 'bus-consolesaas']).
 	
 	"connection users"
-	self assert: (c1 users anySatisfy: [ :e | e =u1 ]).
-	self assert: (c2 users anySatisfy: [ :e | e =u2 ]).
+	self assert: (c1 user =u1).
+	self assert: (c2 user =u2 ).
 	self assert: (u1 usedConnections anySatisfy: [ :e | e =c1 ]).
 	self assert: (u2 usedConnections anySatisfy: [ :e | e =c2 ]).
 	
-	self assert: c1 rmqState name = 'State : running'.
+	self assert: c1 rmqState name = 'running'.
 	self assert: (c1 rmqState connections anySatisfy: [:e | e = c1 ]).
-	self assert: c2 rmqState name = 'State : running'.
+	self assert: c2 rmqState name = 'running'.
 	self assert: (c2 rmqState connections anySatisfy: [:e | e = c2 ]).	
-
+	self assert: model size = 12.
 ]
 
 { #category : #'testing - simple' }
@@ -547,9 +548,9 @@ RMQRESTParserTestApiConnections >> testPopulate [
 	self assert: c1 protocol = 'AMQP 0-9-1'.
 	
 	
-	self assert: c1 authMechanism name = 'AuthMechanism : plain'. 
+	self assert: c1 authMechanism name = 'plain'. 
 	self assert: (c1 authMechanism connections anySatisfy: [ :e | e =c1 ]).
-	self assert: c2 authMechanism name = 'AuthMechanism : plain'. 
+	self assert: c2 authMechanism name = 'plain'. 
 	self assert: (c2 authMechanism connections anySatisfy: [ :e | e =c2 ]).
 	
 	"vhost"
@@ -572,14 +573,14 @@ RMQRESTParserTestApiConnections >> testPopulate [
 	u2 := (model allRMQUsers detect: [:e | e name = 'bus-consolesaas']).
 	
 	"connection users"
-	self assert: (c1 users anySatisfy: [ :e | e =u1 ]).
-	self assert: (c2 users anySatisfy: [ :e | e =u2 ]).
+	self assert: (c1 user =u1 ).
+	self assert: (c2 user =u2 ).
 	self assert: (u1 usedConnections anySatisfy: [ :e | e =c1 ]).
 	self assert: (u2 usedConnections anySatisfy: [ :e | e =c2 ]).
 	
-	self assert: c1 rmqState name = 'State : running'.
+	self assert: c1 rmqState name = 'running'.
 	self assert: (c1 rmqState connections anySatisfy: [:e | e = c1 ]).
-	self assert: c2 rmqState name = 'State : running'.
+	self assert: c2 rmqState name = 'running'.
 	self assert: (c2 rmqState connections anySatisfy: [:e | e = c2 ]).	
 	
 	

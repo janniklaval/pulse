@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'model'
 	],
-	#category : #'RMQ-Core-Parser'
+	#category : #'RMQ-Core-Parser-Tests'
 }
 
 { #category : #accessing }
@@ -127,7 +127,7 @@ RMQRESTParserTestApiExchanges >> setUp [
 RMQRESTParserTestApiExchanges >> testExistingPopulate [
 
 	| t1 t2 vh user |
-	self assert: model size = 12.
+	self assert: model size = 16.
 	self assert: model allRMQExchanges size = 9.
 	self assert: (model allRMQExchanges anySatisfy: [:e | e name = 'pubsub.default.consoleSaasUserAccess.publish']).
 	self assert: (model allRMQExchanges anySatisfy: [:e | e name = 'amq.rabbitmq.event']).
@@ -162,10 +162,9 @@ RMQRESTParserTestApiExchanges >> testExistingPopulate [
 	self assert: (t2 user_who_performed_action  = user).
 	self assert: (user initializedExchanges  anySatisfy: [ :e | e =t2 ]).
 	self assert: (user initializedExchanges size = 8).	
-	
+	self assert: model size = 16.
 	RMQRESTParserApiExchanges populate: model withJson: self data.
-	
-	self assert: model size = 12.
+	self assert: model size = 16.
 	self assert: model allRMQExchanges size = 9.
 	self assert: (model allRMQExchanges anySatisfy: [:e | e name = 'pubsub.default.consoleSaasUserAccess.publish']).
 	self assert: (model allRMQExchanges anySatisfy: [:e | e name = 'amq.rabbitmq.event']).
@@ -200,6 +199,7 @@ RMQRESTParserTestApiExchanges >> testExistingPopulate [
 	self assert: (t2 user_who_performed_action  = user).
 	self assert: (user initializedExchanges  anySatisfy: [ :e | e =t2 ]).
 	self assert: (user initializedExchanges size = 8).	
+	self assert: model size = 16.
 
 ]
 

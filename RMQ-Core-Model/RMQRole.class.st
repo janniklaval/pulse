@@ -2,19 +2,12 @@ Class {
 	#name : #RMQRole,
 	#superclass : #PulseEntity,
 	#instVars : [
-		'users',
 		'tag',
-		'settingDate'
+		'settingDate',
+		'user'
 	],
 	#category : #'RMQ-Core-Model'
 }
-
-{ #category : #accessing }
-RMQRole >> initialize [
-
-	super initialize.
-	users := Set new.
-]
 
 { #category : #accessing }
 RMQRole >> settingDate [
@@ -30,22 +23,22 @@ RMQRole >> settingDate: anObject [
 { #category : #accessing }
 RMQRole >> tag [
 	<MSEProperty: #tag type: #Tag>
-	^ self pulseName
+	^ tag ifNil: [ self tag: Tag none.  tag]
 ]
 
 { #category : #accessing }
 RMQRole >> tag: anObject [
-	self pulseName: anObject
+	tag := self selectEnum: anObject. 
+	tag roles add: self.
 ]
 
 { #category : #accessing }
-RMQRole >> users [
-	<MSEProperty: #users type: #RMQUser opposite:#roles>
-	<multivalued>
-	^ users
+RMQRole >> user [
+	<MSEProperty: #user type: #RMQUser opposite:#roles>
+	^ user
 ]
 
 { #category : #accessing }
-RMQRole >> users: anObject [
-	users := anObject
+RMQRole >> user: anObject [
+	user := anObject
 ]

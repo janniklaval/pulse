@@ -91,7 +91,8 @@ RMQNode >> type [
 
 { #category : #accessing }
 RMQNode >> type: anObject [
-	type := anObject
+	type := self selectEnum: anObject. 
+	type nodes add: self.
 ]
 
 { #category : #accessing }

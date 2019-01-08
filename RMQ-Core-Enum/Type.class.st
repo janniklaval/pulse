@@ -1,6 +1,6 @@
 Class {
 	#name : #Type,
-	#superclass : #MooseEntity,
+	#superclass : #PulseEntity,
 	#instVars : [
 		'rmqState'
 	],
@@ -9,23 +9,29 @@ Class {
 
 { #category : #comparing }
 Type >> = anEnum [
-    ^ self class = anEnum class and: [ self state = anEnum state ]
+    ^ self class = anEnum class and: [ self rmqState = anEnum rmqState ]
 ]
 
 { #category : #comparing }
 Type >> hash [
-    ^ self class hash bitXor: self state hash
-]
-
-{ #category : #accessing }
-Type >> name [
-	^ self class name, ' : ', self rmqState
+    ^ self class hash bitXor: self rmqState hash
 ]
 
 { #category : #printing }
 Type >> printOn: aStream [
     super printOn: aStream.
-    aStream << '(' << self state asString << ')'
+    aStream << '(' << self rmqState asString << ')'
+]
+
+{ #category : #accessing }
+Type >> pulseName [
+	^ rmqState
+]
+
+{ #category : #accessing }
+Type >> pulseName: anObject [
+	rmqState := anObject
+
 ]
 
 { #category : #accessing }
@@ -36,11 +42,6 @@ Type >> rmqState [
 { #category : #accessing }
 Type >> rmqState: anObject [
 	rmqState := anObject
-]
-
-{ #category : #accessing }
-Type >> state [
-	^ state
 ]
 
 { #category : #accessing }
