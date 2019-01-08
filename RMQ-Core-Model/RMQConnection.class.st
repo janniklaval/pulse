@@ -212,7 +212,7 @@ RMQConnection >> sslProtocol: anObject [
 
 { #category : #accessing }
 RMQConnection >> user [
-	<MSEProperty: #users type: #RMQUser opposite:#usedConnections>
+	<MSEProperty: #user type: #RMQUser opposite:#usedConnections>
 	^ user
 ]
 

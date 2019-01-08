@@ -45,7 +45,7 @@ RMQAuthentification >> timestamp: anObject [
 
 { #category : #accessing }
 RMQAuthentification >> user [
-	<MSEProperty: #user type: #RMQUser opposite: #authentification>
+	<MSEProperty: #user type: #RMQUser opposite: #authentifications>
 	^ user
 ]
 

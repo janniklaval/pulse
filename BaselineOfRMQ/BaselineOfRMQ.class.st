@@ -22,12 +22,12 @@ BaselineOfRMQ >> baseline: spec [
 		spec configuration: 'Orion'
 			with: [ spec
 					className: 'ConfigurationOfOrion';
-					loads: #('03-baseline');
+					versionString: #development;
 					file: 'ConfigurationOfOrion';
 					repository: 'http://smalltalkhub.com/mc/Moose/Orion/main' ].
 		
 		spec
- 			group: 'default' with: #( 'RMQ-Core-Enum' 'RMQ-Core-Model' 'RMQ-Core-Parser' 'RMQ-Core-Visualization' 'Amqp' ).
+ 			group: 'default' with: #( 'RMQ-Core-Enum' 'RMQ-Core-Model' 'RMQ-Core-Parser' 'RMQ-Core-Visualization' 'Amqp' 'Orion' ).
 	].
 
 ]

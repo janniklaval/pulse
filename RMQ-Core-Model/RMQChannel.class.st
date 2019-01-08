@@ -169,7 +169,7 @@ RMQChannel >> user: anObject [
 
 { #category : #accessing }
 RMQChannel >> user_who_performed_connection [
-	<MSEProperty: #user_who_performed_connection type: #RMQUser opposite:#usedChannels>
+	<MSEProperty: #user_who_performed_connection type: #RMQUser opposite:#initializedChannels>
 	^ user_who_performed_connection
 ]
 
