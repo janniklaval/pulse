@@ -65,7 +65,7 @@ RMQLogParser class >> populate: aModel withJson: aString [
 			user usedConnections 
 				detect: [:conn| conn = connection ]
 				ifNone: [
-					connection users add: user.
+					connection user: user.
 					user usedConnections add: connection.
 				].
 		
@@ -114,7 +114,7 @@ RMQLogParser class >> populate: aModel withJson: aString [
 			user usedChannels 
 				detect: [:ch| ch = channel ]
 				ifNone: [
-					channel users add: user.
+					channel user: user.
 					user usedChannels add: channel.
 				].
 			
@@ -169,7 +169,7 @@ RMQLogParser class >> populate: aModel withJson: aString [
 				detect: [:ch| ch = channel ]
 				ifNone: [
 					component subscribedChannels add: channel.
-					channel subscribedComponents add: component.
+					channel subscribedComponent: component.
 				].
 			
 			component exchanges 

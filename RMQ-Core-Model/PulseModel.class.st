@@ -17,7 +17,7 @@ PulseModel >> allMessageTypes [
 ]
 
 { #category : #accessing }
-PulseModel >> allRMQAuthentification [
+PulseModel >> allRMQAuthentifications [
 	<navigation: 'All RMQ authentification group'>
 	^self allWithType: RMQAuthentification
 ]

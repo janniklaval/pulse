@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'model'
 	],
-	#category : #'RMQ-Core-Parser'
+	#category : #'RMQ-Core-Parser-Tests'
 }
 
 { #category : #accessing }
@@ -285,8 +285,8 @@ RMQRESTParserTestApiChannels >> testExistingPopulate [
 	self assert: ch2 connection = c2.	
 	
 	"connection users"
-	self assert: (c1 users anySatisfy: [ :e | e =u1 ]).
-	self assert: (c2 users anySatisfy: [ :e | e =u2 ]).
+	self assert: (c1 user =u1 ).
+	self assert: (c2 user =u2 ).
 	self assert: (u1 usedConnections anySatisfy: [ :e | e =c1 ]).
 	self assert: (u2 usedConnections anySatisfy: [ :e | e =c2 ]).
 	
@@ -353,8 +353,8 @@ RMQRESTParserTestApiChannels >> testExistingPopulate [
 	self assert: ch2 connection = c2.	
 	
 	"connection users"
-	self assert: (c1 users anySatisfy: [ :e | e =u1 ]).
-	self assert: (c2 users anySatisfy: [ :e | e =u2 ]).
+	self assert: (c1 user =u1 ).
+	self assert: (c2 user =u2 ).
 	self assert: (u1 usedConnections anySatisfy: [ :e | e =c1 ]).
 	self assert: (u2 usedConnections anySatisfy: [ :e | e =c2 ]).
 
@@ -426,8 +426,8 @@ RMQRESTParserTestApiChannels >> testPopulate [
 	self assert: ch2 connection = c2.	
 	
 	"connection users"
-	self assert: (c1 users anySatisfy: [ :e | e =u1 ]).
-	self assert: (c2 users anySatisfy: [ :e | e =u2 ]).
+	self assert: (c1 user =u1 ).
+	self assert: (c2 user =u2 ).
 	self assert: (u1 usedConnections anySatisfy: [ :e | e =c1 ]).
 	self assert: (u2 usedConnections anySatisfy: [ :e | e =c2 ]).
 	
