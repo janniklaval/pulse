@@ -1,25 +1,25 @@
-Extension { #name : #MooseModel }
+Extension { #name : #PulseModel }
 
 { #category : #'*RMQ-Core-Visualization' }
-MooseModel >> generalView [
+PulseModel >> generalView [
 	<menuItem: 'Global view' category: 'RMQViz'>
 	RMQViz generalViewOf: self
 ]
 
 { #category : #'*RMQ-Core-Visualization' }
-MooseModel >> histogram [
+PulseModel >> histogram [
 	<menuItem: 'Histogram' category: 'RMQViz'>
 	RMQViz histogramFor: self
 ]
 
 { #category : #'*RMQ-Core-Visualization' }
-MooseModel >> histogram2 [
+PulseModel >> histogram2 [
 	<menuItem: 'Histogram2' category: 'RMQViz'>
 	RMQViz histogram2For: self
 ]
 
 { #category : #'*RMQ-Core-Visualization' }
-MooseModel >> types [
+PulseModel >> types [
 	<menuItem: 'Types' category: 'RMQViz'>
 	RMQViz typesFor: self
 ]

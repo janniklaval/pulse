@@ -237,7 +237,7 @@ RMQRESTParserApiDefinitions class >> populate: aModel withUsers: anArray [
 			role := aModel selectOrAddEntityNamed: aRoleString withType: RMQRole.
 			(element roles anySatisfy: [ :e | e = role ]) ifFalse: [
 			element roles add: role.
-			role users add: element  
+			role user: element  
 			].
 			
 		].

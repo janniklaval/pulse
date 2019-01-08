@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'model'
 	],
-	#category : #'RMQ-Core-Parser'
+	#category : #'RMQ-Core-Parser-Tests'
 }
 
 { #category : #accessing }

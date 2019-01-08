@@ -5,7 +5,7 @@ Class {
 		'objects',
 		'model'
 	],
-	#category : #'RMQ-Core-Parser'
+	#category : #'RMQ-Core-Parser-Tests'
 }
 
 { #category : #accessing }
@@ -268,9 +268,9 @@ RMQRESTParserTestApiDefinitions >> testPopulateExistingUser [
 	self assert: any name = 'administrator'.
 	
 	self assert: user roles size = 1.
-	self assert: any users size = 2.
+	self assert: any user = user.
 	self assert: (user roles anySatisfy: [:e | e = any]). 
-	self assert: (any users anySatisfy: [:e | e = user]).
+	self assert: (any user= user).
 
 ]
 
@@ -393,11 +393,11 @@ RMQRESTParserTestApiDefinitions >> testPopulateUser [
 	self assert: t3 roles size = 1.
 	self assert: t4 roles size = 1.
 	
-	self assert: (t1 roles anyOne users size = 2).
+	self assert: (t1 roles anyOne user = t1).
 	self assert: t2 roles anyOne = t1 roles anyOne.
 	
-	self assert: (t3 roles anyOne users size = 1).
-	self assert: (t4 roles anyOne users size = 1).
+	self assert: (t3 roles anyOne user = t3).
+	self assert: (t4 roles anyOne user = t4).
 ]
 
 { #category : #'testing - simple' }
