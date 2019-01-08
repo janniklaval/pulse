@@ -123,6 +123,16 @@ RMQVHost >> permissions: anObject [
 	permissions := anObject
 ]
 
+{ #category : #printing }
+RMQVHost >> printOn: aStream [
+
+super printOn: aStream.
+
+aStream nextPutAll: ' Vhost name : ', self name printString. 
+
+aStream cr
+]
+
 { #category : #accessing }
 RMQVHost >> queues [
 	<MSEProperty: #queues type: #RMQQueue opposite:#vhost>
