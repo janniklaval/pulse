@@ -223,22 +223,22 @@ RMQRESTParserTestApiChannels >> testExistingPopulate [
 
 	| vh ch1 ch2 u1 u2 c1 c2 node |
 	
-	self assert: model size = 10.
+	self assert: model size = 11.
 	"channels"
 	self assert: model allRMQChannels size = 3.
 	ch1 := (model allRMQChannels detect: [:e | e name = '10.238.15.51:49677 -> 10.238.28.5:5672 (1)']).
 	ch2 := (model allRMQChannels detect: [:e | e name = '10.34.132.254:49779 -> 10.238.28.5:5672 (1)']).
 	
-	self assert: ch1 guaranteeMode name = 'GuaranteeMode : none'. 
+	self assert: ch1 guaranteeMode name = 'none'. 
 	self assert: (ch1 guaranteeMode channels anySatisfy: [ :e | e =ch1 ]).
-	self assert: ch2 guaranteeMode name = 'GuaranteeMode : none'. 
+	self assert: ch2 guaranteeMode name = 'none'. 
 	self assert: (ch2 guaranteeMode channels anySatisfy: [ :e | e =ch2 ]).
 	
-	self assert: ch1 rmqState name = 'State : running'.
+	self assert: ch1 rmqState name = 'running'.
 	self assert: (ch1 rmqState channels anySatisfy: [:e | e = ch1 ]).
 	self assert: ch1 idleSince = '2018-11-08 9:47:09'.	
 	
-	self assert: ch2 rmqState name = 'State : running'.
+	self assert: ch2 rmqState name = 'running'.
 	self assert: (ch2 rmqState channels anySatisfy: [:e | e = ch2 ]).
 	self assert: ch2 idleSince = '2018-11-08 9:47:09'.	
 		
@@ -289,24 +289,25 @@ RMQRESTParserTestApiChannels >> testExistingPopulate [
 	self assert: (c2 user =u2 ).
 	self assert: (u1 usedConnections anySatisfy: [ :e | e =c1 ]).
 	self assert: (u2 usedConnections anySatisfy: [ :e | e =c2 ]).
+	self assert: model size = 12.
 	
 	RMQRESTParserApiChannels populate: model withJson: self data.
-	self assert: model size = 10.
+	self assert: model size = 12.
 	"channels"
 	self assert: model allRMQChannels size = 3.
 	ch1 := (model allRMQChannels detect: [:e | e name = '10.238.15.51:49677 -> 10.238.28.5:5672 (1)']).
 	ch2 := (model allRMQChannels detect: [:e | e name = '10.34.132.254:49779 -> 10.238.28.5:5672 (1)']).
 	
-	self assert: ch1 guaranteeMode name = 'GuaranteeMode : none'. 
+	self assert: ch1 guaranteeMode name = 'none'. 
 	self assert: (ch1 guaranteeMode channels anySatisfy: [ :e | e =ch1 ]).
-	self assert: ch2 guaranteeMode name = 'GuaranteeMode : none'. 
+	self assert: ch2 guaranteeMode name = 'none'. 
 	self assert: (ch2 guaranteeMode channels anySatisfy: [ :e | e =ch2 ]).
 	
-	self assert: ch1 rmqState name = 'State : running'.
+	self assert: ch1 rmqState name = 'running'.
 	self assert: (ch1 rmqState channels anySatisfy: [:e | e = ch1 ]).
 	self assert: ch1 idleSince = '2018-11-08 9:47:09'.	
 	
-	self assert: ch2 rmqState name = 'State : running'.
+	self assert: ch2 rmqState name = 'running'.
 	self assert: (ch2 rmqState channels anySatisfy: [:e | e = ch2 ]).
 	self assert: ch2 idleSince = '2018-11-08 9:47:09'.	
 		
@@ -370,16 +371,16 @@ RMQRESTParserTestApiChannels >> testPopulate [
 	ch1 := (model allRMQChannels detect: [:e | e name = '10.238.15.51:49677 -> 10.238.28.5:5672 (1)']).
 	ch2 := (model allRMQChannels detect: [:e | e name = '10.34.132.254:49779 -> 10.238.28.5:5672 (1)']).
 	
-	self assert: ch1 guaranteeMode name = 'GuaranteeMode : none'. 
+	self assert: ch1 guaranteeMode name = 'none'. 
 	self assert: (ch1 guaranteeMode channels anySatisfy: [ :e | e =ch1 ]).
-	self assert: ch2 guaranteeMode name = 'GuaranteeMode : none'. 
+	self assert: ch2 guaranteeMode name = 'none'. 
 	self assert: (ch2 guaranteeMode channels anySatisfy: [ :e | e =ch2 ]).
 	
-	self assert: ch1 rmqState name = 'State : running'.
+	self assert: ch1 rmqState name = 'running'.
 	self assert: (ch1 rmqState channels anySatisfy: [:e | e = ch1 ]).
 	self assert: ch1 idleSince = '2018-11-08 9:47:09'.	
 	
-	self assert: ch2 rmqState name = 'State : running'.
+	self assert: ch2 rmqState name = 'running'.
 	self assert: (ch2 rmqState channels anySatisfy: [:e | e = ch2 ]).
 	self assert: ch2 idleSince = '2018-11-08 9:47:09'.	
 		
@@ -430,6 +431,8 @@ RMQRESTParserTestApiChannels >> testPopulate [
 	self assert: (c2 user =u2 ).
 	self assert: (u1 usedConnections anySatisfy: [ :e | e =c1 ]).
 	self assert: (u2 usedConnections anySatisfy: [ :e | e =c2 ]).
+	
+	self assert: model size = 12.
 	
 	
 ]

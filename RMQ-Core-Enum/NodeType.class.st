@@ -9,12 +9,12 @@ Class {
 
 { #category : #'as yet unclassified' }
 NodeType class >> disc [
-	^ self new state: #disc
+	^ self new rmqState: #disc
 ]
 
 { #category : #'as yet unclassified' }
 NodeType class >> ram [
-	^ self new state: #ram
+	^ self new rmqState: #ram
 ]
 
 { #category : #accessing }

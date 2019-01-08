@@ -10,6 +10,7 @@ Class {
 { #category : #'as yet unclassified' }
 DeliveryMode class >> nonPersistent [
 	^ self new rmqState: #nonPersistent
+
 ]
 
 { #category : #'as yet unclassified' }

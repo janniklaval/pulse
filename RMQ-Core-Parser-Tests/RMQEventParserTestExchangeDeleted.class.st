@@ -32,12 +32,13 @@ RMQEventParserTestExchangeDeleted >> setUp [
 	
 	"populate the model with the resource, set vhost "
 	vhost := RMQVHost new.
-	vhost pulseName: '/'.
-	model add: vhost.
-	exchange := RMQExchange new pulseName: 'test.delete.exchange'.
+	vhost pulseName: '/';
+			mooseModel: model.
+	exchange := RMQExchange new pulseName: 'test.delete.exchange';
+									mooseModel: model.
 	exchange vhost: vhost. 
 	vhost exchanges add: exchange. 
-	model add: exchange.  
+ 
 	2 seconds wait.
 	
 	"cretate then delete resource"

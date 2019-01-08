@@ -33,7 +33,8 @@ RMQConnection >> authMechanism [
 
 { #category : #accessing }
 RMQConnection >> authMechanism: anObject [
-	authMechanism := anObject
+	authMechanism := self selectEnum: anObject. 
+	authMechanism connections add: self.
 ]
 
 { #category : #accessing }
@@ -169,12 +170,13 @@ RMQConnection >> protocol: anObject [
 { #category : #accessing }
 RMQConnection >> rmqState [
 	<MSEProperty: #rmqState type: #State opposite: #connections>
-	^ rmqState
+	^ rmqState ifNil: [ self rmqState: State idle.  rmqState]
 ]
 
 { #category : #accessing }
 RMQConnection >> rmqState: anObject [
-	rmqState := anObject
+	rmqState := self selectEnum: anObject. 
+	rmqState connections add: self.
 ]
 
 { #category : #accessing }

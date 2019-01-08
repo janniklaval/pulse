@@ -1,6 +1,6 @@
 Class {
 	#name : #Type,
-	#superclass : #MooseEntity,
+	#superclass : #PulseEntity,
 	#instVars : [
 		'rmqState'
 	],
@@ -17,15 +17,21 @@ Type >> hash [
     ^ self class hash bitXor: self rmqState hash
 ]
 
-{ #category : #accessing }
-Type >> name [
-	^ self class name, ' : ', self rmqState
-]
-
 { #category : #printing }
 Type >> printOn: aStream [
     super printOn: aStream.
     aStream << '(' << self rmqState asString << ')'
+]
+
+{ #category : #accessing }
+Type >> pulseName [
+	^ rmqState
+]
+
+{ #category : #accessing }
+Type >> pulseName: anObject [
+	rmqState := anObject
+
 ]
 
 { #category : #accessing }

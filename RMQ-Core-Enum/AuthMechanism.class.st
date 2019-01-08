@@ -9,7 +9,7 @@ Class {
 
 { #category : #configuration }
 AuthMechanism class >> amqPlain [
-	^ self new rmqState: #amqPlain
+	^  self new rmqState: #amqPlain
 ]
 
 { #category : #configuration }
@@ -19,7 +19,7 @@ AuthMechanism class >> plain [
 
 { #category : #configuration }
 AuthMechanism class >> rabbit_cr_demo [
-	^ self new rmqState: #rabbit_cr_demo
+		^ self new rmqState: #rabbit_cr_demo
 ]
 
 { #category : #accessing }

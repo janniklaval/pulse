@@ -1905,8 +1905,8 @@ RMQRESTParserApiQueues class >> populate: aModel withJson: aString [
 			ifAbsent:[  
 				|newNode |
 				newNode := RMQNode new
-					pulseName: (anObject at: 'node').
-				aModel add: newNode.
+					pulseName: (anObject at: 'node');
+					mooseModel: aModel.
 				vhost node: newNode.
 				newNode vhosts add: vhost.
 				newNode ].

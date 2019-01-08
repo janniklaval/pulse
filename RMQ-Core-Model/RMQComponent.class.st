@@ -64,7 +64,8 @@ RMQComponent >> componentType [
 
 { #category : #accessing }
 RMQComponent >> componentType: anObject [
-	componentType := anObject
+	componentType := self selectEnum: anObject. 
+	componentType components add: self.
 ]
 
 { #category : #accessing }
@@ -108,7 +109,8 @@ RMQComponent >> deploymentMode [
 
 { #category : #accessing }
 RMQComponent >> deploymentMode: anObject [
-	deploymentMode := anObject
+	deploymentMode := self selectEnum: anObject. 
+	deploymentMode components add: self.
 ]
 
 { #category : #accessing }

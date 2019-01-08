@@ -17,7 +17,8 @@ RMQPayload >> encoding [
 
 { #category : #accessing }
 RMQPayload >> encoding: anObject [
-	encoding := anObject
+	encoding := self selectEnum: anObject. 
+	encoding payloads add: self.
 ]
 
 { #category : #accessing }

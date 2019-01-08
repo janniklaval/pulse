@@ -5,15 +5,63 @@ Class {
 }
 
 { #category : #accessing }
+PulseModel >> allAuthMechanisms [
+	<navigation: 'All AuthMechanisms group'>
+	^self allWithType: AuthMechanism
+]
+
+{ #category : #accessing }
+PulseModel >> allComponentTypes [
+	<navigation: 'All ComponentTypes group'>
+	^self allWithType: ComponentType
+]
+
+{ #category : #accessing }
 PulseModel >> allDeliveryModes [
 	<navigation: 'All delivery modes group'>
 	^self allWithType: DeliveryMode
 ]
 
 { #category : #accessing }
+PulseModel >> allDeploymentModes [
+	<navigation: 'All Deployment modes group'>
+	^self allWithType: DeploymentMode
+]
+
+{ #category : #accessing }
+PulseModel >> allDurabilities [
+	<navigation: 'All Durabilities group'>
+	^self allWithType: Durability
+]
+
+{ #category : #accessing }
+PulseModel >> allEncodings [
+	<navigation: 'All Encodings group'>
+	^self allWithType: Encoding
+]
+
+{ #category : #accessing }
+PulseModel >> allExchangeTypes [
+	<navigation: 'All ExchangeTypes group'>
+	^self allWithType: ExchangeType
+]
+
+{ #category : #accessing }
+PulseModel >> allGuaranteeModes [
+	<navigation: 'All GuaranteeModes group'>
+	^self allWithType: GuaranteeMode
+]
+
+{ #category : #accessing }
 PulseModel >> allMessageTypes [
 	<navigation: 'All Message types group'>
 	^self allWithType: MessageType
+]
+
+{ #category : #accessing }
+PulseModel >> allNodeTypes [
+	<navigation: 'All NodeTypes group'>
+	^self allWithType: NodeType
 ]
 
 { #category : #accessing }
@@ -107,12 +155,6 @@ PulseModel >> allRMQPermissions [
 ]
 
 { #category : #accessing }
-PulseModel >> allRMQProperties [
-	<navigation: 'All RMQ properties group'>
-	^self allWithType: RMQProperty
-]
-
-{ #category : #accessing }
 PulseModel >> allRMQQueues [
 	<navigation: 'All RMQ queues group'>
 	^self allWithType: RMQQueue
@@ -142,6 +184,24 @@ PulseModel >> allRMQVHosts [
 	^self allWithType: RMQVHost
 ]
 
+{ #category : #accessing }
+PulseModel >> allStates [
+	<navigation: 'All States group'>
+	^self allWithType: State
+]
+
+{ #category : #accessing }
+PulseModel >> allTags [
+	<navigation: 'All Tags group'>
+	^self allWithType: Tag
+]
+
+{ #category : #accessing }
+PulseModel >> allTransportPolitics [
+	<navigation: 'All TransportPolitics group'>
+	^self allWithType: TransportPolitic
+]
+
 { #category : #'add-select' }
 PulseModel >> selectOrAddEntityNamed: aName withType: aType [ 
 
@@ -149,8 +209,8 @@ PulseModel >> selectOrAddEntityNamed: aName withType: aType [
 			ifAbsent:[ 
 				|newEntity |
 				newEntity := aType new
-					pulseName: aName.
-				self add: newEntity.
+					pulseName: aName;
+					mooseModel: self.
 				
 				newEntity ].
 ]

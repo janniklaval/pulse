@@ -79,12 +79,13 @@ RMQChannel >> globalPrefetchCount: anObject [
 { #category : #accessing }
 RMQChannel >> guaranteeMode [
 	<MSEProperty: #guaranteeMode type: #GuaranteeMode opposite: #channels>
-	^ guaranteeMode
+	^ guaranteeMode ifNil: [ self guaranteeMode: GuaranteeMode none.  guaranteeMode]
 ]
 
 { #category : #accessing }
 RMQChannel >> guaranteeMode: anObject [
-	guaranteeMode := anObject
+	guaranteeMode := self selectEnum: anObject. 
+	guaranteeMode channels add: self.
 ]
 
 { #category : #accessing }
@@ -105,8 +106,6 @@ RMQChannel >> initialize [
 	"users := Set new."
 	consumedQueues := Set new.
 	"subscribedComponents := Set new."
-	guaranteeMode := GuaranteeMode none.
-	guaranteeMode channels add: self.
 	
 	rmqState := State idle.
 	rmqState channels add: self.
@@ -137,12 +136,13 @@ RMQChannel >> prefetchCount: anObject [
 { #category : #accessing }
 RMQChannel >> rmqState [
 	<MSEProperty: #rmqState type: #State opposite: #channels>
-	^ rmqState
+	^ rmqState ifNil: [ self rmqState: State idle.  rmqState]
 ]
 
 { #category : #accessing }
 RMQChannel >> rmqState: anObject [
-	rmqState := anObject
+	rmqState := self selectEnum: anObject. 
+	rmqState channels add: self.
 ]
 
 { #category : #accessing }

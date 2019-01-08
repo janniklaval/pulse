@@ -112,7 +112,7 @@ RMQQueue >> durability [
 
 { #category : #accessing }
 RMQQueue >> durability: anObject [
-	durability := anObject
+	durability := anObject. 
 ]
 
 { #category : #accessing }
@@ -217,12 +217,13 @@ RMQQueue >> messages: anObject [
 { #category : #accessing }
 RMQQueue >> rmqState [
 	<MSEProperty: #rmqState type: #State opposite:#queues>
-	^ rmqState
+	^ rmqState ifNil: [ self rmqState: State idle.  rmqState]
 ]
 
 { #category : #accessing }
 RMQQueue >> rmqState: anObject [
-	rmqState := anObject
+	rmqState := self selectEnum: anObject. 
+	rmqState queues add: self.
 ]
 
 { #category : #accessing }

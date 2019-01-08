@@ -23,12 +23,13 @@ RMQRole >> settingDate: anObject [
 { #category : #accessing }
 RMQRole >> tag [
 	<MSEProperty: #tag type: #Tag>
-	^ self pulseName
+	^ tag ifNil: [ self tag: Tag none.  tag]
 ]
 
 { #category : #accessing }
 RMQRole >> tag: anObject [
-	self pulseName: anObject
+	tag := self selectEnum: anObject. 
+	tag roles add: self.
 ]
 
 { #category : #accessing }

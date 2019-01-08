@@ -98,7 +98,8 @@ RMQExchange >> durability [
 
 { #category : #accessing }
 RMQExchange >> durability: anObject [
-	durability := anObject
+	durability := anObject. 
+	
 ]
 
 { #category : #accessing }
@@ -179,7 +180,10 @@ RMQExchange >> type [
 
 { #category : #accessing }
 RMQExchange >> type: anObject [
-	type := anObject
+	| obj |
+	obj := ExchangeType perform: anObject asSymbol.
+	type := self selectEnum: obj. 
+	type exchanges add: self.
 ]
 
 { #category : #accessing }

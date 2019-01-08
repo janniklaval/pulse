@@ -9,7 +9,7 @@ Class {
 
 { #category : #'as yet unclassified' }
 MessageType class >> acknowledged [
-	^ self new rmqState: #acknowledged
+	^self new rmqState: #acknowledged
 ]
 
 { #category : #'as yet unclassified' }

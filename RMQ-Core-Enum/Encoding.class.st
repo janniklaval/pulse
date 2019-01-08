@@ -9,12 +9,12 @@ Class {
 
 { #category : #'as yet unclassified' }
 Encoding class >> base64 [
-	^ self new state: #base64
+	^  self new rmqState: #base64
 ]
 
 { #category : #accessing }
 Encoding class >> string [
-	^ self new state: #string
+	^ self new rmqState: #string
 ]
 
 { #category : #accessing }

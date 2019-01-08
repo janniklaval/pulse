@@ -10,16 +10,19 @@ Class {
 { #category : #'System-FileRegistry' }
 ComponentType class >> connector [
 	^ self new rmqState: #connector
+
 ]
 
 { #category : #'System-FileRegistry' }
 ComponentType class >> database [
 	^ self new rmqState: #database
+
 ]
 
 { #category : #'System-FileRegistry' }
 ComponentType class >> mediator [
 	^ self new rmqState: #mediator
+
 ]
 
 { #category : #'System-FileRegistry' }

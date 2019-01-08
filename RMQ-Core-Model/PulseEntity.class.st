@@ -22,3 +22,9 @@ PulseEntity >> pulseName [
 PulseEntity >> pulseName: anObject [
 	pulseName := anObject
 ]
+
+{ #category : #utility }
+PulseEntity >> selectEnum: anEnumObject [
+
+	^ self mooseModel selectOrAddEntityNamed: anEnumObject name withType: anEnumObject class. 
+]

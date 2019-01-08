@@ -9,27 +9,27 @@ Class {
 
 { #category : #'as yet unclassified' }
 Tag class >> administrator [
-	^ self new state: #administrator
+	^self new rmqState: #administrator
 ]
 
 { #category : #'as yet unclassified' }
 Tag class >> management [
-	^ self new state: #management
+	^ self new rmqState: #management
 ]
 
 { #category : #'as yet unclassified' }
 Tag class >> monitoring [
-	^ self new state: #monitoring
+	^ self new rmqState: #monitoring
 ]
 
 { #category : #'instance creation' }
 Tag class >> none [
-	^ self new state: #none
+	^ self new rmqState: #none
 ]
 
 { #category : #'as yet unclassified' }
 Tag class >> policymaker [
-	^ self new state: #policymaker
+	^ self new rmqState: #policymaker
 ]
 
 { #category : #accessing }

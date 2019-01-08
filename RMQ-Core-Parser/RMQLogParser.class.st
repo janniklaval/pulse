@@ -215,7 +215,8 @@ RMQLogParser class >> populateHeaders: aHeader [
 		ifFound: [ :elementFound | 
 			headers add: elementFound.
 			^elementFound]
-		ifNone: [ model add: newHeader.
+		ifNone: [
+			newHeader mooseModel: model.
 			headers add: newHeader.
 			^newHeader].
 ]
@@ -248,7 +249,7 @@ RMQLogParser class >> populateRoutedQueues: aRMQObject [
 			model allRMQQueues
 				detect: [ :el | el pulseName = routed_queue pulseName ]
 				ifFound: [ :elementFound | ]
-				ifNone: [ model add: routed_queue.
+				ifNone: [ routed_queue mooseModel: model.
 					routedQueues add: routed_queue ] ]
 		ifFalse: [ (aRMQObject at: 'routed_queues')
 				do: [ :aRoutedQueue | 
@@ -258,7 +259,7 @@ RMQLogParser class >> populateRoutedQueues: aRMQObject [
 						detect: [ :el | el pulseName = newRoutedQueue pulseName ]
 						ifFound: [ :elementFound | 
 							routedQueues add: elementFound.]
-						ifNone: [ model add: newRoutedQueue.
+						ifNone: [ newRoutedQueue mooseModel: model.
 							routedQueues add: newRoutedQueue ].
 					] .
 				].
@@ -278,7 +279,7 @@ RMQLogParser class >> populateRoutingKeys: aRMQObject [
 				detect: [ :el | el pulseName = newRoutingKey pulseName ]
 				ifFound: [ :elementFound | 
 					routingKeys add: elementFound.]
-				ifNone: [ model add: newRoutingKey.
+				ifNone: [ newRoutingKey mooseModel: model.
 					routingKeys add: newRoutingKey ].
 			].
 	^ routingKeys 

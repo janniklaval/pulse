@@ -116,8 +116,8 @@ RMQRESTParserApiConsumers class >> populate: aModel withJson: aString [
 			ifAbsent:[  
 				|newNode |
 				newNode := RMQNode new
-					pulseName: ((anObject at: 'channel_details') at: 'node').
-				aModel add: newNode.
+					pulseName: ((anObject at: 'channel_details') at: 'node');
+					mooseModel: aModel.
 				vhost node: newNode.
 				newNode vhosts add: vhost.
 				newNode ].

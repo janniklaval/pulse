@@ -1893,7 +1893,7 @@ RMQRESTParserTestApiQueues >> setUp [
 RMQRESTParserTestApiQueues >> testExistingPopulate [
 
 	| t1 t2 vh node |
-	self assert: model size = 20.
+	self assert: model size = 21.
 	self assert: model allRMQQueues size = 18.
 	self assert: (model allRMQQueues anySatisfy: [:e | e name = 'smalltalk']).
 	self assert: (model allRMQQueues anySatisfy: [:e | e name = 'amq.gen-obbNfBG_5XX6cl6cQqcjqQ']).
@@ -1920,19 +1920,21 @@ RMQRESTParserTestApiQueues >> testExistingPopulate [
 	self assert: t2 durability = false.
 	
 	
-	self assert: t2 rmqState name = 'State : running'.
+	self assert: t2 rmqState name = 'running'.
 	self assert: (t2 rmqState queues anySatisfy: [:e | e = t2 ]).
 	self assert: t2 exclusive = true.
 	self assert: t2 idleSince = '2018-11-15 13:53:03'.
 	
-	self assert: t1 rmqState name = 'State : running'.
+	self assert: t1 rmqState name = 'running'.
 	self assert: (t2 rmqState queues anySatisfy: [:e | e = t2 ]).
 	self assert: t1 exclusive = false.
 	self assert: t1 idleSince = '2018-11-15 11:12:05'.
 	
+	
+	self assert: model size = 21.
 	RMQRESTParserApiQueues populate: model withJson: self data.
 	
-	self assert: model size = 20.
+	self assert: model size = 21.
 	self assert: model allRMQQueues size = 18.
 	self assert: (model allRMQQueues anySatisfy: [:e | e name = 'smalltalk']).
 	self assert: (model allRMQQueues anySatisfy: [:e | e name = 'amq.gen-obbNfBG_5XX6cl6cQqcjqQ']).
@@ -1959,12 +1961,12 @@ RMQRESTParserTestApiQueues >> testExistingPopulate [
 	self assert: t2 durability = false.
 	
 	
-	self assert: t2 rmqState name = 'State : running'.
+	self assert: t2 rmqState name = 'running'.
 	self assert: (t2 rmqState queues anySatisfy: [:e | e = t2 ]).
 	self assert: t2 exclusive = true.
 	self assert: t2 idleSince = '2018-11-15 13:53:03'.
 	
-	self assert: t1 rmqState name = 'State : running'.
+	self assert: t1 rmqState name = 'running'.
 	self assert: (t2 rmqState queues anySatisfy: [:e | e = t2 ]).
 	self assert: t1 exclusive = false.
 	self assert: t1 idleSince = '2018-11-15 11:12:05'.
@@ -2001,12 +2003,12 @@ RMQRESTParserTestApiQueues >> testPopulate [
 	self assert: t2 durability = false.
 	
 	
-	self assert: t2 rmqState name = 'State : running'.
+	self assert: t2 rmqState name = 'running'.
 	self assert: (t2 rmqState queues anySatisfy: [:e | e = t2 ]).
 	self assert: t2 exclusive = true.
 	self assert: t2 idleSince = '2018-11-15 13:53:03'.
 	
-	self assert: t1 rmqState name = 'State : running'.
+	self assert: t1 rmqState name = 'running'.
 	self assert: (t2 rmqState queues anySatisfy: [:e | e = t2 ]).
 	self assert: t1 exclusive = false.
 	self assert: t1 idleSince = '2018-11-15 11:12:05'.
