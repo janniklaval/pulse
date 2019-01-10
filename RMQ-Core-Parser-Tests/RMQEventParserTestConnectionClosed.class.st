@@ -41,6 +41,5 @@ RMQEventParserTestConnectionClosed >> setUp [
 { #category : #tests }
 RMQEventParserTestConnectionClosed >> testModelPopulation [
 
-	"self assert: (model allRMQChannels anySatisfy: [:element | element user name = 'guest'])."
 	self assert: (model allRMQConnections anySatisfy: [:element | element user name = 'guest' and: [ element closingDate isNotNil ] ]).
 ]

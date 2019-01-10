@@ -86,10 +86,10 @@ RMQEventParser >> populate: aModel withBindingDeleted: aDictionnary at: timestam
    
    routingKey := aModel entityNamed: routingKeyName withType: RMQRoutingKey.
 	
-	bindingObject := aModel allRMQBindings
+	 aModel allRMQBindings
 		detect: [ :element | element source = source and: [ element destination = destination  and: [ element routingKey = routingKey ] ]  ]
-		ifFound: [ :elementFound | 
-			elementFound ].
+		ifFound: [ :elementFound |  bindingObject := elementFound ].
+		
 	bindingObject ifNotNil:[ bindingObject deletionDate: timestamp. ]
 		
 
@@ -102,10 +102,10 @@ RMQEventParser >> populate: aModel withChannelClosed: aDictionnary at: timestamp
    " pid in the definition of the channel to corelate with the created channel"
   	| channelObject |
 
-	   channelObject := aModel allRMQChannels
+	   aModel allRMQChannels
 		detect: [ :element | element pid = (aDictionnary at: 'pid') ]
 		ifFound: [ :elementFound | 
-			elementFound ].
+			channelObject := elementFound ].
 			
 		channelObject ifNotNil: [ channelObject closingDate: timestamp ]. 
 	
@@ -137,10 +137,10 @@ RMQEventParser >> populate: aModel withChannelCreated: aDictionnary at: timestam
 		vhost channels add: channelObject.
 
      "if the pid is unique"
-     connection :=	aModel allRMQConnections
+      aModel allRMQConnections
 					detect: [ :element | element pid = (aDictionnary at: 'connection') ]
 					ifFound: [ :elementFound | 
-			                 elementFound ]
+			                 connection := elementFound ]
 		          ifNone: [  ]. "// créer la connection ??"
 		channelObject connection: connection. 
 		
@@ -159,10 +159,10 @@ RMQEventParser >> populate: aModel withConnectionClosed: aDictionnary at: timest
 
      | connectionObject  |
      
-     connectionObject := aModel allRMQConnections
+     aModel allRMQConnections
 	  detect: [ :element | element pid = (aDictionnary at: 'pid') ]
 	  ifFound: [ :elementFound | 
-			elementFound ].
+			connectionObject := elementFound ].
 		
 	  connectionObject ifNotNil: [connectionObject closingDate: timestamp]. 
 		
@@ -286,13 +286,13 @@ RMQEventParser >> populate: aModel withConsumerDeleted: aDictionnary at: timesta
 
 		vhost:= aModel entityNamed: (aDictionnary at: 'vhost') withType: RMQVHost.
 		
-	   componentObject := aModel allRMQComponents
+	   aModel allRMQComponents
 		detect: [ :element | element consumerTag = (aDictionnary at: 'consumer_tag') 
 			"and the channels of the consumer are on the right vhost"
 			and: [ element subscribedChannels anySatisfy: [ :el | el pid = (aDictionnary at: 'channel') and: [ el  vhost = vhost] ] ]				
 			 ]
 		ifFound: [ :elementFound | 
-			elementFound ].
+			componentObject := elementFound ].
 			
 		componentObject ifNotNil: [ componentObject deletionDate: timestamp ]. 
 	

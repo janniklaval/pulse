@@ -37,9 +37,9 @@ RMQEventParserTestQueueDeleted >> setUp [
 	queue vhost: vhost.  
 	
 	"cretate then delete queue test.delete.queue "
-	"consumer createQueue: 'test.delete.queue'.
+	consumer createQueue: 'test.delete.queue'.
 	consumer deleteQueue: 'test.delete.queue'. 
-   2 seconds wait." 
+   2 seconds wait.
 
 	"consume from the events queue"
 	consumer consumeQueue: 'events.queue.deleted'; start. 
