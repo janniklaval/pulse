@@ -227,6 +227,8 @@ RMQComponent >> subscribedChannels: anObject [
 
 { #category : #accessing }
 RMQComponent >> tenants [
+	<MSEProperty: #tenants type: #RMQTenant opposite:#component>
+	<multivalued>
 	^ tenants
 ]
 
