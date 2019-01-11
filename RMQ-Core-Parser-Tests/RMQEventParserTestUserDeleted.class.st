@@ -1,6 +1,7 @@
 "
 runs on default rabbitMQ setup, with events on and events queues bound to events exchange  
 events.user.deleted  queue must not be empty 
+message with user name testuser 
 "
 Class {
 	#name : #RMQEventParserTestUserDeleted,
@@ -18,6 +19,7 @@ RMQEventParserTestUserDeleted >> setUp [
 
 "todo : go further and create the events queue and bing it to the exchange queue ?"
 
+	| user|
 	model := PulseModel new.
 	model name: 'test'.
 	
@@ -26,6 +28,11 @@ RMQEventParserTestUserDeleted >> setUp [
 	consumer := ConsumeEvents new. 
 	consumer model: model. 
 	consumer parser: parser.
+	
+	"populate the model with the resource "
+	user := RMQUser new.
+	user pulseName: 'testuser';
+			mooseModel: model.
 	
 	"consume from the events queues"
 	consumer consumeQueue: 'events.user.deleted'; start. 

@@ -38,17 +38,16 @@ RMQEventParserTestExchangeDeleted >> setUp [
 									mooseModel: model.
 	exchange vhost: vhost. 
 	vhost exchanges add: exchange. 
- 
-	2 seconds wait.
+
 	
 	"cretate then delete resource"
-	"consumer createExchange: 'test.delete.exchange' type: 'topic'.
-	1 seconds wait.
-	consumer deleteExchange: 'test.delete.exchange'. "
+	consumer createExchange: 'test.delete.exchange' type: 'topic'.
+	consumer deleteExchange: 'test.delete.exchange'. 
+   1 seconds wait.
 
 	"consume from the events queue"
 	consumer consumeQueue: 'events.exchange.deleted'; start. 
-	"5 seconds wait."
+	2 seconds wait.
 	
 
 	

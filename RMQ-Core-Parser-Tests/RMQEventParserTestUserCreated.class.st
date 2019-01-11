@@ -1,6 +1,7 @@
 "
 runs on default rabbitMQ setup, with events on and events queues bound to events exchange  
 events.user.created  queue must not be empty 
+event with user name user
 "
 Class {
 	#name : #RMQEventParserTestUserCreated,
@@ -36,6 +37,6 @@ RMQEventParserTestUserCreated >> setUp [
 { #category : #tests }
 RMQEventParserTestUserCreated >> testModelPopulation [
 
-	self assert: (model allRMQUsers anySatisfy: [:element | element name = 'testuser' and:[ element creationDate isNotNil ] ]).
+	self assert: (model allRMQUsers anySatisfy: [:element | element name = 'user' and:[ element creationDate isNotNil ] ]).
 
 ]

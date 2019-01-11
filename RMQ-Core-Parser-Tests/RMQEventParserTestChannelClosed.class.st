@@ -16,6 +16,7 @@ Class {
 { #category : #initialization }
 RMQEventParserTestChannelClosed >> setUp [
 
+
 "todo : go further and create the events queue and bing it to the exchange queue ?"
 
 	model := PulseModel new.
@@ -26,7 +27,7 @@ RMQEventParserTestChannelClosed >> setUp [
 	consumer := ConsumeEvents new. 
 	consumer model: model. 
 	consumer parser: parser.
-	
+
 	"consume from the events queues"
 	consumer consumeQueue: 'events.channel.closed'; start. 
 	2 seconds wait.
