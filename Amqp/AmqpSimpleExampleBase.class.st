@@ -27,10 +27,15 @@ AmqpSimpleExampleBase >> exampleHost [
 { #category : #initialization }
 AmqpSimpleExampleBase >> initialize [
 	super initialize.
+	
+	"credentials := AmqpPlainCredentials new
+			username: 'guest';
+		   password: 'guest'."
 
 	conn := AmqpConnection new.
 	conn protocolClass: Amqp091.
 	conn host: self exampleHost port: 5672.
+	"conn credentials: credentials."
 	conn open.
 
 	ch := conn newChannel.

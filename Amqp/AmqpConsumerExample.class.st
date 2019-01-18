@@ -29,7 +29,7 @@ AmqpConsumerExample >> initialize [
 		arguments: nil) method queue.
 	ch queueBind: queueName exchange: self exampleExchange routingKey: ''.
 	consumerTag := ch consumeFrom: queueName callback: self selector: #handleDelivery:."
-	consumerTag := ch consumeFrom: 'events.queue.created' callback: self selector: #handleDelivery:.
+	consumerTag := ch consumeFrom: 'smalltalk' callback: self selector: #handleDelivery:.
 ]
 
 { #category : #'as yet unclassified' }
