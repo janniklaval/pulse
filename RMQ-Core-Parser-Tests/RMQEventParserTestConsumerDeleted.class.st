@@ -18,6 +18,7 @@ RMQEventParserTestConsumerDeleted >> setUp [
 
 "todo : go further and create the events queue and bing it to the exchange queue ?"
 
+	| consumer2 |
 	model := PulseModel new.
 	model name: 'test'.
 	
@@ -27,8 +28,16 @@ RMQEventParserTestConsumerDeleted >> setUp [
 	consumer model: model. 
 	consumer parser: parser.
 	
+	consumer2 := ConsumeEvents new. 
+	consumer2 model: model. 
+	consumer2 parser: parser.
+	
+	"consume from the consumer.created queues"
+	consumer consumeQueue: 'events.consumer.created'; start. 
+	2 seconds wait.
+	
 	"consume from the events queues"
-	consumer consumeQueue: 'events.consumer.deleted'; start. 
+	consumer2 consumeQueue: 'events.consumer.deleted'; start. 
 	2 seconds wait.
 	
 	

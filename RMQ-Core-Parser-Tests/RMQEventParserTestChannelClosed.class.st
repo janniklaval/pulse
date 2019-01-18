@@ -19,6 +19,7 @@ RMQEventParserTestChannelClosed >> setUp [
 
 "todo : go further and create the events queue and bing it to the exchange queue ?"
 
+	| consumer2 |
 	model := PulseModel new.
 	model name: 'test'.
 	
@@ -27,9 +28,17 @@ RMQEventParserTestChannelClosed >> setUp [
 	consumer := ConsumeEvents new. 
 	consumer model: model. 
 	consumer parser: parser.
+	
+	consumer2 := ConsumeEvents new. 
+	consumer2 model: model. 
+	consumer2 parser: parser.
+	
+	"listen first to the channel.created queue"
+	consumer consumeQueue: 'events.channel.created'; start. 
+	2 seconds wait.
 
 	"consume from the events queues"
-	consumer consumeQueue: 'events.channel.closed'; start. 
+	consumer2 consumeQueue: 'events.channel.closed'; start. 
 	2 seconds wait.
 	
 	
