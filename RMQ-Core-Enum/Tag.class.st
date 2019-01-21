@@ -32,6 +32,13 @@ Tag class >> policymaker [
 	^ self new rmqState: #policymaker
 ]
 
+{ #category : #initialization }
+Tag >> initialize [
+
+	super initialize.
+	roles := Set new.
+]
+
 { #category : #accessing }
 Tag >> roles [
 	<MSEProperty: #roles type: #RMQRole opposite:#tag>

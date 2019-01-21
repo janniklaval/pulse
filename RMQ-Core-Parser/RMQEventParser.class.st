@@ -35,20 +35,21 @@ RMQEventParser >> populate: aModel withBindingCreated: aDictionnary at: timestam
 	].
 	newBinding 
 		source: source;
-		destination: destination.
+		destination: destination;
+		mooseModel: aModel. 
 	
 		
 	"if the binding does not exist, create it"
 	
-	bindingObject := aModel allRMQBindings
+	 aModel allRMQBindings
 		detect: [ :el | el source = source and: [ el destination = destination ] ]
 		ifFound: [ :elementFound | 
-			elementFound ]
+			bindingObject := elementFound ]
 		ifNone: [  
 				destination destinationBindings add: newBinding.
 				source sourceBindings add: newBinding.
 				aModel add: newBinding.
-				newBinding ].
+				bindingObject := newBinding ].
 		
 		bindingObject creationDate: timestamp. 
 
@@ -193,7 +194,8 @@ aDictionnary (timestamp_in_ms:	1544196873787, pid:	<rabbit@fceed0d94b94.3.12113.
 	   ifAbsent:[ 
 		| newConnection |
 				newConnection := RMQConnection new
-					pulseName: connectionName.
+					pulseName: connectionName;
+					mooseModel: aModel. 
 				
 	  newConnection pid: (aDictionnary at: 'pid').
 	  newConnection connectionType: (aDictionnary at: 'type').
@@ -239,39 +241,39 @@ aDictionnary (timestamp_in_ms:	1544196873787, pid:	<rabbit@fceed0d94b94.3.12113.
 RMQEventParser >> populate: aModel withConsumerCreated: aDictionnary at: timestamp [
    "aDictionnary ( vhost, consumer_tag, channel(pid), exclusive, arguments, ack_required, queue)"
 
-      | componentObject newComponent  vhost channel newChannel relatedQueue |
+      | componentObject vhost channel relatedQueue |
 
 		vhost:= aModel selectOrAddEntityNamed: (aDictionnary at: 'vhost') withType: RMQVHost.
 		
 		"// find the consumer with the right channel and vhost"
-	   componentObject := aModel allRMQComponents
+	   aModel allRMQComponents
 		detect: [ :element | element consumerTag = (aDictionnary at: 'consumer_tag') 
 			and: [ element subscribedChannels anySatisfy: [ :el | el pid = (aDictionnary at: 'channel') and: [ el  vhost = vhost] ] ]		
 			 ]
 		ifFound: [ :elementFound | 
-			elementFound ]
+			componentObject := elementFound ]
 		ifNone: [  
-            newComponent := RMQComponent new.
-            newComponent consumerTag: (aDictionnary at: 'consumer_tag').
-				aModel add: newComponent.
-				newComponent ].
+            componentObject := RMQComponent new.
+            componentObject consumerTag: (aDictionnary at: 'consumer_tag').
+            componentObject mooseModel: aModel.
+				aModel add: componentObject ].
 			
 		componentObject creationDate: timestamp. 
 		
 		relatedQueue := aModel selectOrAddEntityNamed: (aDictionnary at: 'queue') withType: RMQQueue. . 
 		
 		"trouver la channel et la lier au consumer sinon la créer, set son subscribedComponent, pid, consumedQueues et vhost"
-		channel :=	aModel allRMQChannels
+		 aModel allRMQChannels
 					detect: [ :el | el pid = (aDictionnary at: 'channel') and: [ el  vhost = vhost] ]
 					ifFound: [ :elementFound | 
-			                 elementFound ]
-		          ifNone: [ newChannel := RMQChannel new.
-			                 newChannel subscribedComponent: componentObject.
-			                 newChannel pid: (aDictionnary at: 'channel').
-			                 newChannel consumedQueues add: relatedQueue. 
-			                 newChannel vhost: vhost.
-			                 aModel add: newChannel.
-			                 newChannel  ]. 
+			                 channel := elementFound ]
+		          ifNone: [ channel := RMQChannel new.
+			                 channel subscribedComponent: componentObject.
+			                 channel pid: (aDictionnary at: 'channel').
+			                 channel consumedQueues add: relatedQueue. 
+			                 channel vhost: vhost.
+			                 channel mooseModel: aModel.
+			                 aModel add: channel ]. 
 		
 		componentObject subscribedChannels add: channel. 
 
@@ -284,7 +286,7 @@ RMQEventParser >> populate: aModel withConsumerDeleted: aDictionnary at: timesta
 	
 		| componentObject  vhost |
 
-		vhost:= aModel entityNamed: (aDictionnary at: 'vhost') withType: RMQVHost.
+		vhost := aModel entityNamed: (aDictionnary at: 'vhost') withType: RMQVHost.
 		
 	   aModel allRMQComponents
 		detect: [ :element | element consumerTag = (aDictionnary at: 'consumer_tag') 
@@ -375,28 +377,28 @@ RMQEventParser >> populate: aModel withPermissionCreated: aDictionnary at: times
 		readValue := aDictionnary at: 'read'.
 
          "add the new permission to the model if it doest not exist"
-		permissionObject :=	aModel allRMQPermissions
+	   aModel allRMQPermissions
 					detect: [ :el | el vhost pulseName = vhostName
 								and: [ el user pulseName = userName and: [ el configureValue = configureValue and: [ el writeValue = writeValue and: [el readValue = readValue] ] ] ] ]
 						ifFound: [ :elementFound | permissionObject := elementFound ]
-						ifNone: [ | newPermission |
-							newPermission := RMQPermission new
+						ifNone: [ 
+							permissionObject := RMQPermission new
 								configureValue: configureValue;
 								writeValue: writeValue; 
 								readValue: readValue.
+							permissionObject mooseModel: aModel. 
 								
 						   "add the user to the model if it doest not exist"
 							user := aModel selectOrAddEntityNamed: userName withType: RMQUser.
-							newPermission user: user.
-							user permissions add: newPermission.
+							permissionObject user: user.
+							user permissions add: permissionObject.
 							
 							"add the vhost to the model if it doest not exist"
 							vhost := aModel selectOrAddEntityNamed: vhostName withType: RMQVHost.
-							newPermission vhost: vhost.
-							vhost permissions add: newPermission.
+							permissionObject vhost: vhost.
+							vhost permissions add: permissionObject.
 						
-							aModel add: newPermission.
-						   newPermission ]. 
+							aModel add: permissionObject ]. 
 					
 				permissionObject creationDate: timestamp. 
 ]
@@ -426,7 +428,7 @@ RMQEventParser >> populate: aModel withQueueCreated: aDictionnary at: timestamp 
 		queueName := (aDictionnary at: 'name') trimLeft: [ :e | e = '"' ] right: [ :e | e = '"' ].
 		
 		"if the queue does not exist, create it"
-		queueObject := aModel selectOrAddEntityNamed: queueName withType: RMQQueue. "ici on peut avoir une liste ! à revoir dans ex: populate:withQueues: dans RMQRestParser. ++ est ce que cette méthode est définie de façon à rendre une liste ? non juste une entité.  sinon le nom de la resources dans rabbitmq ne doit pas être l'identifiant de l'objet dans le modèle, oui à voir "
+		queueObject := aModel selectOrAddEntityNamed: queueName withType: RMQQueue. "ici on peut avoir une liste !"
 			
 		queueObject creationDate: timestamp. 
 		
@@ -462,7 +464,7 @@ RMQEventParser >> populate: aModel withQueueDeleted: aDictionnary at: timestamp 
 		
       queueName := (aDictionnary at: 'name') trimLeft: [ :e | e = '"' ] right: [ :e | e = '"' ].
 		vhostName := (aDictionnary at: 'vhost') trimLeft: [ :e | e = '"' ] right: [ :e | e = '"' ]. 
-		"queueObject := aModel entityNamed: (aDictionnary at: 'name') withType: RMQQueue.""ici on peut avoir une liste ! à revoir dans ex: populate: aModel withQueues: anArray dans RMQRestParser "
+		
 		aModel allRMQQueues detect:[ :el | el pulseName = queueName and:[ el vhost pulseName =  vhostName] ]
 		                        ifFound: [ :elementFound | queueObject := elementFound ].  
 		
@@ -505,7 +507,7 @@ error:	117...   // the error is in ascii"
   authentificationObject success: false. 
   authentificationObject failureError: (aDictionnary at: 'error').
   authentificationObject timestamp: timestamp. 
-
+  authentificationObject mooseModel: aModel. 
   aModel add: authentificationObject. 
 
   "if the connection is of network type create the connection and link it to the user that authentificates"
@@ -517,7 +519,8 @@ error:	117...   // the error is in ascii"
 	ifAbsent:[ 
 		| newConnection |
 				newConnection := RMQConnection new
-					pulseName: connectionName.
+					pulseName: connectionName; 
+					mooseModel: aModel. 
 				
 	  newConnection connectionType: (aDictionnary at: 'connection_type').
      "connection // set the authMechanism"
@@ -559,7 +562,7 @@ aDictionnary (connection_type:	direct, name:	admin, timestamp_in_ms:	15284543543
   "set the authentification state"
   authentificationObject success: true. 
   authentificationObject timestamp: timestamp. 
-
+  authentificationObject mooseModel: aModel. 
   aModel add: authentificationObject. 
 
   "if the connection is of network type create the connection and link it to the user that authentificates"
@@ -571,7 +574,8 @@ aDictionnary (connection_type:	direct, name:	admin, timestamp_in_ms:	15284543543
 	ifAbsent:[ 
 		| newConnection |
 				newConnection := RMQConnection new
-					pulseName: connectionName.
+					pulseName: connectionName;
+					mooseModel: aModel.
 				
 	  newConnection connectionType: (aDictionnary at: 'connection_type').
      "connection // set the authMechanism"
@@ -655,12 +659,22 @@ RMQEventParser >> populate: aModel withUserTagsSet: aDictionnary at: timestamp [
 			ifAbsent:[   
 				|newRole |
 				newRole := RMQRole new
-					tag: aTagString;   "?"
+				   mooseModel: aModel;
 					settingDate: timestamp.
+					
+				(aTagString = 'administrator') ifTrue: [ newRole tag: (Tag administrator).
+			   newRole tag roles add: newRole].	
+			   (aTagString = 'management') ifTrue: [ newRole tag: (Tag management).
+			   newRole tag roles add: newRole].
+		      (aTagString = 'monitoring') ifTrue: [ newRole tag: (Tag monitoring).
+			   newRole tag roles add: newRole].
+		      (aTagString = 'policymaker') ifTrue: [ newRole tag: (Tag policymaker).
+			   newRole tag roles add: newRole].
+					
 				aModel add: newRole.
 				newRole ].
 			
-			 (user roles anySatisfy: [ :e | e = roleObject ]) ifFalse: [ "??"
+			 (user roles anySatisfy: [ :e | e = roleObject ]) ifFalse: [
 			  user roles add: roleObject.
 			  roleObject user: user 
 			].
