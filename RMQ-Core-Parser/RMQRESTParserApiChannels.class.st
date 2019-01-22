@@ -271,8 +271,8 @@ RMQRESTParserApiChannels class >> populate: aModel withJson: aString [
 		connection peerHost: ((anObject at: 'connection_details') at: 'peer_host').
 		connection peerPort: ((anObject at: 'connection_details') at: 'peer_port').
 		
-		connection host: ((('10.238.15.51:49677 -> 10.238.28.5:5672' substrings: '->') second) substrings: ':') first withBlanksCondensed.
-		connection port: ((('10.238.15.51:49677 -> 10.238.28.5:5672' substrings: '->') second) substrings: ':') second withBlanksCondensed asInteger.
+		connection host: (((((anObject at: 'connection_details') at: 'name')"'10.238.15.51:49677 -> 10.238.28.5:5672'" substrings: '->') second) substrings: ':') first withBlanksCondensed.
+		connection port: (((((anObject at: 'connection_details') at: 'name')"'10.238.15.51:49677 -> 10.238.28.5:5672'" substrings: '->') second) substrings: ':') second withBlanksCondensed asInteger.
 		
 		connection channels add: channel.
 		channel connection: connection.
