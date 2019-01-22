@@ -7,6 +7,12 @@ Class {
 	#category : #'RMQ-Core-Model'
 }
 
+{ #category : #testing }
+PulseEntity class >> isVoyageRoot [
+
+	^true
+]
+
 { #category : #accessing }
 PulseEntity >> name [
 	<MSEProperty: #name type: #String>

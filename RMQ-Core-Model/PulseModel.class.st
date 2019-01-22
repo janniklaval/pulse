@@ -4,6 +4,12 @@ Class {
 	#category : #'RMQ-Core-Model'
 }
 
+{ #category : #testing }
+PulseModel class >> isVoyageRoot [
+
+	^true
+]
+
 { #category : #accessing }
 PulseModel >> allAuthMechanisms [
 	<navigation: 'All AuthMechanisms group'>

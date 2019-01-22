@@ -26,8 +26,15 @@ BaselineOfRMQ >> baseline: spec [
 					file: 'ConfigurationOfOrion';
 					repository: 'http://smalltalkhub.com/mc/Moose/Orion/main' ].
 		
+		spec configuration: 'VoyageMongo' 
+		with: [ spec
+					className: 'ConfigurationOfVoyageMongo';
+					versionString: #stable;
+					file: 'ConfigurationOfVoyageMongo';
+				repository: 'http://smalltalkhub.com/mc/estebanlm/Voyage/main'].
+		
 		spec
- 			group: 'default' with: #( 'RMQ-Core-Enum' 'RMQ-Core-Model' 'RMQ-Core-Parser' 'RMQ-Core-Visualization' 'Amqp' 'Orion' ).
+ 			group: 'default' with: #(  'Amqp' 'VoyageMongo' 'Orion' 'RMQ-Core-Enum' 'RMQ-Core-Model' 'RMQ-Core-Parser' 'RMQ-Core-Visualization').
 	].
 
 ]
