@@ -30,7 +30,7 @@ BaselineOfRMQ >> baseline: spec [
                         baseline: 'Voyage'
                             with: [ spec
                                 className: 'BaselineOfVoyage';
-                                repository: 'github://pharo-nosql/voyage/mc';
+                                repository: 'github://pharo-nosql/voyage:1.5/mc';
                                 loads: #('mongo tests') ];
                         import: 'Voyage'.
 		spec
