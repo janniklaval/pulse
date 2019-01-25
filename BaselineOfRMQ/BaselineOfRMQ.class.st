@@ -26,11 +26,13 @@ BaselineOfRMQ >> baseline: spec [
 					file: 'ConfigurationOfOrion';
 					repository: 'http://smalltalkhub.com/mc/Moose/Orion/main' ].
 		
-		spec baseline: 'Voyage' 
-		with: [ spec
-					repository: 'github://pharo-nosql/voyage/mc';
-					loads: #('mongo tests')
-				].
+		spec
+                        baseline: 'Voyage'
+                            with: [ spec
+                                className: 'BaselineOfVoyage';
+                                repository: 'github://pharo-nosql/voyage/mc';
+                                loads: #('mongo tests') ];
+                        import: 'Voyage'.
 		spec
  			group: 'default' with: #(  'Amqp' 'Voyage' 'Orion' 'RMQ-Core-Enum' 'RMQ-Core-Model' 'RMQ-Core-Parser' 'RMQ-Core-Visualization').
 	].
