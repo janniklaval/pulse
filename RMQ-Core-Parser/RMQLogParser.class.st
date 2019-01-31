@@ -102,7 +102,7 @@ RMQLogParser class >> populate: aModel withJson: aString [
 				vhost node: node.
 			].
 			
-			channel := aModel selectOrAddEntityNamed: (aRMQObject at: 'channel') withType: RMQChannel.
+			channel := aModel selectOrAddEntityNamed: (aRMQObject at: 'channel') asString withType: RMQChannel.
 			channel vhost ifNil:[
 				vhost channels add: vhost.
 				channel vhost: vhost.
@@ -161,24 +161,25 @@ RMQLogParser class >> populate: aModel withJson: aString [
 			message messageType: messageType.
 			messageType messages add: message.
 			
-			component := aModel selectOrAddEntityNamed: ((aRMQObject at: 'properties') at: 'app_id') withType: RMQComponent.
-			component senderMessages add: message.
-			message senderComponent:component.
+			(aRMQObject at: 'properties') at: 'app_id' ifPresent:[
+				component := aModel selectOrAddEntityNamed: ((aRMQObject at: 'properties') at: 'app_id') withType: RMQComponent.
+				component senderMessages add: message.
+				message senderComponent:component.
 			
-			component subscribedChannels 
-				detect: [:ch| ch = channel ]
-				ifNone: [
-					component subscribedChannels add: channel.
-					channel subscribedComponent: component.
-				].
+				component subscribedChannels 
+					detect: [:ch| ch = channel ]
+					ifNone: [
+						component subscribedChannels add: channel.
+						channel subscribedComponent: component.
+					].
 			
-			component exchanges 
-				detect: [:exch| exch = exchange ]
-				ifNone: [
-					component exchanges add: exchange.
-					exchange components add: component.
-				].
-			
+				component exchanges 
+					detect: [:exch| exch = exchange ]
+					ifNone: [
+						component exchanges add: exchange.
+						exchange components add: component.
+					].
+			].
 			
 			delivMode := self populateDeliveryMode: aRMQObject.
 			message deliveryMode: delivMode.
