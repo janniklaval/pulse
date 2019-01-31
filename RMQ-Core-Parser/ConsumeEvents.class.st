@@ -1,3 +1,6 @@
+"
+useful AMQP methods 
+"
 Class {
 	#name : #ConsumeEvents,
 	#superclass : #RMQAmqpConnecter,

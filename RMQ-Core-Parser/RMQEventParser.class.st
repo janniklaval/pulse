@@ -386,21 +386,24 @@ RMQEventParser >> populate: aModel withPermissionCreated: aDictionnary at: times
 								and: [ el user pulseName = userName and: [ el configureValue = configureValue and: [ el writeValue = writeValue and: [el readValue = readValue] ] ] ] ]
 						ifFound: [ :elementFound | permissionObject := elementFound ]
 						ifNone: [ 
-							permissionObject := RMQPermission new
-								configureValue: configureValue;
-								writeValue: writeValue; 
-								readValue: readValue.
+							permissionObject := RMQPermission new.
+							permissionObject configureValue: configureValue.
+							permissionObject writeValue: writeValue.
+							permissionObject readValue: readValue.
 							permissionObject mooseModel: aModel. 
+							
+						  "add the vhost to the model if it doest not exist"
+							vhost := aModel selectOrAddEntityNamed: vhostName withType: RMQVHost.
+							permissionObject vhost: vhost.
+							vhost permissions add: permissionObject.
 								
 						   "add the user to the model if it doest not exist"
 							user := aModel selectOrAddEntityNamed: userName withType: RMQUser.
 							permissionObject user: user.
 							user permissions add: permissionObject.
+							user vhosts add: vhost. 
 							
-							"add the vhost to the model if it doest not exist"
-							vhost := aModel selectOrAddEntityNamed: vhostName withType: RMQVHost.
-							permissionObject vhost: vhost.
-							vhost permissions add: permissionObject.
+							vhost users add: user.
 						
 							aModel add: permissionObject ]. 
 					
