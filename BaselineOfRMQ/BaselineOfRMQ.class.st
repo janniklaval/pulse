@@ -12,6 +12,7 @@ BaselineOfRMQ >> baseline: spec [
 		
 		spec package: 'RMQ-Core-Model'.
 		spec package: 'RMQ-Core-Parser'.
+		spec package: 'RMQ-Process'. 
 		spec package: 'RMQ-Core-Visualization'. 
 		spec package: 'RMQ-Core-Parser-Tests'. 
 		
