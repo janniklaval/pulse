@@ -1,11 +1,11 @@
 Class {
 	#name : #Durability,
-	#superclass : #Type,
+	#superclass : #PulseEnum,
 	#instVars : [
 		'queues',
 		'exchanges'
 	],
-	#category : #'RMQ-Core-Enum'
+	#category : #'RMQ-Core-Model'
 }
 
 { #category : #accessing }

@@ -35,8 +35,6 @@ RMQConnection >> authMechanism [
 RMQConnection >> authMechanism: anObject [
 	authMechanism := self selectEnum: anObject. 
 	authMechanism connections add: self.
-	
-
 ]
 
 { #category : #accessing }
