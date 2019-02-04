@@ -37,7 +37,7 @@ RMQEventParserTestUserTagsSet >> setUp [
 { #category : #tests }
 RMQEventParserTestUserTagsSet >> testModelPopulation [
 
-	self assert: (model allRMQUsers anySatisfy: [:element | element name = 'testuser' ]).
-	self assert: (model allRMQRoles anySatisfy: [:element | element tag name = 'monitoring' and: [ element user name = 'testuser' and:[ element settingDate isNotNil ] ] ] ).
+	self assert: (model allRMQUsers anySatisfy: [:element | element name = 'user' ]).
+	self assert: (model allRMQRoles anySatisfy: [:element | element tag name = 'testing' and: [ element user name = 'user' and:[ element settingDate isNotNil ] ] ] ).
 
 ]

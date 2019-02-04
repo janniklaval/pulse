@@ -12,7 +12,7 @@ Class {
 
 { #category : #parsing }
 RMQEventParser >> populate: aModel withBindingCreated: aDictionnary at: timestamp [
-"aDictionnary : destination_kind source_kind, arguments (aDictionnary), destination_name, routing_key, source_name"
+"aDictionnary : destination_kind source_kind, arguments (aDictionnary), destination_name, routing_key, source_name, vhost"
 "todo : set the arguments"
 	
 	| bindingObject source destination routingKey destType sourceName destinationName newBinding |
@@ -129,13 +129,14 @@ RMQEventParser >> populate: aModel withChannelCreated: aDictionnary at: timestam
 		channelObject creationDate: timestamp.
 		channelObject pid: (aDictionnary at: 'pid').
 		
-		user := aModel selectOrAddEntityNamed: (aDictionnary at: 'user') withType: RMQUser.
-		channelObject user: user.
-		user usedChannels add: channelObject.
-
 		vhost := aModel selectOrAddEntityNamed: (aDictionnary at: 'vhost') withType: RMQVHost.
 		channelObject vhost: vhost.
 		vhost channels add: channelObject.
+		
+		user := aModel selectOrAddEntityNamed: (aDictionnary at: 'user') withType: RMQUser.
+		channelObject user: user.
+		user usedChannels add: channelObject.
+		user vhosts add: vhost. 
 
      "if the pid is unique"
       aModel allRMQConnections
@@ -184,57 +185,53 @@ auth_mechanism:	PLAIN, ssl_protocol:, ssl_key_exchange:, ssl_cipher: ssl_hash:, 
 
 when connection is of direct type :
 aDictionnary (timestamp_in_ms:	1544196873787, pid:	<rabbit@fceed0d94b94.3.12113.0>, protocol:	{'Direct',{0,9,1}}, host:	unknown, port:	unknown, name:	<rabbit@fceed0d94b94.3.12113.0>, peer_host:	unknown, peer_port:	unknown, user:	guest, vhost:	/, client_properties:	, type:	direct, connected_at:	1544196873787)"
+
 	| connectionType connectionObject connectionName user vhost |
 	
-	connectionName := (aDictionnary at: 'name').
-	connectionType := (aDictionnary at: 'type').
-	"create connection if needed according to the connection type "
+	connectionName := aDictionnary at: 'name'.
+	connectionType := aDictionnary at: 'type'.
+	
+	connectionObject := aModel entityNamed: connectionName withType: RMQConnection
+		ifAbsent: [ | newConnection |
+			newConnection := RMQConnection new
+				pulseName: connectionName;
+				mooseModel: aModel.
+			newConnection pid: (aDictionnary at: 'pid').
+			newConnection connectionType: (aDictionnary at: 'type').
+			newConnection connectedAt: (aDictionnary at: 'connected_at').
+			newConnection host: (aDictionnary at: 'host').
+			newConnection port: (aDictionnary at: 'port').
+			newConnection peerHost: (aDictionnary at: 'peer_host').
+			newConnection peerPort: (aDictionnary at: 'peer_port').
+			newConnection protocol: (aDictionnary at: 'protocol').
+			connectionType = 'network'
+				ifTrue: [ newConnection ssl: (aDictionnary at: 'ssl').
+					       ((aDictionnary at: 'auth_mechanism') = 'plain') ifTrue: [ newConnection authMechanism: (AuthMechanism plain).
+			              newConnection authMechanism connections add: newConnection].
+		                ((aDictionnary at: 'auth_mechanism') = 'amqPlain') ifTrue: [ newConnection authMechanism: (AuthMechanism amqPlain).
+			              newConnection authMechanism connections add: newConnection].	
+			             ((aDictionnary at: 'auth_mechanism') = 'rabbit_cr_demo') ifTrue: [ newConnection authMechanism: (AuthMechanism rabbit_cr_demo).
+			              newConnection authMechanism connections add: newConnection].		
+			
+					       (newConnection ssl = true)
+						    ifTrue: [ newConnection sslProtocol: (aDictionnary at: 'ssl_protocol').
+							newConnection sslHash: (aDictionnary at: 'ssl_hash') ] ].
+			aModel add: newConnection.
+			newConnection ].
 		
-		connectionObject := aModel entityNamed: connectionName withType: RMQConnection
-	   ifAbsent:[ 
-		| newConnection |
-				newConnection := RMQConnection new
-					pulseName: connectionName;
-					mooseModel: aModel. 
-				
-	  newConnection pid: (aDictionnary at: 'pid').
-	  newConnection connectionType: (aDictionnary at: 'type').
-	  newConnection connectedAt: (aDictionnary at: 'connected_at').
-	  newConnection host: (aDictionnary at: 'host').
-	  newConnection port: (aDictionnary at: 'port').
-	  newConnection peerHost: (aDictionnary at: 'peer_host').
-	  newConnection peerPort: (aDictionnary at: 'peer_port').
-	  newConnection protocol: (aDictionnary at: 'protocol').
-	  
-	  
-	  (connectionType = 'network') ifTrue: [ 
-		 "todo: set the authMechanism"
-		newConnection ssl: (aDictionnary at: 'ssl'). 
-		(newConnection ssl = True ) ifTrue:[
-		newConnection sslProtocol: (aDictionnary at: 'ssl_protocol').
-		newConnection sslHash: (aDictionnary at: 'ssl_hash')].
-	  ].
-	  
-	  aModel add: newConnection.
-				newConnection 
-	  ].
-
-    "set the creation timestamp"
-    connectionObject creationDate: timestamp. 
-    
-    "create user if needed and link to  user "
-    user := aModel selectOrAddEntityNamed: (aDictionnary at: 'user') withType: RMQUser.
-	 (user usedConnections anySatisfy: [ :e | e = connectionObject ]) ifFalse: [ 
-			  user usedConnections add: connectionObject.
-			  connectionObject user: user 
-			].
+	connectionObject creationDate: timestamp.
 		
-	 "create user if needed and link to  user "
-	 vhost :=	aModel selectOrAddEntityNamed: (aDictionnary at: 'vhost') withType: RMQVHost.
-    (vhost connections anySatisfy: [ :e | e = connectionObject ]) ifFalse: [
-			  vhost connections add: connectionObject.
-			  connectionObject vhost: vhost 
-			].
+	vhost := aModel selectOrAddEntityNamed: (aDictionnary at: 'vhost') withType: RMQVHost.
+	(vhost connections anySatisfy: [ :e | e = connectionObject ])
+		ifFalse: [ vhost connections add: connectionObject.
+			        connectionObject vhost: vhost ].
+		
+  	user := aModel selectOrAddEntityNamed: (aDictionnary at: 'user') withType: RMQUser.
+	(user usedConnections anySatisfy: [ :e | e = connectionObject ])
+		ifFalse: [ user usedConnections add: connectionObject.
+			        user vhosts add: vhost.
+			        connectionObject user: user ].
+	
 ]
 
 { #category : #parsing }
@@ -258,7 +255,10 @@ RMQEventParser >> populate: aModel withConsumerCreated: aDictionnary at: timesta
             componentObject mooseModel: aModel.
 				aModel add: componentObject ].
 			
-		componentObject creationDate: timestamp. 
+		componentObject creationDate: timestamp.
+		componentObject exclusive: (aDictionnary at: 'exclusive').
+		componentObject ackRequired: (aDictionnary at: 'ack_required').
+		
 		
 		relatedQueue := aModel selectOrAddEntityNamed: (aDictionnary at: 'queue') withType: RMQQueue. . 
 		
@@ -315,10 +315,14 @@ RMQEventParser >> populate: aModel withExchangeCreated: aDictionnary at: timesta
 		
 		exchangeObject creationDate: timestamp.
 			
-		exchangeObject type: (aDictionnary at: 'type').
+		((aDictionnary at: 'type') = 'topic') ifTrue: [ exchangeObject type: (ExchangeType topic).  exchangeObject type exchanges add: exchangeObject].
+		((aDictionnary at: 'type') = 'direct') ifTrue: [ exchangeObject type: (ExchangeType direct).  exchangeObject type exchanges add: exchangeObject].
+		((aDictionnary at: 'type') = 'fanout') ifTrue: [ exchangeObject type: (ExchangeType fanout).  exchangeObject type exchanges add: exchangeObject].
+		((aDictionnary at: 'type') = 'headers') ifTrue: [ exchangeObject type: (ExchangeType headers).  exchangeObject type exchanges add: exchangeObject].
 		exchangeObject internal: (aDictionnary at: 'internal').
 		exchangeObject autoDelete: (aDictionnary at: 'auto_delete').
-		exchangeObject durability:(aDictionnary at: 'durable').
+		((aDictionnary at: 'durable') = 1) ifTrue: [ exchangeObject durability: (Durability durable).  exchangeObject durability exchanges add: exchangeObject].
+		((aDictionnary at: 'durable') = 0) ifTrue: [ exchangeObject durability: (Durability transient).  exchangeObject durability exchanges add: exchangeObject].
 		
 		
 		vhost := aModel selectOrAddEntityNamed: (aDictionnary at: 'vhost') withType: RMQVHost.
@@ -382,21 +386,24 @@ RMQEventParser >> populate: aModel withPermissionCreated: aDictionnary at: times
 								and: [ el user pulseName = userName and: [ el configureValue = configureValue and: [ el writeValue = writeValue and: [el readValue = readValue] ] ] ] ]
 						ifFound: [ :elementFound | permissionObject := elementFound ]
 						ifNone: [ 
-							permissionObject := RMQPermission new
-								configureValue: configureValue;
-								writeValue: writeValue; 
-								readValue: readValue.
+							permissionObject := RMQPermission new.
+							permissionObject configureValue: configureValue.
+							permissionObject writeValue: writeValue.
+							permissionObject readValue: readValue.
 							permissionObject mooseModel: aModel. 
+							
+						  "add the vhost to the model if it doest not exist"
+							vhost := aModel selectOrAddEntityNamed: vhostName withType: RMQVHost.
+							permissionObject vhost: vhost.
+							vhost permissions add: permissionObject.
 								
 						   "add the user to the model if it doest not exist"
 							user := aModel selectOrAddEntityNamed: userName withType: RMQUser.
 							permissionObject user: user.
 							user permissions add: permissionObject.
+							user vhosts add: vhost. 
 							
-							"add the vhost to the model if it doest not exist"
-							vhost := aModel selectOrAddEntityNamed: vhostName withType: RMQVHost.
-							permissionObject vhost: vhost.
-							vhost permissions add: permissionObject.
+							vhost users add: user.
 						
 							aModel add: permissionObject ]. 
 					
@@ -627,10 +634,10 @@ RMQEventParser >> populate: aModel withUserDeleted: aDictionnary at: timestamp [
 { #category : #parsing }
 RMQEventParser >> populate: aModel withUserPasswordChanged: aDictionnary at: timestamp [
 "aDictionnary (name)"
-  | UserObject |
+  | userObject |
 		
-		UserObject := aModel entityNamed: (aDictionnary at: 'name') withType: RMQUser.
-		UserObject ifNotNil: [ UserObject passwordChangingDate:  timestamp. ]
+		userObject := aModel entityNamed: (aDictionnary at: 'name') withType: RMQUser.
+		userObject ifNotNil: [ userObject passwordChangingDate:  timestamp. ]
 ]
 
 { #category : #parsing }
@@ -670,6 +677,11 @@ RMQEventParser >> populate: aModel withUserTagsSet: aDictionnary at: timestamp [
 			   newRole tag roles add: newRole].
 		      (aTagString = 'policymaker') ifTrue: [ newRole tag: (Tag policymaker).
 			   newRole tag roles add: newRole].
+		      (aTagString = 'none') ifTrue: [ newRole tag: (Tag none).
+			   newRole tag roles add: newRole].
+		
+		      ((aTagString = 'administrator') or: [ (aTagString = 'management') or: [ (aTagString = 'monitoring') or: [(aTagString = 'policymaker') or: [ (aTagString = 'none') ] ] ] ]) 
+		      ifFalse: [newRole tag: (Tag new rmqState: aTagString)]. 
 					
 				aModel add: newRole.
 				newRole ].

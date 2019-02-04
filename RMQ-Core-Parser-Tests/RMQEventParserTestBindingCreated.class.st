@@ -50,5 +50,6 @@ RMQEventParserTestBindingCreated >> testModelPopulation [
 
 	self assert: (model allRMQExchanges anySatisfy: [:element | element name = 'test.create.exchangeforbinding']).
 	self assert: (model allRMQQueues anySatisfy: [:element | element name = 'test.create.queueforbinding']).
-	self assert: (model allRMQBindingWithQueues anySatisfy: [ :el | el source name = 'test.create.exchangeforbinding' and: [ el destination name = 'test.create.queueforbinding' and:[ el creationDate isNotNil ]] ]).
+	self assert: (model allRMQRoutingKeys anySatisfy: [:element | element name = 'key']).
+	self assert: (model allRMQBindingWithQueues anySatisfy: [ :el | el source name = 'test.create.exchangeforbinding' and: [ el destination name = 'test.create.queueforbinding' and:[ el creationDate isNotNil and:[ el routingKey name = 'key' ] ] ] ]).
 ]

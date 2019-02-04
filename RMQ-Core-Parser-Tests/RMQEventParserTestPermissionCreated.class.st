@@ -29,7 +29,7 @@ RMQEventParserTestPermissionCreated >> setUp [
 	
 	"consume from the events queues"
 	consumer consumeQueue: 'events.permission.created'; start. 
-	2 seconds wait.
+	1 seconds wait.
 	
 	
 
