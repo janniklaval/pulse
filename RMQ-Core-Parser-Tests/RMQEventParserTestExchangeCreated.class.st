@@ -30,7 +30,7 @@ RMQEventParserTestExchangeCreated >> setUp [
 	consumer purgeQueue: 'events.exchange.created'.
 	
 	"cretate a queue test.create.exchange"
-	consumer createExchange: 'test.create.exchange'  type: 'fanout'.
+	consumer createExchange: 'test.create.exchange'  type: 'topic'.
 	
 	"consume from the events queue"
 	consumer consumeQueue: 'events.exchange.created'; start. 
@@ -44,10 +44,5 @@ RMQEventParserTestExchangeCreated >> setUp [
 { #category : #tests }
 RMQEventParserTestExchangeCreated >> testModelPopulation [
 
-	self assert: (model allRMQExchanges anySatisfy: [:element | element name = 'test.create.exchange' 
-		                                                         and:[ element creationDate isNotNil
-			                                                      and: [ element type name = 'fanout'
-				                                                   and: [ element durability name =  'transient' ] ] ]]).
-	
-  self assert: (model allRMQVHosts anySatisfy: [:element | element name = '/' and: [ element exchanges anySatisfy: [ :el | el name = 'test.create.exchange' ]]]).
+	self assert: (model allRMQExchanges anySatisfy: [:element | element name = 'test.create.exchange' and:[ element creationDate isNotNil ]]).
 ]

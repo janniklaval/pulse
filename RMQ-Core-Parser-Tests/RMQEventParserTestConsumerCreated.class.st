@@ -40,9 +40,6 @@ RMQEventParserTestConsumerCreated >> testModelPopulation [
 
 	"self assert: (model allRMQChannels anySatisfy: [:element | element vhost name ='/']).
 	self assert: (model allRMQConnections anySatisfy: [:element | element user name = 'guest'])."
-	self assert: (model allRMQComponents anySatisfy: [:element | element creationDate isNotNil 
-		                                                          and:[ element subscribedChannels anySatisfy: [ :el | el vhost name = '/'
-				                                                    and: [ element subscribedChannels anySatisfy: [ :elem | elem consumedQueues isNotNil
-						                                              and: [ element exclusive = 0 and: [ element ackRequired = 1  ] ] ] ]]]] ).
+	self assert: (model allRMQComponents anySatisfy: [:element | element creationDate isNotNil and:[ element subscribedChannels anySatisfy: [ :el | el vhost name = '/']]]).
 	
 ]

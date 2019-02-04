@@ -49,8 +49,8 @@ RMQEventParserTestConnectionCreated >> setUp [
 { #category : #tests }
 RMQEventParserTestConnectionCreated >> testModelPopulation [
 
-
-	self assert: (model allRMQConnections anySatisfy: [:element | element user name = 'guest' and: [ element creationDate isNotNil and: [ element connectedAt isNotNil ] ] ]).
-	self assert: (model allRMQUsers anySatisfy: [:element | element name = 'guest' and:[ element vhosts anySatisfy: [:el| el name = '/']  ] ]).
+	"self assert: (model allRMQChannels anySatisfy: [:element | element user name = 'guest'])."
+	self assert: (model allRMQConnections anySatisfy: [:element | element user name = 'guest' and: [ element creationDate isNotNil ] ]).
+	"self assert: (model allRMQComponents anySatisfy: [:element |  element subscribedChannels anySatisfy: [ :el | el  vhost = '/']])."
 	 
 ]

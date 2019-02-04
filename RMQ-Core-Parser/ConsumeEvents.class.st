@@ -1,6 +1,3 @@
-"
-useful AMQP methods 
-"
 Class {
 	#name : #ConsumeEvents,
 	#superclass : #RMQAmqpConnecter,
@@ -18,13 +15,6 @@ ConsumeEvents >> bindQueue: qname withExchange: exname routingKey: key [
 
 channel 
 		queueBind: qname exchange: exname routingKey: key. 
-]
-
-{ #category : #amqp }
-ConsumeEvents >> consumeEventsQueue [
-" consumes a predifined queue for events, named eventsqueue"
-   consumerTag := channel consumeFrom: 'eventsqueue' callback: self selector: #handleDelivery:.
-
 ]
 
 { #category : #amqp }
@@ -46,40 +36,17 @@ ConsumeEvents >> consumeQueue [
 
 { #category : #amqp }
 ConsumeEvents >> consumeQueue: key [
-	" consumes a predifined queue, named 'key' " 
-   consumerTag := channel consumeFrom: key callback: self selector: #handleDelivery:.
+	"comment stating purpose of message"
 
-]
-
-{ #category : #amqp }
-ConsumeEvents >> createAndConsumeEventsQueue: key [
-	" createconsumes a queue " 
-
-	queueName := (channel
+	"queueName := (channel
 		queueDeclare: 'events.', key
 		durable: false
 		exclusive: false
 		autoDelete: true
 		passive: false
 		arguments: nil) method queue.
-   channel queueBind: queueName exchange: self definedExchange routingKey: key.
+   channel queueBind: queueName exchange: self definedExchange routingKey: key."
    consumerTag := channel consumeFrom: key callback: self selector: #handleDelivery:.
-
-]
-
-{ #category : #amqp }
-ConsumeEvents >> createAndConsumeQueue: queue exchange: exchange [ 
-	"comment stating purpose of message"
-
-	queueName := (channel
-		queueDeclare: queue
-		durable: false
-		exclusive: false
-		autoDelete: true
-		passive: false
-		arguments: nil) method queue.
-   channel queueBind: queueName exchange: exchange routingKey: 'key'.
-   consumerTag := channel consumeFrom: queue callback: self selector: #handleDelivery:.
 
 ]
 

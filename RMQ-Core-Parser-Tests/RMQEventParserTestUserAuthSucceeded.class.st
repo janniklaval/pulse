@@ -37,6 +37,6 @@ RMQEventParserTestUserAuthSucceeded >> setUp [
 { #category : #tests }
 RMQEventParserTestUserAuthSucceeded >> testModelPopulation [
 
-	self assert: (model allRMQAuthentifications anySatisfy: [:element | element user name = 'guest' and:[ element timestamp isNotNil and:[element success] ] ]).
+	self assert: (model allRMQAuthentifications anySatisfy: [:element | element user name = 'guest' and:[ element timestamp isNotNil and:[element success = true] ] ]).
 
 ]

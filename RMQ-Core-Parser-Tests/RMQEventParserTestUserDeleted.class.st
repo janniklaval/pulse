@@ -31,7 +31,7 @@ RMQEventParserTestUserDeleted >> setUp [
 	
 	"populate the model with the resource "
 	user := RMQUser new.
-	user pulseName: 'user';
+	user pulseName: 'testuser';
 			mooseModel: model.
 	
 	"consume from the events queues"
@@ -43,6 +43,6 @@ RMQEventParserTestUserDeleted >> setUp [
 { #category : #tests }
 RMQEventParserTestUserDeleted >> testModelPopulation [
 
-	self assert: (model allRMQUsers anySatisfy: [:element | element name = 'user' and:[ element deletionDate isNotNil ] ]).
+	self assert: (model allRMQUsers anySatisfy: [:element | element name = 'testuser' and:[ element deletionDate isNotNil ] ]).
 
 ]
