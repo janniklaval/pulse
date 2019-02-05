@@ -208,13 +208,6 @@ PulseModel >> allTransportPolitics [
 	^self allWithType: TransportPolitic
 ]
 
-{ #category : #'initialize-release' }
-PulseModel >> initialize [
-
-	super initialize.
-	self sourceLanguage: 'RabbitMQ'
-]
-
 { #category : #'add-select' }
 PulseModel >> selectOrAddEntityNamed: aName withType: aType [ 
 

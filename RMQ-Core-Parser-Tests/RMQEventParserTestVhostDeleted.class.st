@@ -16,9 +16,8 @@ Class {
 
 { #category : #initialization }
 RMQEventParserTestVhostDeleted >> setUp [
-|vhost|
 
-"todo : go further and create the events queue and bing it to the exchange queue ?"
+"todo : go further and create the events queue and bind it to the exchange queue ?"
 
 	model := PulseModel new.
 	model name: 'test'.
@@ -30,7 +29,7 @@ RMQEventParserTestVhostDeleted >> setUp [
 	consumer parser: parser.
 	
 	"set up the model for the test"
-	vhost := model selectOrAddEntityNamed: 'testtest' withType: RMQVHost.
+	model selectOrAddEntityNamed: 'testtest' withType: RMQVHost.
 	2 second wait. 
 	
 	"consume from the events queues"

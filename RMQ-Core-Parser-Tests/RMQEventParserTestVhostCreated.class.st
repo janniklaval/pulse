@@ -36,6 +36,6 @@ RMQEventParserTestVhostCreated >> setUp [
 { #category : #tests }
 RMQEventParserTestVhostCreated >> testModelPopulation [
 
-	self assert: (model allRMQVHosts anySatisfy: [:element | element name = 'smalltalk' and:[ element creationDate isNotNil ] ]).
+	self assert: (model allRMQVHosts anySatisfy: [:element | element name = 'testtest' and:[ element creationDate isNotNil ] ]).
 
 ]

@@ -12,9 +12,9 @@ BaselineOfRMQ >> baseline: spec [
 		
 		spec package: 'RMQ-Core-Model'.
 		spec package: 'RMQ-Core-Parser'.
-		spec package: 'RMQ-Process'. 
-		spec package: 'RMQ-Core-Visualization'. 
-		spec package: 'RMQ-Core-Parser-Tests'. 
+		spec package: 'RMQ-Process'.
+		spec package: 'RMQ-Core-Visualization'.
+		spec package: 'RMQ-Core-Parser-Tests'.
 		
 		spec package: 'Amqp'.
 		
@@ -33,7 +33,7 @@ BaselineOfRMQ >> baseline: spec [
                                 loads: #('mongo tests') ];
                         import: 'Voyage'."
 		spec
- 			group: 'default' with: #(  'Amqp' 'RMQ-Core-Model' 'RMQ-Core-Parser' 'RMQ-Core-Visualization').
+ 			group: 'default' with: #(  'Amqp' 'RMQ-Core-Model' 'RMQ-Core-Parser' 'RMQ-Process' 'RMQ-Core-Visualization' 'RMQ-Core-Parser-Tests' ).
 	].
 
 ]
