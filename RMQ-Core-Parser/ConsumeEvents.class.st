@@ -28,23 +28,6 @@ ConsumeEvents >> consumeEventsQueue [
 ]
 
 { #category : #amqp }
-ConsumeEvents >> consumeQueue [
-"// for tests "
-": key
-
-	queueName := (channel
-		queueDeclare: 'events.', key
-		durable: false
-		exclusive: false
-		autoDelete: true
-		passive: false
-		arguments: nil) method queue.
-   channel queueBind: queueName exchange: self definedExchange routingKey: key."
-   consumerTag := channel consumeFrom: 'smalltalk' callback: self selector: #handleDelivery:.
-
-]
-
-{ #category : #amqp }
 ConsumeEvents >> consumeQueue: key [
 	" consumes a predifined queue, named 'key' " 
    consumerTag := channel consumeFrom: key callback: self selector: #handleDelivery:.
@@ -52,18 +35,18 @@ ConsumeEvents >> consumeQueue: key [
 ]
 
 { #category : #amqp }
-ConsumeEvents >> createAndConsumeEventsQueue: key [
+ConsumeEvents >> createAndConsumeEventsQueue: qName [
 	" createconsumes a queue " 
 
 	queueName := (channel
-		queueDeclare: 'events.', key
+		queueDeclare: qName
 		durable: false
 		exclusive: false
 		autoDelete: true
 		passive: false
 		arguments: nil) method queue.
-   channel queueBind: queueName exchange: self definedExchange routingKey: key.
-   consumerTag := channel consumeFrom: key callback: self selector: #handleDelivery:.
+   channel queueBind: queueName exchange: 'amq.rabbitmq.event' routingKey: qName.
+   consumerTag := channel consumeFrom: qName callback: self selector: #handleDelivery:.
 
 ]
 
