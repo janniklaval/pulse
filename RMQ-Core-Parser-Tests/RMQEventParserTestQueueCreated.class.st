@@ -38,7 +38,8 @@ RMQEventParserTestQueueCreated >> setUp [
 	
 	"delete the created resource"
 	consumer deleteQueue: 'test.create.queue'. 
-
+   1 seconds wait.
+	consumer stop. 
 ]
 
 { #category : #'testing - simple' }

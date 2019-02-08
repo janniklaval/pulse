@@ -42,7 +42,8 @@ RMQEventParserTestBindingCreated >> setUp [
 	
 	"consume from the events queue"
 	consumer consumeQueue: 'events.binding.created'; start. 
-	2 seconds wait.
+	1 seconds wait.
+	consumer stop. 
 ]
 
 { #category : #tests }

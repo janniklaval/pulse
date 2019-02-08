@@ -34,7 +34,8 @@ RMQEventParserTestVhostDeleted >> setUp [
 	
 	"consume from the events queues"
 	consumer consumeQueue: 'events.vhost.deleted'; start. 
-	2 second wait. 
+	1 seconds wait.
+	consumer stop. 
 	
 ]
 

@@ -38,7 +38,8 @@ RMQEventParserTestConnectionClosed >> setUp [
    
 	"consume from the events queues"
 	consumer2 consumeQueue: 'events.connection.closed'; start. 
-   	2 seconds wait.
+   1 seconds wait.
+	consumer stop. 
 	
 	
 

@@ -38,6 +38,8 @@ RMQEventParserTestExchangeCreated >> setUp [
 	
 	"delete the created resource"
 	consumer deleteExchange: 'test.create.exchange'. 
+	1 seconds wait.
+	consumer stop. 
 
 ]
 

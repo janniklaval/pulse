@@ -20,12 +20,15 @@ Class {
 PulseEventProcess >> blockToExecute [
   
   	consumer consumeEventsQueue ; start.
+
 ]
 
 { #category : #accessing }
 PulseEventProcess >> blockToFinalize [
 
 	connection close.
+	consumer stop. 
+   "model save."
 ]
 
 { #category : #connecting }
@@ -41,6 +44,8 @@ PulseEventProcess >> definedHost [
 { #category : #initialize }
 PulseEventProcess >> initialiseModel: name [ 
 
+	| repository | 
+	
    model := PulseModel new.
 	model name: name.
 	MooseModel root add: model.
@@ -57,7 +62,16 @@ PulseEventProcess >> initialiseModel: name [
 	connection open.
 
 	channel := connection newChannel.  
-	
+
+
+   "repository := VOMongoRepository
+   host: 'localhost'
+   database: 'rmqmodel'.
+   repository enableSingleton."
+
+
+
+
     
 ]
 

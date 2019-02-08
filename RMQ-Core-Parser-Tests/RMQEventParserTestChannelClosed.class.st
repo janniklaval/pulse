@@ -39,7 +39,8 @@ RMQEventParserTestChannelClosed >> setUp [
 
 	"consume from the events queues"
 	consumer2 consumeQueue: 'events.channel.closed'; start. 
-	2 seconds wait.
+	1 seconds wait.
+	consumer stop. 
 	
 	
 

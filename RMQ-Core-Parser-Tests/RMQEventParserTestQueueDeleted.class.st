@@ -43,8 +43,8 @@ RMQEventParserTestQueueDeleted >> setUp [
 
 	"consume from the events queue"
 	consumer consumeQueue: 'events.queue.deleted'; start. 
-	2 seconds wait.
-	
+	1 seconds wait.
+	consumer stop. 
 
 	
 ]
