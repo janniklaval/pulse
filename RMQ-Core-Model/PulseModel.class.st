@@ -120,7 +120,7 @@ PulseModel >> allRMQConnections [
 
 { #category : #accessing }
 PulseModel >> allRMQExchangeFormats [
-	<navigation: 'All RMQ exchange formats group'>
+	<navigation: 'All RMQ exchangeFormats group'>
 	^self allWithType: RMQExchangeFormat
 ]
 

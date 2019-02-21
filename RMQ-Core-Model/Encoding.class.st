@@ -7,7 +7,7 @@ Class {
 	#category : #'RMQ-Core-Model'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 Encoding class >> base64 [
 	^  self new rmqState: #base64
 ]

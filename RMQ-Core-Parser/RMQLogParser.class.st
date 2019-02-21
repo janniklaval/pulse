@@ -45,7 +45,7 @@ RMQLogParser class >> populate: aModel withJson: aString [
 	rmqObjects := parser parse: aString.
 	
 	rmqObjects do: [:aRMQObject | 
-			| message connection queue user node exchange vhost channel routingKeys binding payload component delivMode routedQueues messageType|
+			| message connection queue user node exchange vhost channel routingKeys binding payload component delivMode routedQueues messageType exchangeFormat |
 			payload := aModel selectOrAddEntityNamed: (aRMQObject at: 'payload') withType: RMQPayload.
 			
 			message := self populateMessage: aRMQObject payload: payload.
@@ -156,6 +156,19 @@ RMQLogParser class >> populate: aModel withJson: aString [
 			].
 					
 			
+			"set the exchange format"
+		   aModel allRMQExchangeFormats
+		   detect: [ :el | el exchangeFormatSchema  = (((aRMQObject at: 'properties') at: 'headers') at: 'X-ExchangeFormatSchema') ]
+		   ifFound: [ :elementFound | 
+			exchangeFormat := elementFound. ]
+		   ifNone: [ 
+			  exchangeFormat := RMQExchangeFormat new. 
+			  exchangeFormat exchangeFormatSchema: (((aRMQObject at: 'properties') at: 'headers') at: 'X-ExchangeFormatSchema'). 
+			  exchangeFormat exchangeFormatType: (((aRMQObject at: 'properties') at: 'headers') at: 'X-ExchangeFormatId').
+			  exchangeFormat mooseModel: aModel.
+		     aModel add: exchangeFormat].
+		     message exchangeFormat: exchangeFormat. 
+		     exchangeFormat messages add: message. 
 		
 			messageType := self populateType: aRMQObject.
 			message messageType: messageType.

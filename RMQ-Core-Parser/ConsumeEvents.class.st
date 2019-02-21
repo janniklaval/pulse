@@ -1,5 +1,5 @@
 "
-useful AMQP methods 
+we must not parse messages from exchange : amq.rabbitmq.event in  Properties headers: exchange_name: 
 "
 Class {
 	#name : #ConsumeEvents,
@@ -31,6 +31,13 @@ ConsumeEvents >> consumeEventsQueue [
 ConsumeEvents >> consumeQueue: key [
 	" consumes a predifined queue, named 'key' " 
    consumerTag := channel consumeFrom: key callback: self selector: #handleDelivery:.
+
+]
+
+{ #category : #amqp }
+ConsumeEvents >> consumeTracesQueue [
+" consumes a predifined queue for events, named eventsqueue"
+   consumerTag := channel consumeFrom: 'messages_traces' callback: self selector: #handleDeliveryTracesQueue:.
 
 ]
 
@@ -206,6 +213,20 @@ ConsumeEvents >> handleDeliveryTest: delivery [
 	 "delivery properties headers printString , delivery properties messageId printString. "
 	Transcript cr; nextPutAll: 'Received delivery: ', str; flush.
 	channel basicAck: delivery method deliveryTag. 
+]
+
+{ #category : #amqp }
+ConsumeEvents >> handleDeliveryTracesQueue: delivery [
+
+	| routingKey headersDictionnary exchange |
+	
+	routingKey := (delivery method routingKey) trimLeft: [ :e | e = '"' ] right: [ :e | e = '"' ]. 
+	headersDictionnary := delivery properties headers. 
+	exchange := (headersDictionnary at: 'exchange_name'). 
+	
+	(exchange = 'amq.rabbitmq.event') ifFalse: [ self parser populate: self model withTraceMessage: headersDictionnary onResource: routingKey ]. 
+	
+	channel basicAck: delivery method deliveryTag.  
 ]
 
 { #category : #initialization }
