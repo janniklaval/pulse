@@ -31,6 +31,14 @@ RMQExchangeFormat >> exchangeFormatType: anObject [
 	exchangeFormatType := anObject
 ]
 
+{ #category : #initialization }
+RMQExchangeFormat >> initialize [
+
+	super initialize.
+	"users := Set new."
+	messages := Set new.
+]
+
 { #category : #accessing }
 RMQExchangeFormat >> messages [
 	<MSEProperty: #messages type: #RMQMessage opposite:#exchangeFormat>

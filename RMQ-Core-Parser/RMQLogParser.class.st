@@ -104,7 +104,7 @@ RMQLogParser class >> populate: aModel withJson: aString [
 			
 			channel := aModel selectOrAddEntityNamed: (aRMQObject at: 'channel') asString withType: RMQChannel.
 			channel vhost ifNil:[
-				vhost channels add: vhost.
+				vhost channels add: channel.
 				channel vhost: vhost.
 			].
 			channel connection ifNil:[

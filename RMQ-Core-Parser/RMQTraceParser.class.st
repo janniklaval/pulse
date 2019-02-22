@@ -82,6 +82,7 @@ RMQTraceParser >> populate: aModel withTraceMessage: aDictionnary onResource: re
 		   ifNone: [ 
 			  messageObject := RMQMessage new. 
 			  messageObject messageID: messageId.
+			  messageObject mooseModel: aModel. 
 			  aModel add: messageObject ].
 		   
 			messageObject timestamp: ((aDictionnary at: 'properties') at: 'timestamp').
@@ -109,10 +110,10 @@ RMQTraceParser >> populate: aModel withTraceMessage: aDictionnary onResource: re
 				].
 			
 			"channels name is connection + (+ channel+)"
-			channel := aModel selectOrAddEntityNamed: ((aDictionnary at: 'connection'), ' (', (aDictionnary at: 'channel'), ')' ) withType: RMQChannel.
+			channel := aModel selectOrAddEntityNamed: ((aDictionnary at: 'connection'), ' (', ((aDictionnary at: 'channel') asStringWithCommas), ')' ) withType: RMQChannel.
 			
 			channel vhost ifNil:[
-				vhost channels add: vhost.
+				vhost channels add: channel.
 				channel vhost: vhost.
 			].
 			channel connection ifNil:[
@@ -133,7 +134,7 @@ RMQTraceParser >> populate: aModel withTraceMessage: aDictionnary onResource: re
 			exchange vhost ifNil:[ vhost exchanges add: exchange. exchange vhost: vhost. ].
 		
 			"message delivery mode"
-			((aDictionnary at: 'delivery_mode') = '1') ifTrue: [ messageObject deliveryMode: (DeliveryMode nonPersistent) ]
+			(((aDictionnary at: 'properties') at: 'delivery_mode') = 1) ifTrue: [ messageObject deliveryMode: (DeliveryMode nonPersistent) ]
 			                                           ifFalse: [ messageObject deliveryMode: (DeliveryMode persistent) ].    
 			 messageObject deliveryMode messages add: messageObject.          
 					
@@ -178,8 +179,8 @@ RMQTraceParser >> populate: aModel withTraceMessage: aDictionnary onResource: re
 		     exchangeFormat messages add: messageObject. 
 		
 	      "message type according to existance of routed_queues "
-			(aDictionnary at: 'routed_queues') ifNotNil: [ messageObject messageType: (MessageType published). messageObject type messages add: messageObject ].
-			(aDictionnary at: 'routed_queues') ifNil: [ messageObject messageType: (MessageType received). messageObject type messages add: messageObject. " to do : or set received to true !"
+			aDictionnary at: 'routed_queues' ifPresent: [ messageObject messageType: (MessageType published). messageObject messageType messages add: messageObject ].
+			aDictionnary at: 'routed_queues'  ifAbsent: [ messageObject messageType: (MessageType received). messageObject messageType messages add: messageObject. " to do : or set received to true !"
 				                                         queue := aModel selectOrAddEntityNamed: resource withType: RMQQueue.
 				                                         messageObject queue: queue.
 				                                         queue sendedMessages add: messageObject.
