@@ -44,7 +44,7 @@ PulseEventProcess >> definedHost [
 { #category : #initialize }
 PulseEventProcess >> initialiseModel: name [ 
 
-	| repository | 
+	"| repository |" 
 	
    model := PulseModel new.
 	model name: name.

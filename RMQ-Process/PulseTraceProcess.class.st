@@ -1,5 +1,5 @@
 "
-PulseTraceProcess uniqueInstance initNewModelNamed: 'test' onServer: 'localhost' port: '15672' userName: 'guest' pwd: 'guest'.
+PulseTraceProcess uniqueInstance initialiseModel: 'TraceModel1' host: 'localhost' port: '15672' username: 'guest' password: 'guest'.
 PulseTraceProcess uniqueInstance start.
 
 PulseTraceProcess uniqueInstance stop
@@ -29,6 +29,35 @@ PulseTraceProcess >> blockToFinalize [
 	connection close.
 	consumer stop. 
    "model save."
+]
+
+{ #category : #initialize }
+PulseTraceProcess >> initialiseModel: name [ 
+
+	"| repository |" 
+	
+   model := PulseModel new.
+	model name: name.
+	MooseModel root add: model.
+	
+	parser := RMQTraceParser new. 
+	
+	consumer := ConsumeEvents new. 
+	consumer model: model. 
+	consumer parser: parser.
+	
+   connection := AmqpConnection new.
+	connection protocolClass: Amqp091.
+	connection host: 'localhost' port: 5672.
+	connection open.
+
+	channel := connection newChannel.  
+
+
+   "repository := VOMongoRepository
+   host: 'localhost'
+   database: 'rmqmodel'.
+   repository enableSingleton."
 ]
 
 { #category : #initialize }

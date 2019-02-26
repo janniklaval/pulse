@@ -198,10 +198,7 @@ RMQLogParser class >> populate: aModel withJson: aString [
 			message deliveryMode: delivMode.
 			delivMode messages add: message.
 			
-			
-			((aRMQObject at: 'properties') at: 'headers')
-				do:
-					[ :aHeader | self populateHeaders: aHeader ] ].
+			 ].
 	
 	MooseModel root add: aModel
 ]

@@ -65,7 +65,8 @@ RMQTraceParser >> populate: aModel withTraceMessage: aDictionnary onResource: re
  user:	guest  *
  routed_queues:	pubsub.default.consoleSaasUserAccess.module-profile-updated.subscribe"
  
-			| messageObject messageId connection queue user node exchange vhost channel component  tenant exchangeFormat|
+			| messageObject messageId connection queue user node exchange vhost channel component  tenant exchangeFormat |
+			
 			
 			node := aModel selectOrAddEntityNamed: (aDictionnary at: 'node') withType: RMQNode.
 			
@@ -83,7 +84,7 @@ RMQTraceParser >> populate: aModel withTraceMessage: aDictionnary onResource: re
 			  messageObject := RMQMessage new. 
 			  messageObject messageID: messageId.
 			  messageObject mooseModel: aModel. 
-			  aModel add: messageObject ].
+			  aModel add: messageObject  ].
 		   
 			messageObject timestamp: ((aDictionnary at: 'properties') at: 'timestamp').
 			
