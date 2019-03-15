@@ -38,6 +38,9 @@ we must not parse messages from exchange : Properties headers: exchange_name: am
 Class {
 	#name : #RMQTraceParser,
 	#superclass : #Object,
+	#instVars : [
+		'message'
+	],
 	#category : #'RMQ-Core-Parser'
 }
 
@@ -273,7 +276,7 @@ the dictionnary represents the properties headers :
  user:	guest  *
  routed_queues:	pubsub.default.consoleSaasUserAccess.module-profile-updated.subscribe"
  
-			| messageObject messageId connection queue user node exchange vhost channel publisherComponent consumerComponent exchangeFormat component tenantId |
+			| messageObject messageId connection queue user node exchange vhost channel publisherComponent consumerComponent exchangeFormat tenantId routedQueue routingKey |
 			
 			
 			node := aModel selectOrAddEntityNamed: (aDictionnary at: 'node') withType: RMQNode.
@@ -335,19 +338,11 @@ the dictionnary represents the properties headers :
 					channel user: user.
 					user usedChannels add: channel.
 			].
-			
-			"set the exchange"
-			exchange := aModel selectOrAddEntityNamed: ( aDictionnary at: 'exchange_name') withType: RMQExchange.
-			exchange publishedMessages add: messageObject.
-			messageObject publishedToExchange: exchange.
-			exchange vhost ifNil:[ vhost exchanges add: exchange. exchange vhost: vhost. ].
 		
 			"message delivery mode"
 			(((aDictionnary at: 'properties') at: 'delivery_mode') = 1) ifTrue: [ messageObject deliveryMode: (DeliveryMode nonPersistent) ]
 			                                           ifFalse: [ messageObject deliveryMode: (DeliveryMode persistent) ].    
 			 messageObject deliveryMode messages add: messageObject.          
-			 
-			
 		
 		   "set the exchange format"
 		   aModel allRMQExchangeFormats
@@ -364,12 +359,21 @@ the dictionnary represents the properties headers :
 		     exchangeFormat messages add: messageObject. 
 		
 		  
-		    "to do : separate consumer and publisher tow cases according to trace type  !"	
-			(traceType = 'publish' ) ifTrue:[  ] ifFalse: [  ].
+		    "consumer or publisher : tow cases according to trace type"	
+			(traceType = 'publish' ) ifTrue:[  "case message published"
+				
+			 "set the exchange"
+			   exchange := aModel selectOrAddEntityNamed: ( aDictionnary at: 'exchange_name') withType: RMQExchange.
+			   exchange publishedMessages add: messageObject.
+			   messageObject publishedToExchange: exchange.
+			   exchange vhost ifNil:[ vhost exchanges add: exchange. exchange vhost: vhost. ].
 				
           "set the publisher"        
 			 (aDictionnary at: 'properties') at: 'app_id' ifPresent:[
 				publisherComponent := aModel selectOrAddEntityNamed: ((aDictionnary at: 'properties') at: 'app_id') withType: RMQPublisherComponent.
+				
+				publisherComponent appId: ((aDictionnary at: 'properties') at: 'app_id'). 
+				
 				publisherComponent messagesFromPublisher add: messageObject.
 				messageObject publisherComponent: publisherComponent.
 				
@@ -383,28 +387,74 @@ the dictionnary represents the properties headers :
 						channel publisherComponent: publisherComponent.
 					].
 			
-				component exchanges 
+				publisherComponent exchanges 
 					detect: [:exch| exch = exchange ]
 					ifNone: [
-						component exchanges add: exchange.
-						exchange publisherComponents add: component.
+						publisherComponent exchanges add: exchange.
+						exchange publisherComponents add: publisherComponent.
 					].
-			].
+			   ].
 		
-		
-	      "message type according to existance of routed_queues "
-			aDictionnary at: 'routed_queues' ifPresent: [ messageObject messageType: (MessageType published). messageObject messageType messages add: messageObject ].
-			aDictionnary at: 'routed_queues'  ifAbsent: [ messageObject messageType: (MessageType received). messageObject messageType messages add: messageObject. " to do : a revoir !"
+	         "if routed_queues is present and not null : message published and routed 
+	         if routed_queues is present and  null : message published and not routed  "
+			   aDictionnary at: 'routed_queues' ifPresent: 
+			    [ 				
+              (aDictionnary at: 'routed_queues')
+				  do: [ :aRoutedQueue |
+				      routedQueue := aModel selectOrAddEntityNamed: aRoutedQueue withType: RMQQueue.				
+				      "link with messages"
+				      routedQueue routedMessages add: message.
+				      message routedToQueues add: routedQueue.	
+					
+					   "set vhost"		
+						routedQueue vhost: vhost. 
+						vhost queues add: routedQueue. 
+				    ].			
+				 ].
+			 " à revoi"
+			  aDictionnary at: 'routed_queues'  ifAbsent: [ messageObject messageType: (MessageType received). messageObject messageType messages add: messageObject. " to do : a revoir !"
 				                                         queue := aModel selectOrAddEntityNamed: resource withType: RMQQueue.
 				                                         messageObject queue: queue.
 				                                         queue messagesFromPublisher add: messageObject. "to do : a revoir plus de queue dans message et pa de messagesFromPublisher dans queue "
 				                                         queue vhost ifNil:[	vhost queues add: queue. queue vhost: vhost ].
 				                                       ].
+			] ifFalse: [   "case message delivered"
+			"set the consumer"
+			" if routed_queues is not present and  trace type deliver : message delivered to consumer"
+			"get the module id to create the consumerComponent, the moduleId is part of the resource (here queue),  set subscribedChannel of consumerComponent, link channel to related queue, and queue to the message "	
+				
+				"set the queue from which the message was delivered "
+				  queue := aModel selectOrAddEntityNamed: resource withType: RMQQueue.				
+				  "link with messages"
+				  queue deliveredMessages add: message.
+				  message deliveredFromQueues add: queue.	
+					
+				  "set vhost"		
+				  queue vhost: vhost. 
+				  vhost queues add: queue. 
+				
+				  "set the consumer" " link with message ?"
+				  consumerComponent := aModel selectOrAddEntityNamed: ((aDictionnary at: 'properties') at: 'app_id') withType: RMQPublisherComponent.
+				
+				  consumerComponent appId: ((aDictionnary at: 'properties') at: 'app_id'). 
+			
+				  consumerComponent subscribedChannels 
+					detect: [:ch| ch = channel ]
+					ifNone: [
+						consumerComponent subscribedChannels add: channel.
+						channel consumerComponent: consumerComponent.
+					].
+						
+			 ].
 			
 		   	
-			" set routingKeys if the MM is updated "
-			
-		
+			" set routingKeys "  
+		   (aDictionnary at: 'routing_keys') do: [ :aRoutingKey |
+					routingKey := aModel selectOrAddEntityNamed: aRoutingKey withType: RMQRoutingKey.
+					routingKey messages add: messageObject. 
+					messageObject routingKeys add: routingKey. 
+				].
+	
 			
 
 			

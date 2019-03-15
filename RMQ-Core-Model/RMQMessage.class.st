@@ -14,7 +14,7 @@ Class {
 		'queue',
 		'publisherComponent',
 		'routedQueues',
-		'routingKey',
+		'routingKeys',
 		'publishedToExchange',
 		'routedToQueues',
 		'deliveredFromQueues'
@@ -170,14 +170,14 @@ RMQMessage >> routedToQueues: anObject [
 ]
 
 { #category : #accessing }
-RMQMessage >> routingKey [
+RMQMessage >> routingKeys [
 	<MSEProperty: #routingKey type: #RMQRoutingKey opposite:#messages>
-	^ routingKey
+	^ routingKeys
 ]
 
 { #category : #accessing }
-RMQMessage >> routingKey: anObject [
-	routingKey := anObject
+RMQMessage >> routingKeys: anObject [
+	routingKeys := anObject
 ]
 
 { #category : #accessing }

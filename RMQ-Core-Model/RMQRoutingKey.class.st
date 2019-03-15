@@ -2,6 +2,7 @@ Class {
 	#name : #RMQRoutingKey,
 	#superclass : #PulseEntity,
 	#instVars : [
+		'value',
 		'binding',
 		'queues_for_dead_letter',
 		'messages'
@@ -29,7 +30,7 @@ RMQRoutingKey >> initialize [
 
 { #category : #accessing }
 RMQRoutingKey >> messages [
-	<MSEProperty: #messages type: #RMQMessage opposite:#routingKey>
+	<MSEProperty: #messages type: #RMQMessage opposite:#routingKeys>
 	<multivalued>
 	^ messages
 ]

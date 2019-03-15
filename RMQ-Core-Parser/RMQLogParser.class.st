@@ -216,23 +216,6 @@ RMQLogParser class >> populateDeliveryMode: aRMQObject [
 ]
 
 { #category : #parsing }
-RMQLogParser class >> populateHeaders: aHeader [
-	| newHeader headers |
-	headers := OrderedCollection new.
-	newHeader := RMQHeader new
-		pulseName: aHeader.
-	model allRMQHeaders
-		detect: [ :el | el pulseName = newHeader pulseName ]
-		ifFound: [ :elementFound | 
-			headers add: elementFound.
-			^elementFound]
-		ifNone: [
-			newHeader mooseModel: model.
-			headers add: newHeader.
-			^newHeader].
-]
-
-{ #category : #parsing }
 RMQLogParser class >> populateMessage: aRMQObject payload: payload [
 	|message|
 	message := RMQMessage new 
