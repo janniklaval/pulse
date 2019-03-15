@@ -12,7 +12,8 @@ Class {
 		'deploymentMode',
 		'appId',
 		'consumerProcesses',
-		'tenantId'
+		'tenantId',
+		'subscribedChannels'
 	],
 	#category : #'RMQ-Core-Model'
 }
@@ -102,6 +103,7 @@ RMQConsumerComponent >> initialize [
 
 	super initialize.
 	consumerProcesses := Set new. 
+	subscribedChannels := Set new. 
 ]
 
 { #category : #accessing }
@@ -146,6 +148,18 @@ RMQConsumerComponent >> rmqState [
 { #category : #accessing }
 RMQConsumerComponent >> rmqState: anObject [
 	rmqState := anObject
+]
+
+{ #category : #accessing }
+RMQConsumerComponent >> subscribedChannels [
+	<MSEProperty: #subscribedChannels type: #RMQChannel opposite:#consumerComponent>
+	<multivalued>
+	^ subscribedChannels
+]
+
+{ #category : #accessing }
+RMQConsumerComponent >> subscribedChannels: anObject [
+	subscribedChannels := anObject
 ]
 
 { #category : #accessing }

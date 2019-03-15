@@ -14,7 +14,9 @@ Class {
 		'exchanges',
 		'tenantId',
 		'appId',
-		'messagesFromPublisher'
+		'messagesFromPublisher',
+		'usedChannels',
+		'usedChannel'
 	],
 	#category : #'RMQ-Core-Model'
 }
@@ -104,7 +106,7 @@ RMQPublisherComponent >> initialize [
 
 	super initialize.
 	messagesFromPublisher := Set new.
-	subscribedChannels := Set new.
+	usedChannels := Set new.
 	exchanges := Set new.
 ]
 
@@ -165,18 +167,6 @@ RMQPublisherComponent >> rmqState: anObject [
 ]
 
 { #category : #accessing }
-RMQPublisherComponent >> subscribedChannels [
-	<MSEProperty: #subscribedChannels type: #RMQChannel opposite:#subscribedComponent>
-	<multivalued>
-	^ subscribedChannels
-]
-
-{ #category : #accessing }
-RMQPublisherComponent >> subscribedChannels: anObject [
-	subscribedChannels := anObject
-]
-
-{ #category : #accessing }
 RMQPublisherComponent >> tenantId [
 	<MSEProperty: #tenantId type: #String>
 	^ tenantId
@@ -185,6 +175,18 @@ RMQPublisherComponent >> tenantId [
 { #category : #accessing }
 RMQPublisherComponent >> tenantId: anObject [
 	tenantId := anObject
+]
+
+{ #category : #accessing }
+RMQPublisherComponent >> usedChannels [
+	<MSEProperty: #usedChannels type: #RMQChannel opposite:#publisherComponent>
+	<multivalued>
+	^ usedChannels
+]
+
+{ #category : #accessing }
+RMQPublisherComponent >> usedChannels: anObject [
+	usedChannels := anObject
 ]
 
 { #category : #accessing }

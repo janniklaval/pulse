@@ -268,7 +268,7 @@ RMQEventParser >> populate: aModel withConsumerCreated: aDictionnary at: timesta
 					ifFound: [ :elementFound | 
 			                 channel := elementFound ]
 		          ifNone: [ channel := RMQChannel new.
-			                 channel subscribedComponent: componentObject.
+			                 channel consumerProcess: componentObject.
 			                 channel pid: (aDictionnary at: 'channel').
 			                 channel consumedQueues add: relatedQueue. 
 			                 channel vhost: vhost.

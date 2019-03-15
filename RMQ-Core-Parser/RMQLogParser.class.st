@@ -179,11 +179,11 @@ RMQLogParser class >> populate: aModel withJson: aString [
 				component messagesFromPublisher add: message.
 				message publisherComponent:component.
 			
-				component subscribedChannels 
+				component subscribedChannels "to do : publisher ? consumer ? used or subscribed channel ?"
 					detect: [:ch| ch = channel ]
 					ifNone: [
 						component subscribedChannels add: channel.
-						channel subscribedComponent: component.
+						channel publisherComponent: component.
 					].
 			
 				component exchanges 

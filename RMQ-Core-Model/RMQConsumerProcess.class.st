@@ -123,7 +123,7 @@ RMQConsumerProcess >> rmqState: anObject [
 
 { #category : #accessing }
 RMQConsumerProcess >> subscribedChannels [
-	<MSEProperty: #subscribedChannels type: #RMQChannel opposite:#subscribedComponent>
+	<MSEProperty: #subscribedChannels type: #RMQChannel opposite:#consumerProcess>
 	<multivalued>
 	^ subscribedChannels
 ]

@@ -15,7 +15,10 @@ Class {
 		'closingDate',
 		'consumedQueues',
 		'pid',
-		'subscribedComponent'
+		'subscribedComponent',
+		'publisherComponent',
+		'consumerComponent',
+		'consumerProcess'
 	],
 	#category : #'RMQ-Core-Model'
 }
@@ -52,6 +55,28 @@ RMQChannel >> consumedQueues [
 { #category : #accessing }
 RMQChannel >> consumedQueues: anObject [
 	consumedQueues := anObject
+]
+
+{ #category : #accessing }
+RMQChannel >> consumerComponent [
+	<MSEProperty: #consumerComponent type: #RMQConsumerComponent opposite:#subscribedChannels>
+	^ consumerComponent
+]
+
+{ #category : #accessing }
+RMQChannel >> consumerComponent: anObject [
+	consumerComponent := anObject
+]
+
+{ #category : #accessing }
+RMQChannel >> consumerProcess [
+	<MSEProperty: #consumerProcess type: #RMQConsumerProcess opposite:#subscribedChannels>
+	^ consumerProcess
+]
+
+{ #category : #accessing }
+RMQChannel >> consumerProcess: anObject [
+	consumerProcess := anObject
 ]
 
 { #category : #accessing }
@@ -134,6 +159,17 @@ RMQChannel >> prefetchCount: anObject [
 ]
 
 { #category : #accessing }
+RMQChannel >> publisherComponent [
+	<MSEProperty: #publisherComponent type: #RMQPublisherComponent opposite:#usedChannels>
+	^ publisherComponent
+]
+
+{ #category : #accessing }
+RMQChannel >> publisherComponent: anObject [
+	publisherComponent := anObject
+]
+
+{ #category : #accessing }
 RMQChannel >> rmqState [
 	<MSEProperty: #rmqState type: #State opposite: #channels>
 	^ rmqState ifNil: [ self rmqState: State idle.  rmqState]
@@ -143,17 +179,6 @@ RMQChannel >> rmqState [
 RMQChannel >> rmqState: anObject [
 	rmqState := self selectEnum: anObject. 
 	rmqState channels add: self.
-]
-
-{ #category : #accessing }
-RMQChannel >> subscribedComponent [
-	<MSEProperty: #subscribedComponent type: #RMQPublisherComponent opposite:#subscribedChannels>
-	^ subscribedComponent
-]
-
-{ #category : #accessing }
-RMQChannel >> subscribedComponent: anObject [
-	subscribedComponent := anObject
 ]
 
 { #category : #accessing }
