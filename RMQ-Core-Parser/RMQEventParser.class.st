@@ -241,16 +241,16 @@ RMQEventParser >> populate: aModel withConsumerCreated: aDictionnary at: timesta
       | componentObject vhost channel relatedQueue |
 
 		vhost:= aModel selectOrAddEntityNamed: (aDictionnary at: 'vhost') withType: RMQVHost.
-		
+		"to do: change to ConsumerProcess"
 		"// find the consumer with the right channel and vhost"
-	   aModel allRMQComponents
+	   aModel allRMQConsumerProcesses
 		detect: [ :element | element consumerTag = (aDictionnary at: 'consumer_tag') 
 			and: [ element subscribedChannels anySatisfy: [ :el | el pid = (aDictionnary at: 'channel') and: [ el  vhost = vhost] ] ]		
 			 ]
 		ifFound: [ :elementFound | 
 			componentObject := elementFound ]
 		ifNone: [  
-            componentObject := RMQComponent new.
+            componentObject := RMQConsumerProcess new.
             componentObject consumerTag: (aDictionnary at: 'consumer_tag').
             componentObject mooseModel: aModel.
 				aModel add: componentObject ].
@@ -288,7 +288,7 @@ RMQEventParser >> populate: aModel withConsumerDeleted: aDictionnary at: timesta
 
 		vhost := aModel entityNamed: (aDictionnary at: 'vhost') withType: RMQVHost.
 		
-	   aModel allRMQComponents
+	   aModel allRMQConsumerProcesses
 		detect: [ :element | element consumerTag = (aDictionnary at: 'consumer_tag') 
 			"and the channels of the consumer are on the right vhost"
 			and: [ element subscribedChannels anySatisfy: [ :el | el pid = (aDictionnary at: 'channel') and: [ el  vhost = vhost] ] ]				

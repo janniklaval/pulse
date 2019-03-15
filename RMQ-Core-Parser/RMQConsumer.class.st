@@ -2,7 +2,7 @@
 we must not parse messages from exchange : amq.rabbitmq.event in  Properties headers: exchange_name: 
 "
 Class {
-	#name : #ConsumeEvents,
+	#name : #RMQConsumer,
 	#superclass : #RMQAmqpConnecter,
 	#instVars : [
 		'model',
@@ -14,35 +14,35 @@ Class {
 }
 
 { #category : #amqp }
-ConsumeEvents >> bindQueue: qname withExchange: exname routingKey: key [
+RMQConsumer >> bindQueue: qname withExchange: exname routingKey: key [
 
 channel 
 		queueBind: qname exchange: exname routingKey: key. 
 ]
 
 { #category : #amqp }
-ConsumeEvents >> consumeEventsQueue [
+RMQConsumer >> consumeEventsQueue [
 " consumes a predifined queue for events, named eventsqueue"
    consumerTag := channel consumeFrom: 'eventsqueue' callback: self selector: #handleDelivery:.
 
 ]
 
 { #category : #amqp }
-ConsumeEvents >> consumeQueue: key [
+RMQConsumer >> consumeQueue: key [
 	" consumes a predifined queue, named 'key' " 
    consumerTag := channel consumeFrom: key callback: self selector: #handleDelivery:.
 
 ]
 
 { #category : #amqp }
-ConsumeEvents >> consumeTracesQueue [
+RMQConsumer >> consumeTracesQueue [
 " consumes a predifined queue for events, named eventsqueue"
    consumerTag := channel consumeFrom: 'messages_traces' callback: self selector: #handleDeliveryTracesQueue:.
 
 ]
 
 { #category : #amqp }
-ConsumeEvents >> createAndConsumeEventsQueue: qName [
+RMQConsumer >> createAndConsumeEventsQueue: qName [
 	" createconsumes a queue " 
 
 	queueName := (channel
@@ -58,7 +58,7 @@ ConsumeEvents >> createAndConsumeEventsQueue: qName [
 ]
 
 { #category : #amqp }
-ConsumeEvents >> createAndConsumeQueue: queue exchange: exchange routingKey: key [ 
+RMQConsumer >> createAndConsumeQueue: queue exchange: exchange routingKey: key [ 
 
 	queueName := (channel
 		queueDeclare: queue
@@ -73,14 +73,14 @@ ConsumeEvents >> createAndConsumeQueue: queue exchange: exchange routingKey: key
 ]
 
 { #category : #amqp }
-ConsumeEvents >> createExchange: exchangeName type: typeName [
+RMQConsumer >> createExchange: exchangeName type: typeName [
 
 channel 
 	exchangeDeclare: exchangeName type: typeName
 ]
 
 { #category : #amqp }
-ConsumeEvents >> createQueue: qname [ 
+RMQConsumer >> createQueue: qname [ 
 
 channel 
 		queueDeclare: qname
@@ -92,21 +92,21 @@ channel
 ]
 
 { #category : #amqp }
-ConsumeEvents >> deleteExchange: exname [ 
+RMQConsumer >> deleteExchange: exname [ 
 
 channel 
 		exchangeDelete: exname.
 ]
 
 { #category : #amqp }
-ConsumeEvents >> deleteQueue: qname [ 
+RMQConsumer >> deleteQueue: qname [ 
 
 channel 
 		queueDelete: qname.
 ]
 
 { #category : #amqp }
-ConsumeEvents >> handleDelivery: delivery [
+RMQConsumer >> handleDelivery: delivery [
 
 	| routingKey headersDictionnary timestamp  |
 	
@@ -142,7 +142,7 @@ ConsumeEvents >> handleDelivery: delivery [
 ]
 
 { #category : #amqp }
-ConsumeEvents >> handleDeliveryForAll: delivery [ 
+RMQConsumer >> handleDeliveryForAll: delivery [ 
 	
 	"listening to a single queue of all events, this handleDelivery calls RMQEventParser methodes to populate the model according to rooting key"
 	"otherwise have a handleDelivery to every queue"
@@ -184,7 +184,7 @@ ConsumeEvents >> handleDeliveryForAll: delivery [
 ]
 
 { #category : #amqp }
-ConsumeEvents >> handleDeliveryQueueCreated: delivery [ 	
+RMQConsumer >> handleDeliveryQueueCreated: delivery [ 	
 	
 	"otherwise have a handleDelivery to every queue"
 	| headersDictionnary timestamp outputString|
@@ -206,7 +206,7 @@ ConsumeEvents >> handleDeliveryQueueCreated: delivery [
 ]
 
 { #category : #amqp }
-ConsumeEvents >> handleDeliveryTest: delivery [
+RMQConsumer >> handleDeliveryTest: delivery [
 "// for tests"
 	| str |
 	str := 'headers: ', delivery properties headers printString, 'timestamp: ', delivery properties timestamp printString.
@@ -216,60 +216,63 @@ ConsumeEvents >> handleDeliveryTest: delivery [
 ]
 
 { #category : #amqp }
-ConsumeEvents >> handleDeliveryTracesQueue: delivery [
+RMQConsumer >> handleDeliveryTracesQueue: delivery [
 
-	| routingKey headersDictionnary exchange |
+	| routingKey headersDictionnary exchange resource |
 	
-	routingKey := (delivery method routingKey) trimLeft: [ :e | e = '"' ] right: [ :e | e = '"' ]. 
-	headersDictionnary := delivery properties headers. 
+	routingKey := (delivery method routingKey) trimLeft: [ :e | e = '"' ] right: [ :e | e = '"' ].
+	headersDictionnary  := delivery properties headers. 
 	exchange := (headersDictionnary at: 'exchange_name'). 
+	resource := 'to do : get what is after deliver or publish'. 
 	
-	(exchange = 'amq.rabbitmq.event') ifFalse: [ self parser populate: self model withTraceMessage: headersDictionnary onResource: routingKey ]. 
+	(exchange = 'amq.rabbitmq.event') ifFalse: [ self parser populate: self model withTraceMessage: headersDictionnary onResource: routingKey ].  
 	
 	channel basicAck: delivery method deliveryTag.  
+	
+
 ]
 
 { #category : #initialization }
-ConsumeEvents >> initialize [
+RMQConsumer >> initialize [
 	super initialize.
 	
 	
 ]
 
 { #category : #amqp }
-ConsumeEvents >> mainloop [
+RMQConsumer >> mainloop [
 	[ connection waitForEvent ] repeat.
 ]
 
 { #category : #accessing }
-ConsumeEvents >> model [
+RMQConsumer >> model [
 	^ model
 ]
 
 { #category : #accessing }
-ConsumeEvents >> model: anObject [
+RMQConsumer >> model: anObject [
 	model := anObject
 ]
 
 { #category : #accessing }
-ConsumeEvents >> parser [
+RMQConsumer >> parser [
 	^ parser
 ]
 
 { #category : #accessing }
-ConsumeEvents >> parser: anObject [
+RMQConsumer >> parser: anObject [
 	parser := anObject
 ]
 
 { #category : #amqp }
-ConsumeEvents >> purgeQueue: qname [ 
+RMQConsumer >> purgeQueue: qname [ 
 
 channel 
 		queuePurge: qname.
 ]
 
 { #category : #amqp }
-ConsumeEvents >> unbindQueue: qname withExchange: exname routingKey: key [
+RMQConsumer >> unbindQueue: qname withExchange: exname routingKey: key [
 
 channel 
 		queueUnbind: qname exchange: exname routingKey: key. 

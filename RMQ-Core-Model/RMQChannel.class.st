@@ -147,7 +147,7 @@ RMQChannel >> rmqState: anObject [
 
 { #category : #accessing }
 RMQChannel >> subscribedComponent [
-	<MSEProperty: #subscribedComponent type: #RMQComponent opposite:#subscribedChannels>
+	<MSEProperty: #subscribedComponent type: #RMQPublisherComponent opposite:#subscribedChannels>
 	^ subscribedComponent
 ]
 

@@ -24,11 +24,11 @@ RMQEventParserTestConsumerDeleted >> setUp [
 	
 	parser := RMQEventParser new. 
 	
-	consumer := ConsumeEvents new. 
+	consumer := RMQConsumer new. 
 	consumer model: model. 
 	consumer parser: parser.
 	
-	consumer2 := ConsumeEvents new. 
+	consumer2 := RMQConsumer new. 
 	consumer2 model: model. 
 	consumer2 parser: parser.
 	
@@ -50,6 +50,6 @@ RMQEventParserTestConsumerDeleted >> testModelPopulation [
 
 	"self assert: (model allRMQChannels anySatisfy: [:element | element vhost name ='/']).
 	self assert: (model allRMQConnections anySatisfy: [:element | element user name = 'guest'])."
-	self assert: (model allRMQComponents anySatisfy: [:element | element deletionDate isNotNil and:[ element subscribedChannels anySatisfy: [ :el | el vhost name = '/']]]).
+	self assert: (model allRMQConsumerProcesses anySatisfy: [:element | element deletionDate isNotNil and:[ element subscribedChannels anySatisfy: [ :el | el vhost name = '/']]]).
 	
 ]

@@ -24,11 +24,11 @@ RMQEventParserTestConnectionClosed >> setUp [
 	
 	parser := RMQEventParser new. 
 	
-	consumer := ConsumeEvents new. 
+	consumer := RMQConsumer new. 
 	consumer model: model. 
 	consumer parser: parser.
 	
-	consumer2 := ConsumeEvents new. 
+	consumer2 := RMQConsumer new. 
 	consumer2 model: model. 
 	consumer2 parser: parser.
 	

@@ -12,12 +12,30 @@ Class {
 		'priority',
 		'exchangeFormat',
 		'queue',
-		'senderComponent',
+		'publisherComponent',
 		'routedQueues',
-		'exchange'
+		'routingKey',
+		'publishedToExchange',
+		'routedToQueues',
+		'deliveredFromQueues'
+	],
+	#classInstVars : [
+		'received'
 	],
 	#category : #'RMQ-Core-Model'
 }
+
+{ #category : #accessing }
+RMQMessage >> deliveredFromQueues [
+   <MSEProperty: #deliveredFromQueues type: #RMQQueue opposite:#deliveredMessages>
+   <multivalued>
+	^ deliveredFromQueues
+]
+
+{ #category : #accessing }
+RMQMessage >> deliveredFromQueues: anObject [
+	deliveredFromQueues := anObject
+]
 
 { #category : #accessing }
 RMQMessage >> deliveryMode [
@@ -43,17 +61,6 @@ RMQMessage >> encrypted: anObject [
 ]
 
 { #category : #accessing }
-RMQMessage >> exchange [
-<MSEProperty: #exchange type: #RMQExchange opposite:#messages>
-	^ exchange
-]
-
-{ #category : #accessing }
-RMQMessage >> exchange: anObject [
-	exchange := anObject
-]
-
-{ #category : #accessing }
 RMQMessage >> exchangeFormat [
 <MSEProperty: #exchangeFormat type: #RMQExchangeFormat opposite:#messages>
 	^ exchangeFormat
@@ -68,7 +75,8 @@ RMQMessage >> exchangeFormat: anObject [
 RMQMessage >> initialize [
 
 	super initialize.
-	routedQueues := Set new.
+	routedToQueues := Set new.
+	deliveredFromQueues := Set new. 
 ]
 
 { #category : #accessing }
@@ -117,14 +125,25 @@ RMQMessage >> priority: anObject [
 ]
 
 { #category : #accessing }
-RMQMessage >> queue [
-	<MSEProperty: #queue type: #RMQQueue opposite:#sendedMessages>
-	^ queue
+RMQMessage >> publishedToExchange [
+<MSEProperty: #publishedToExchange type: #RMQExchange opposite:#publishedMessages>
+	^ publishedToExchange
 ]
 
 { #category : #accessing }
-RMQMessage >> queue: anObject [
-	queue := anObject
+RMQMessage >> publishedToExchange: anObject [
+	publishedToExchange := anObject
+]
+
+{ #category : #accessing }
+RMQMessage >> publisherComponent [
+	<MSEProperty: #publisherComponent type: #RMQPublisherComponent opposite:#messagesFromPublisher>
+	^ publisherComponent
+]
+
+{ #category : #accessing }
+RMQMessage >> publisherComponent: anObject [
+	publisherComponent := anObject
 ]
 
 { #category : #accessing }
@@ -139,26 +158,26 @@ RMQMessage >> redelivered: anObject [
 ]
 
 { #category : #accessing }
-RMQMessage >> routedQueues [
-	<MSEProperty: #routedQueues type: #RMQQueue opposite:#messages>
-	<multivalued>
-	^ routedQueues
+RMQMessage >> routedToQueues [
+   <MSEProperty: #routedToQueues type: #RMQQueue opposite:#routedMessages>
+   <multivalued>
+	^ routedToQueues
 ]
 
 { #category : #accessing }
-RMQMessage >> routedQueues: anObject [
-	routedQueues := anObject
+RMQMessage >> routedToQueues: anObject [
+	routedToQueues := anObject
 ]
 
 { #category : #accessing }
-RMQMessage >> senderComponent [
-	<MSEProperty: #senderComponent type: #RMQComponent opposite:#senderMessages>
-	^ senderComponent
+RMQMessage >> routingKey [
+	<MSEProperty: #routingKey type: #RMQRoutingKey opposite:#messages>
+	^ routingKey
 ]
 
 { #category : #accessing }
-RMQMessage >> senderComponent: anObject [
-	senderComponent := anObject
+RMQMessage >> routingKey: anObject [
+	routingKey := anObject
 ]
 
 { #category : #accessing }

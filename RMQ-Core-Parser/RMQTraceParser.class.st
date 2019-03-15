@@ -44,7 +44,14 @@ Class {
 { #category : #parsing }
 RMQTraceParser >> populate: aModel withTraceMessage: aDictionnary onResource: resource [
 
-" the Message, the dictionnary represents the properties headers :
+" the Message, 
+Exchange	amq.rabbitmq.trace
+Routing Key	deliver.events.user.authentication.success
+Redelivered	●
+Properties	
+headers:
+
+the dictionnary represents the properties headers :
  exchange_name:	pubsub.default.consoleSaasUserAccess.publish *
  routing_keys:	message
  properties:	
@@ -130,20 +137,21 @@ RMQTraceParser >> populate: aModel withTraceMessage: aDictionnary onResource: re
 			
 			"set the exchange"
 			exchange := aModel selectOrAddEntityNamed: ( aDictionnary at: 'exchange_name') withType: RMQExchange.
-			exchange messages add: messageObject.
-			messageObject exchange: exchange.
+			exchange publishedMessages add: messageObject.
+			messageObject publishedToExchange: exchange.
 			exchange vhost ifNil:[ vhost exchanges add: exchange. exchange vhost: vhost. ].
 		
 			"message delivery mode"
 			(((aDictionnary at: 'properties') at: 'delivery_mode') = 1) ifTrue: [ messageObject deliveryMode: (DeliveryMode nonPersistent) ]
 			                                           ifFalse: [ messageObject deliveryMode: (DeliveryMode persistent) ].    
 			 messageObject deliveryMode messages add: messageObject.          
-					
+			 "to do : separate consumer and publisher !"	
+				
           "set the publisher"        
 			(aDictionnary at: 'properties') at: 'app_id' ifPresent:[
-				component := aModel selectOrAddEntityNamed: ((aDictionnary at: 'properties') at: 'app_id') withType: RMQComponent.
-				component senderMessages add: messageObject.
-				messageObject senderComponent:component.
+				component := aModel selectOrAddEntityNamed: ((aDictionnary at: 'properties') at: 'app_id') withType: RMQPublisherComponent.
+				component messagesFromPublisher add: messageObject.
+				messageObject publisherComponent: component.
 				
 				tenant := aModel selectOrAddEntityNamed: (((aDictionnary at: 'properties') at: 'headers') at: 'X-TenantId') withType: RMQTenant. "to do : update !!"
 				component tenants add: tenant. 
@@ -160,7 +168,7 @@ RMQTraceParser >> populate: aModel withTraceMessage: aDictionnary onResource: re
 					detect: [:exch| exch = exchange ]
 					ifNone: [
 						component exchanges add: exchange.
-						exchange components add: component.
+						exchange publisherComponents add: component.
 					].
 			].
 		
@@ -181,10 +189,10 @@ RMQTraceParser >> populate: aModel withTraceMessage: aDictionnary onResource: re
 		
 	      "message type according to existance of routed_queues "
 			aDictionnary at: 'routed_queues' ifPresent: [ messageObject messageType: (MessageType published). messageObject messageType messages add: messageObject ].
-			aDictionnary at: 'routed_queues'  ifAbsent: [ messageObject messageType: (MessageType received). messageObject messageType messages add: messageObject. " to do : or set received to true !"
+			aDictionnary at: 'routed_queues'  ifAbsent: [ messageObject messageType: (MessageType received). messageObject messageType messages add: messageObject. " to do : a revoir !"
 				                                         queue := aModel selectOrAddEntityNamed: resource withType: RMQQueue.
 				                                         messageObject queue: queue.
-				                                         queue sendedMessages add: messageObject.
+				                                         queue messagesFromPublisher add: messageObject. "to do : a revoir plus de queue dans message et pa de messagesFromPublisher dans queue "
 				                                         queue vhost ifNil:[	vhost queues add: queue. queue vhost: vhost ].
 				                                       ].
 			
@@ -195,5 +203,41 @@ RMQTraceParser >> populate: aModel withTraceMessage: aDictionnary onResource: re
 			
 
 			
+	
+]
+
+{ #category : #parsing }
+RMQTraceParser >> populate: aModel withTraceMessage: aDictionnary onResource: resource method: method [
+
+" the Message, 
+Exchange	amq.rabbitmq.trace
+Routing Key	deliver.events.user.authentication.success
+Redelivered	●
+Properties	
+headers:
+
+the dictionnary represents the properties headers :
+ exchange_name:	pubsub.default.consoleSaasUserAccess.publish *
+ routing_keys:	message
+ properties:	
+  app_id:	bl-console-saas *
+  timestamp:	1550658626  *
+  message_id:	0c38ddd9-2a84-493a-bd5d-1c8d2906350e  *
+  delivery_mode:	2 *
+  headers:	
+   X-ExchangeFormatId:	AVRO *
+   X-TenantId:	default *
+   X-ClientId:	bl-console-saas
+   X-TopicId:	consoleSaasUserAccess
+   X-ExchangeFormatSchema:	*
+ node:	rabbit@fceed0d94b94  *
+ vhost:	/ *
+ connection:	172.17.0.1:43458 -> 172.17.0.2:5672  *
+ channel:	1  *
+ user:	guest  *
+ routed_queues:	pubsub.default.consoleSaasUserAccess.module-profile-updated.subscribe"
+ 
+
+			Transcript cr; nextPutAll: '   method ', method  ; flush.
 	
 ]

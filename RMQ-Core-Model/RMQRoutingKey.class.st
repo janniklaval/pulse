@@ -3,7 +3,8 @@ Class {
 	#superclass : #PulseEntity,
 	#instVars : [
 		'binding',
-		'queues_for_dead_letter'
+		'queues_for_dead_letter',
+		'messages'
 	],
 	#category : #'RMQ-Core-Model'
 }
@@ -23,6 +24,19 @@ RMQRoutingKey >> binding: anObject [
 RMQRoutingKey >> initialize [
 	super initialize.
 	queues_for_dead_letter := Set new.
+	messages := Set new. 
+]
+
+{ #category : #accessing }
+RMQRoutingKey >> messages [
+	<MSEProperty: #messages type: #RMQMessage opposite:#routingKey>
+	<multivalued>
+	^ messages
+]
+
+{ #category : #accessing }
+RMQRoutingKey >> messages: anObject [
+	messages := anObject
 ]
 
 { #category : #accessing }

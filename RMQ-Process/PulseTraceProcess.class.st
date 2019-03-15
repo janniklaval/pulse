@@ -42,7 +42,7 @@ PulseTraceProcess >> initialiseModel: name [
 	
 	parser := RMQTraceParser new. 
 	
-	consumer := ConsumeEvents new. 
+	consumer := RMQConsumer new. 
 	consumer model: model. 
 	consumer parser: parser.
 	
@@ -71,7 +71,7 @@ PulseTraceProcess >> initialiseModel: name host: host port: port username: usern
 	
 	parser := RMQTraceParser new. 
 	
-	consumer := ConsumeEvents new. 
+	consumer := RMQConsumer new. 
 	consumer model: model. 
 	consumer parser: parser.
 	

@@ -84,9 +84,9 @@ RMQRESTParserApiConsumers class >> populate: aModel withJson: aString [
 		
 		consumerTag := (anObject at: 'consumer_tag').
 		
-		component := aModel allRMQComponents detect: [:e | e consumerTag = consumerTag] ifNone:[ 
+		component := aModel allRMQConsumerProcesses detect: [:e | e consumerTag = consumerTag] ifNone:[ 
 				|newComponent |
-				newComponent := RMQComponent new
+				newComponent := RMQConsumerProcess new
 					consumerTag: consumerTag.
 				aModel add: newComponent.
 				newComponent ].

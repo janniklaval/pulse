@@ -19,7 +19,7 @@ RMQTraceParserTest >> setUp [
 	
 	parser := RMQTraceParser new. 
 	
-	consumer := ConsumeEvents new. 
+	consumer := RMQConsumer new. 
 	consumer model: model. 
 	consumer parser: parser.
 	
@@ -33,5 +33,16 @@ RMQTraceParserTest >> setUp [
 { #category : #tests }
 RMQTraceParserTest >> testModelPopulation [
 
+   self assert: (model allRMQNodes anySatisfy: [:element | element name = '/' ]).
 	self assert: (model allRMQVHosts anySatisfy: [:element | element name = '/' ]).
+	self assert: (model allRMQExchanges anySatisfy: [:element | element name = 'test.create.exchangeforbinding']).
+	self assert: (model allRMQQueues anySatisfy: [:element | element name = 'test.create.queueforbinding']).
+	self assert: (model allRMQChannels anySatisfy: [:element | element user name = 'guest' and:[ element creationDate isNotNil ] ]).
+	self assert: (model allRMQConnections anySatisfy: [:element | element user name = 'guest']).
+	self assert: (model allRMQUsers anySatisfy: [:element | element name = 'guest' and:[ element vhosts anySatisfy: [:el| el name = '/']  ] ]).
+	self assert: (model allRMQExchangeFormats anySatisfy: [:element | element name = 'test.create.exchangeforbinding']).
+	self assert: (model allRMQConsumerProcesses anySatisfy: [:element | element name = 'test.create.exchangeforbinding']).
+	self assert: (model allRMQMessages anySatisfy: [:element | element name = 'test.create.exchangeforbinding']).
+	self assert: (model allDeliveryModes anySatisfy: [:element | element name = 'test.create.exchangeforbinding']).
+	self assert: (model allMessageTypes anySatisfy: [:element | element name = 'test.create.exchangeforbinding']).
 ]

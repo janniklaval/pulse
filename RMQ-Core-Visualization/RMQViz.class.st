@@ -6,6 +6,9 @@ Class {
 
 { #category : #accessing }
 RMQViz class >> generalViewOf: model [
+
+"to do: change RMQComponent"
+
 | v es lineShape producers exchanges queues consumers edges1 edges2 edges3|
 v := RTView new.
 
@@ -18,7 +21,7 @@ es := (RTShapeBuilder new box; withText: #asString height: 40)
 RTNest new for: es add: [ :group :localModel |
 			
 		(localModel = 'Producers') ifTrue: [
-			producers := (RTShapeBuilder new box width: 300; height: 110; color: Color orange trans; borderColor: [ :e | ((model allRMQQueues reject:[:i | i name = 'none'] )contains:[:q | ((q name substrings:'.') at: 4) = e pulseName ]) ifTrue:[ Color black ] ] ;borderWidth: [ :e | ((model allRMQQueues reject:[:i | i name = 'none'] )contains:[:q | ((q name substrings:'.') at: 4) = e pulseName ]) ifTrue:[ 4 ] ]; withText: [:e | e pulseName, String cr, 'last at: ', String cr, (e senderMessages sort:[:l :m | l timestamp < m timestamp ]) last timestamp] height: 20 color: Color black) elementsOn: (model allRMQComponents).
+			producers := (RTShapeBuilder new box width: 300; height: 110; color: Color orange trans; borderColor: [ :e | ((model allRMQQueues reject:[:i | i name = 'none'] )contains:[:q | ((q name substrings:'.') at: 4) = e pulseName ]) ifTrue:[ Color black ] ] ;borderWidth: [ :e | ((model allRMQQueues reject:[:i | i name = 'none'] )contains:[:q | ((q name substrings:'.') at: 4) = e pulseName ]) ifTrue:[ 4 ] ]; withText: [:e | e pulseName, String cr, 'last at: ', String cr, (e publishedMessages sort:[:l :m | l timestamp < m timestamp ]) last timestamp] height: 20 color: Color black) elementsOn: (model allRMQComponents).
 			producers := producers sort: [ :e :f | e model name < f model name ].
 			
 			group addAll: producers.

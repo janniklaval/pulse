@@ -55,9 +55,9 @@ RMQLogParser class >> populate: aModel withJson: aString [
 			
 			queue := aModel selectOrAddEntityNamed: (aRMQObject at: 'queue') withType: RMQQueue.
 			
-			message queue ifNil:[
-				queue sendedMessages add: message.
-				message queue: queue.
+			message queue ifNil:[ "to do : revoir la verification"
+				queue deliveredMessages add: message.
+				message deliveredFromQueues add: queue.
 			].
 			
 			user := aModel selectOrAddEntityNamed: (aRMQObject at: 'user') withType: RMQUser.
@@ -73,8 +73,8 @@ RMQLogParser class >> populate: aModel withJson: aString [
 			
 			
 			exchange := aModel selectOrAddEntityNamed: (aRMQObject at: 'exchange') withType: RMQExchange.
-			exchange messages add: message.
-			message exchange: exchange.
+			exchange publishedMessages add: message.
+			message publishedToExchange: exchange.
 			
 			
 			vhost := aModel selectOrAddEntityNamed: (aRMQObject at: 'vhost') withType: RMQVHost.
@@ -129,8 +129,8 @@ RMQLogParser class >> populate: aModel withJson: aString [
 				channel consumedQueues add: aQueue.
 				
 				"link with messages"
-				aQueue messages add: message.
-				message routedQueues add: aQueue.
+				aQueue routedMessages add: message.
+				message routedToQueues add: aQueue.
 				
 				"add the bindings"
 				routingKeys do:[:aRoutingKey |
@@ -175,9 +175,9 @@ RMQLogParser class >> populate: aModel withJson: aString [
 			messageType messages add: message.
 			
 			(aRMQObject at: 'properties') at: 'app_id' ifPresent:[
-				component := aModel selectOrAddEntityNamed: ((aRMQObject at: 'properties') at: 'app_id') withType: RMQComponent.
-				component senderMessages add: message.
-				message senderComponent:component.
+				component := aModel selectOrAddEntityNamed: ((aRMQObject at: 'properties') at: 'app_id') withType: RMQPublisherComponent.
+				component messagesFromPublisher add: message.
+				message publisherComponent:component.
 			
 				component subscribedChannels 
 					detect: [:ch| ch = channel ]
@@ -190,7 +190,7 @@ RMQLogParser class >> populate: aModel withJson: aString [
 					detect: [:exch| exch = exchange ]
 					ifNone: [
 						component exchanges add: exchange.
-						exchange components add: component.
+						exchange publisherComponents add: component.
 					].
 			].
 			
