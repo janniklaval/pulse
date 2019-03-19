@@ -68,7 +68,13 @@ RMQRESTParserApiDefinitions class >> populate: aModel withExchanges: anArray [
 		
 		element := aModel selectOrAddEntityNamed: exchangeName withType:RMQExchange.
 		
-		element type: (anExchange at: 'type').
+		"element type: (anExchange at: 'type')."
+		
+		((anExchange at: 'type') = 'topic') ifTrue: [ element type: (ExchangeType topic).  element type exchanges add: element].
+		((anExchange at: 'type') = 'direct') ifTrue: [ element type: (ExchangeType direct).  element type exchanges add: element].
+		((anExchange at: 'type') = 'fanout') ifTrue: [ element type: (ExchangeType fanout).  element type exchanges add: element].
+		((anExchange at: 'type') = 'headers') ifTrue: [ element type: (ExchangeType headers).  element type exchanges add: element].	
+		
 		element internal: (anExchange at: 'internal').
 		element autoDelete: (anExchange at: 'auto_delete').
 		

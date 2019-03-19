@@ -76,7 +76,8 @@ RMQMessage >> initialize [
 
 	super initialize.
 	routedToQueues := Set new.
-	deliveredFromQueues := Set new. 
+	deliveredFromQueues := Set new.
+	routingKeys := Set new.  
 ]
 
 { #category : #accessing }

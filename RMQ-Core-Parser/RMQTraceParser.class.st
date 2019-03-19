@@ -276,7 +276,7 @@ the dictionnary represents the properties headers :
  user:	guest  *
  routed_queues:	pubsub.default.consoleSaasUserAccess.module-profile-updated.subscribe"
  
-			| messageObject messageId connection queue user node exchange vhost channel publisherComponent consumerComponent exchangeFormat tenantId routedQueue routingKey |
+			| messageObject messageId connection queue user node exchange vhost channel publisherComponent consumerComponent exchangeFormat tenantId routedQueue routedQueues routingKey |
 			
 			
 			node := aModel selectOrAddEntityNamed: (aDictionnary at: 'node') withType: RMQNode.
@@ -397,46 +397,53 @@ the dictionnary represents the properties headers :
 		
 	         "if routed_queues is present and not null : message published and routed 
 	         if routed_queues is present and  null : message published and not routed  "
-			   aDictionnary at: 'routed_queues' ifPresent: 
-			    [ 				
-              (aDictionnary at: 'routed_queues')
-				  do: [ :aRoutedQueue |
-				      routedQueue := aModel selectOrAddEntityNamed: aRoutedQueue withType: RMQQueue.				
-				      "link with messages"
-				      routedQueue routedMessages add: message.
-				      message routedToQueues add: routedQueue.	
+	         "vérifier d'abord si'il y a plus d'un element dans la liste "
+			   "aDictionnary at: 'routed_queues' ifPresent: 
+			    [ 	
+              routedQueues := (aDictionnary at: 'routed_queues'). 
+              
+              ( routedQueues size = 1) 
+              ifTrue: [  routedQueue := aModel selectOrAddEntityNamed: routedQueues withType: RMQQueue.				
+				      ""link with messages""
+				      routedQueue routedMessages add: messageObject.
+				      messageObject routedToQueues add: routedQueue.	  
 					
-					   "set vhost"		
+					   ""set vhost""		
+						routedQueue vhost: vhost. 
+						vhost queues add: routedQueue.  ]. 
+				  ( routedQueues size >= 1) 
+              ifTrue: [  routedQueues do: [ :aRoutedQueue |
+				      routedQueue := aModel selectOrAddEntityNamed: aRoutedQueue withType: RMQQueue.				
+				      ""link with messages""
+				      routedQueue routedMessages add: messageObject.
+				      messageObject routedToQueues add: routedQueue.	  
+					
+					   ""set vhost""		
 						routedQueue vhost: vhost. 
 						vhost queues add: routedQueue. 
-				    ].			
-				 ].
-			 " à revoi"
-			  aDictionnary at: 'routed_queues'  ifAbsent: [ messageObject messageType: (MessageType received). messageObject messageType messages add: messageObject. " to do : a revoir !"
-				                                         queue := aModel selectOrAddEntityNamed: resource withType: RMQQueue.
-				                                         messageObject queue: queue.
-				                                         queue messagesFromPublisher add: messageObject. "to do : a revoir plus de queue dans message et pa de messagesFromPublisher dans queue "
-				                                         queue vhost ifNil:[	vhost queues add: queue. queue vhost: vhost ].
-				                                       ].
+				    ].		
+					].	
+				 ]."
+			
 			] ifFalse: [   "case message delivered"
 			"set the consumer"
-			" if routed_queues is not present and  trace type deliver : message delivered to consumer"
+			" if routed_queues is not present and trace type deliver : message delivered to consumer"
 			"get the module id to create the consumerComponent, the moduleId is part of the resource (here queue),  set subscribedChannel of consumerComponent, link channel to related queue, and queue to the message "	
 				
 				"set the queue from which the message was delivered "
 				  queue := aModel selectOrAddEntityNamed: resource withType: RMQQueue.				
 				  "link with messages"
-				  queue deliveredMessages add: message.
-				  message deliveredFromQueues add: queue.	
+				  queue deliveredMessages add: messageObject.
+				  messageObject deliveredFromQueues add: queue.	
 					
 				  "set vhost"		
 				  queue vhost: vhost. 
 				  vhost queues add: queue. 
 				
 				  "set the consumer" " link with message ?"
-				  consumerComponent := aModel selectOrAddEntityNamed: ((aDictionnary at: 'properties') at: 'app_id') withType: RMQPublisherComponent.
+				  consumerComponent := aModel selectOrAddEntityNamed: ((aDictionnary at: 'properties') at: 'app_id') withType: RMQConsumerComponent.
 				
-				  consumerComponent appId: ((aDictionnary at: 'properties') at: 'app_id'). 
+				  consumerComponent appId: (( resource substrings: '.') at: 4 ). 
 			
 				  consumerComponent subscribedChannels 
 					detect: [:ch| ch = channel ]
@@ -445,15 +452,19 @@ the dictionnary represents the properties headers :
 						channel consumerComponent: consumerComponent.
 					].
 						
+				   channel consumedQueues add: queue. 
+				   queue consumerChannels add: channel. 
+				
 			 ].
 			
 		   	
 			" set routingKeys "  
-		   (aDictionnary at: 'routing_keys') do: [ :aRoutingKey |
+			"vérifier d'abord si'il y a plus d'un element dans la liste "
+		   "(aDictionnary at: 'routing_keys') do: [ :aRoutingKey |
 					routingKey := aModel selectOrAddEntityNamed: aRoutingKey withType: RMQRoutingKey.
 					routingKey messages add: messageObject. 
 					messageObject routingKeys add: routingKey. 
-				].
+				]."
 	
 			
 

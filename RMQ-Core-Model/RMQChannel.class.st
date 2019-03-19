@@ -128,10 +128,8 @@ RMQChannel >> idleSince: anObject [
 RMQChannel >> initialize [
 
 	super initialize.
-	"users := Set new."
+
 	consumedQueues := Set new.
-	"subscribedComponents := Set new."
-	
 	rmqState := State idle.
 	rmqState channels add: self.
 ]

@@ -105,6 +105,9 @@ RMQRESTParserApiConsumers class >> populate: aModel withJson: aString [
 		channelName := ((anObject at: 'channel_details') at: 'name').
 		channel := aModel selectOrAddEntityNamed: channelName withType: RMQChannel.
 		
+		component subscribedChannels add: channel.
+		channel consumerProcess: component. 
+		
 		channel consumedQueues add: queue.
 		queue consumerChannels add: channel.
 		

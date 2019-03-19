@@ -218,14 +218,17 @@ RMQConsumer >> handleDeliveryTest: delivery [
 { #category : #amqp }
 RMQConsumer >> handleDeliveryTracesQueue: delivery [
 
-	| routingKey headersDictionnary exchange resource |
+	| routingKey headersDictionnary exchange resource  traceType |
 	
 	routingKey := (delivery method routingKey) trimLeft: [ :e | e = '"' ] right: [ :e | e = '"' ].
 	headersDictionnary  := delivery properties headers. 
 	exchange := (headersDictionnary at: 'exchange_name'). 
-	resource := 'to do : get what is after deliver or publish'. 
+	traceType := (routingKey substrings: '.') at: 1 . 
+	resource := routingKey removePrefix: (traceType,'.').
+ 
+	"Transcript cr; nextPutAll: 'headers : ', headersDictionnary; flush."
 	
-	(exchange = 'amq.rabbitmq.event') ifFalse: [ self parser populate: self model withTraceMessage: headersDictionnary onResource: routingKey ].  
+	(exchange = 'amq.rabbitmq.event') ifFalse: [ self parser populate: self model withTraceMessage: headersDictionnary withTraceType: traceType onResource: resource ].  
 	
 	channel basicAck: delivery method deliveryTag.  
 	

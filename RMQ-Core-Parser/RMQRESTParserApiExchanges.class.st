@@ -124,8 +124,12 @@ RMQRESTParserApiExchanges class >> populate: aModel withJson: aString [
 		exchangeName := (anObject at: 'name').
 		exchange := aModel selectOrAddEntityNamed: exchangeName withType: RMQExchange.
 		
-		exchange type: (anObject at: 'type').
-		exchange type exchanges add: exchange.						
+		"exchange type: (anObject at: 'type').
+		exchange type exchanges add: exchange."	
+		((anObject at: 'type') = 'topic') ifTrue: [ exchange type: (ExchangeType topic).  exchange type exchanges add: exchange].
+		((anObject at: 'type') = 'direct') ifTrue: [ exchange type: (ExchangeType direct).  exchange type exchanges add: exchange].
+		((anObject at: 'type') = 'fanout') ifTrue: [ exchange type: (ExchangeType fanout).  exchange type exchanges add: exchange].
+		((anObject at: 'type') = 'headers') ifTrue: [ exchange type: (ExchangeType headers).  exchange type exchanges add: exchange].					
 			
 		vhost := aModel selectOrAddEntityNamed: (anObject at: 'vhost') withType: RMQVHost.
 		exchange vhost: vhost.
@@ -138,7 +142,11 @@ RMQRESTParserApiExchanges class >> populate: aModel withJson: aString [
 		user_who_performed_action initializedExchanges add: exchange.
 		
 		
-		exchange durability: (anObject at: 'durable').
+		"exchange durability: (exchange at: 'durable')."
+		
+	   ((anObject at: 'durable') = true) ifTrue: [ exchange durability: (Durability durable).  exchange durability exchanges add: exchange].
+		((anObject at: 'durable') = false) ifTrue: [ exchange durability: (Durability transient).  exchange durability exchanges add: exchange].
+		
 		exchange internal: (anObject at: 'internal').
 	]
 ]

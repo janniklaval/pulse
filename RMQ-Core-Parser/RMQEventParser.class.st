@@ -283,6 +283,7 @@ RMQEventParser >> populate: aModel withConsumerCreated: aDictionnary at: timesta
 { #category : #parsing }
 RMQEventParser >> populate: aModel withConsumerDeleted: aDictionnary at: timestamp [
     "aDictionnary ( vhost, consumer_tag, channel, queue)"
+    "to do : create the consumer component from the module id information in the queue ? "
 	
 		| componentObject  vhost |
 
