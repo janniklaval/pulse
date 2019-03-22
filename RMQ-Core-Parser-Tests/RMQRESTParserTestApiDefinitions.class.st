@@ -80,8 +80,8 @@ RMQRESTParserTestApiDefinitions >> testPopulateExchange [
 	self assert: t2 vhost = (model allRMQVHosts detect: [:e | e name = '/']).
 	self assert: t1 type name = 'direct'.
 	self assert: t2 type name = 'topic'.
-	self assert: t1 durability = true.
-	self assert: t2 durability = false.
+	self assert: t1 durability = 'durable'.
+	self assert: t2 durability = 'transient'.
 	self assert: t1 autoDelete = false.
 	self assert: t2 autoDelete = false.
 	self assert: t1 internal = false.
@@ -150,8 +150,8 @@ RMQRESTParserTestApiDefinitions >> testPopulateExistingExchange [
 	self assert: t2 vhost = (model allRMQVHosts detect: [:e | e name = '/']).
 	self assert: t1 type name = 'direct'.
 	self assert: t2 type name= 'topic'.
-	self assert: t1 durability = true.
-	self assert: t2 durability = false.
+	self assert: t1 durability = 'durable'.
+	self assert: t2 durability = 'transient'.
 	self assert: t1 autoDelete = false.
 	self assert: t2 autoDelete = false.
 	self assert: t1 internal = false.

@@ -65,7 +65,7 @@ RMQConsumerComponent >> componentType: anObject [
 
 { #category : #accessing }
 RMQConsumerComponent >> consumerProcesses [
-	<MSEProperty: #onsumerProcesses type: #RMQConsumerProcess opposite:#consumerComponent>
+	<MSEProperty: #consumerProcesses type: #RMQConsumerProcess opposite:#consumerComponent> 
 	<multivalued>
 	^ consumerProcesses
 ]

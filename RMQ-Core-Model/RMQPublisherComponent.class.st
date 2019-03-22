@@ -56,7 +56,7 @@ RMQPublisherComponent >> author: anObject [
 
 { #category : #accessing }
 RMQPublisherComponent >> componentType [
-	<MSEProperty: #componentType type: #ComponentType opposite: #components>
+	<MSEProperty: #componentType type: #ComponentType opposite: #publisherComponents>
 	^ componentType
 ]
 

@@ -83,7 +83,11 @@ RMQRESTParserApiDefinitions class >> populate: aModel withExchanges: anArray [
 		element vhost: vhost.
 		vhost exchanges add: element.
 
-		element durability:(anExchange at: 'durable').
+		"element durability:(anExchange at: 'durable')."
+		
+		((anExchange at: 'durable') = 1) ifTrue: [ element durability: (Durability durable).  element durability exchanges add: element].
+		((anExchange at: 'durable') = 0) ifTrue: [ element durability: (Durability transient).  element durability exchanges add: element].
+		
 		arg := (anExchange at: 'arguments').
 		
 		altExchName := (arg at: 'alternate-exchange' ifAbsent:[nil]).

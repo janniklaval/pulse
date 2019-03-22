@@ -172,7 +172,7 @@ RMQMessage >> routedToQueues: anObject [
 
 { #category : #accessing }
 RMQMessage >> routingKeys [
-	<MSEProperty: #routingKey type: #RMQRoutingKey opposite:#messages>
+	<MSEProperty: #routingKeys type: #RMQRoutingKey opposite:#messages>
 	^ routingKeys
 ]
 
