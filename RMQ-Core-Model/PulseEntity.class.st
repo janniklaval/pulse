@@ -2,7 +2,8 @@ Class {
 	#name : #PulseEntity,
 	#superclass : #MooseEntity,
 	#instVars : [
-		'pulseName'
+		'pulseName',
+		'sources'
 	],
 	#category : #'RMQ-Core-Model'
 }
@@ -33,4 +34,16 @@ PulseEntity >> pulseName: anObject [
 PulseEntity >> selectEnum: anEnumObject [
 
 	^ self mooseModel selectOrAddEntityNamed: anEnumObject name withType: anEnumObject class. 
+]
+
+{ #category : #accessing }
+PulseEntity >> sources [
+	<MSEProperty: #sources type: #PulseSource>
+	<multivalued>
+	^ sources
+]
+
+{ #category : #accessing }
+PulseEntity >> sources: anObject [
+	sources := anObject
 ]
