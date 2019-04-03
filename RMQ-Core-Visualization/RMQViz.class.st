@@ -174,6 +174,24 @@ v := RTView new.
 ]
 
 { #category : #accessing }
+RMQViz class >> queue: aModel [
+
+	| v shape elem l |
+	v := RTView new.
+	shape := RTBox new color: Color red trans; width: [ :s| s messages size * 10]; height: 20.
+	elem := shape elementsOn: ((aModel allRMQQueues) select: [ :each | each messages size > 0]).
+	v addAll: elem.
+	elem @ (RTLabeled new text: [ :s | s name asString ]).
+	elem @ (RTPopup new text: [ :s | s messages size asString ,' / ', s maxLength asString ]).
+	
+	l := RTVerticalLineLayout new.
+	l on: elem.
+	
+	v add: ((RTLabel new color: Color black; elementOn: aModel allRMQQueues size asString, ' non empty Queues' ) translateTo: 60 @ 200).
+	v inspect
+]
+
+{ #category : #accessing }
 RMQViz class >> types2For: aModel [
 "
 RMQViz typesFor: MooseModel root third

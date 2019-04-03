@@ -19,6 +19,12 @@ PulseModel >> histogram2 [
 ]
 
 { #category : #'*RMQ-Core-Visualization' }
+PulseModel >> queues [
+	<menuItem: 'Queues' category: 'RMQViz'>
+	RMQViz queue: self
+]
+
+{ #category : #'*RMQ-Core-Visualization' }
 PulseModel >> types [
 	<menuItem: 'Types' category: 'RMQViz'>
 	RMQViz typesFor: self
