@@ -1880,45 +1880,42 @@ Class {
 { #category : #parsing }
 RMQRESTParserApiQueues class >> populate: aModel withJson: aString [
 	| parser rmqObjects queueName queue vhost node |
-	parser := PPParserResource current
-		parserAt: PPJsonParser.
+	parser := PPParserResource current parserAt: PPJsonParser.
 	rmqObjects := parser parse: aString.
-	
-
-	rmqObjects do: [ :anObject |
-		
-		queueName := (anObject at: 'name').
-		queue := aModel selectOrAddEntityNamed: queueName withType: RMQQueue.
-			
-		queue autoDelete: 	(anObject at: 'auto_delete').
-		queue idleSince: (anObject at: 'idle_since').
-		queue durability: (anObject at: 'durable').
-		queue exclusive: (anObject at: 'exclusive').
-				
-		
-		vhost := aModel selectOrAddEntityNamed: (anObject at: 'vhost') withType: RMQVHost.
-		queue vhost: vhost.
-		vhost queues add: queue.
-		
-		
-		node := aModel entityNamed: (anObject at: 'node') withType: RMQNode
-			ifAbsent:[  
-				|newNode |
-				newNode := RMQNode new
-					pulseName: (anObject at: 'node');
-					mooseModel: aModel.
-				vhost node: newNode.
-				newNode vhosts add: vhost.
-				newNode ].
-			
-		
-		(anObject at: 'state') = 'running' ifTrue: [ 			queue	rmqState: (State running).
-			queue rmqState queues add: queue].
-		
-		(anObject at: 'state') = 'idle' ifTrue: [ 			queue	rmqState: (State idle).
-			queue rmqState queues add: queue].
-		
-		(anObject at: 'state') = 'other' ifTrue: [ 			queue	rmqState: (State other).
-			queue rmqState queues add: queue].
-	]
+	rmqObjects
+		do: [ :anObject | 
+			queueName := anObject at: 'name'.
+			queue := aModel
+				selectOrAddEntityNamed: queueName
+				withType: RMQQueue
+				sourceName: nil.
+			queue autoDelete: (anObject at: 'auto_delete').
+			queue idleSince: (anObject at: 'idle_since').
+			queue durability: (anObject at: 'durable').
+			queue exclusive: (anObject at: 'exclusive').
+			vhost := aModel
+				selectOrAddEntityNamed: (anObject at: 'vhost')
+				withType: RMQVHost
+				sourceName: nil.
+			queue vhost: vhost.
+			vhost queues add: queue.
+			node := aModel
+				entityNamed: (anObject at: 'node')
+				withType: RMQNode
+				ifAbsent: [ | newNode |
+					newNode := RMQNode new
+						pulseName: (anObject at: 'node');
+						mooseModel: aModel.
+					vhost node: newNode.
+					newNode vhosts add: vhost.
+					newNode ].
+			(anObject at: 'state') = 'running'
+				ifTrue: [ queue rmqState: State running.
+					queue rmqState queues add: queue ].
+			(anObject at: 'state') = 'idle'
+				ifTrue: [ queue rmqState: State idle.
+					queue rmqState queues add: queue ].
+			(anObject at: 'state') = 'other'
+				ifTrue: [ queue rmqState: State other.
+					queue rmqState queues add: queue ] ]
 ]

@@ -43,163 +43,152 @@ RMQLogParser class >> populate: aModel withJson: aString [
 	| parser rmqObjects |
 	parser := PPParserResource current parserAt: PPJsonParser.
 	rmqObjects := parser parse: aString.
-	
-	rmqObjects do: [:aRMQObject | 
+	rmqObjects
+		do: [ :aRMQObject | 
 			| message connection queue user node exchange vhost channel routingKeys binding payload component delivMode routedQueues messageType exchangeFormat |
-			payload := aModel selectOrAddEntityNamed: (aRMQObject at: 'payload') withType: RMQPayload.
-			
+			payload := aModel
+				selectOrAddEntityNamed: (aRMQObject at: 'payload')
+				withType: RMQPayload
+				sourceName: nil.
 			message := self populateMessage: aRMQObject payload: payload.
 			message timestamp: (aRMQObject at: 'timestamp').
-			
-			connection := aModel selectOrAddEntityNamed: (aRMQObject at: 'connection') withType: RMQConnection.
-			
-			queue := aModel selectOrAddEntityNamed: (aRMQObject at: 'queue') withType: RMQQueue.
-			
-			message queue ifNil:[
-				queue sendedMessages add: message.
-				message queue: queue.
-			].
-			
-			user := aModel selectOrAddEntityNamed: (aRMQObject at: 'user') withType: RMQUser.
-			
-			user usedConnections 
-				detect: [:conn| conn = connection ]
-				ifNone: [
-					connection user: user.
-					user usedConnections add: connection.
-				].
-		
-			node := aModel selectOrAddEntityNamed: (aRMQObject at: 'node') withType: RMQNode.
-			
-			
-			exchange := aModel selectOrAddEntityNamed: (aRMQObject at: 'exchange') withType: RMQExchange.
+			connection := aModel
+				selectOrAddEntityNamed: (aRMQObject at: 'connection')
+				withType: RMQConnection
+				sourceName: nil.
+			queue := aModel
+				selectOrAddEntityNamed: (aRMQObject at: 'queue')
+				withType: RMQQueue
+				sourceName: nil.
+			message queue
+				ifNil: [ queue sendedMessages add: message.
+					message queue: queue ].
+			user := aModel
+				selectOrAddEntityNamed: (aRMQObject at: 'user')
+				withType: RMQUser
+				sourceName: nil.
+			user usedConnections
+				detect: [ :conn | conn = connection ]
+				ifNone: [ connection user: user.
+					user usedConnections add: connection ].
+			node := aModel
+				selectOrAddEntityNamed: (aRMQObject at: 'node')
+				withType: RMQNode
+				sourceName: nil.
+			exchange := aModel
+				selectOrAddEntityNamed: (aRMQObject at: 'exchange')
+				withType: RMQExchange
+				sourceName: nil.
 			exchange messages add: message.
 			message exchange: exchange.
-			
-			
-			vhost := aModel selectOrAddEntityNamed: (aRMQObject at: 'vhost') withType: RMQVHost.
-			user vhosts 
-				detect: [:vh| vh = vhost ]
-				ifNone: [
-					vhost users add: user.
-					user vhosts add: vhost.
-				].
-
-			connection vhost ifNil:[
-				vhost connections add: connection.
-				connection vhost: vhost.
-			].
-			queue vhost ifNil:[
-				vhost queues add: queue.
-				queue vhost: vhost.
-			].
-			exchange vhost ifNil:[
-				vhost exchanges add: exchange.
-				exchange vhost: vhost.
-			].
-			vhost node ifNil:[
-				node vhosts add: vhost.
-				vhost node: node.
-			].
-			
-			channel := aModel selectOrAddEntityNamed: (aRMQObject at: 'channel') asString withType: RMQChannel.
-			channel vhost ifNil:[
-				vhost channels add: channel.
-				channel vhost: vhost.
-			].
-			channel connection ifNil:[
-				connection channels add: connection.
-				channel connection: connection.
-			].
-			user usedChannels 
-				detect: [:ch| ch = channel ]
-				ifNone: [
-					channel user: user.
-					user usedChannels add: channel.
-				].
-			
-		
+			vhost := aModel
+				selectOrAddEntityNamed: (aRMQObject at: 'vhost')
+				withType: RMQVHost
+				sourceName: nil.
+			user vhosts
+				detect: [ :vh | vh = vhost ]
+				ifNone: [ vhost users add: user.
+					user vhosts add: vhost ].
+			connection vhost
+				ifNil: [ vhost connections add: connection.
+					connection vhost: vhost ].
+			queue vhost
+				ifNil: [ vhost queues add: queue.
+					queue vhost: vhost ].
+			exchange vhost
+				ifNil: [ vhost exchanges add: exchange.
+					exchange vhost: vhost ].
+			vhost node
+				ifNil: [ node vhosts add: vhost.
+					vhost node: node ].
+			channel := aModel
+				selectOrAddEntityNamed: (aRMQObject at: 'channel') asString
+				withType: RMQChannel
+				sourceName: nil.
+			channel vhost
+				ifNil: [ vhost channels add: channel.
+					channel vhost: vhost ].
+			channel connection
+				ifNil: [ connection channels add: connection.
+					channel connection: connection ].
+			user usedChannels
+				detect: [ :ch | ch = channel ]
+				ifNone: [ channel user: user.
+					user usedChannels add: channel ].
 			routingKeys := self populateRoutingKeys: aRMQObject.
-			
 			routedQueues := self populateRoutedQueues: aRMQObject.
-			
-			routedQueues do:[:aQueue |
-				"link with channels"
-				aQueue consumerChannels add: channel.
-				channel consumedQueues add: aQueue.
-				
-				"link with messages"
-				aQueue messages add: message.
-				message routedQueues add: aQueue.
-				
-				"add the bindings"
-				routingKeys do:[:aRoutingKey |
-					binding := RMQBindingWithQueue new.
-					
-					binding destination: aQueue.
-					aQueue destinationBindings add: binding.
-					
-					binding source: exchange.
-					exchange sourceBindings add: binding.
-					
-					binding routingKey: aRoutingKey.	
-					aRoutingKey binding: binding.
-					
-					
-					aModel allRMQBindings
-						detect: [ :el | (el source = binding source) and:[(el destination = binding destination) and:[el routingKey = binding routingKey]] ]
-							ifFound: [ :elementFound | 
-								]
-							ifNone: [ aModel add: binding.
-						].
-				].
-			].
-					
-			
+			routedQueues
+				do: [ :aQueue | 
+					"link with channels"
+					aQueue consumerChannels add: channel.
+					channel consumedQueues add: aQueue.
+
+					"link with messages"
+					aQueue messages add: message.
+					message routedQueues add: aQueue.
+
+					"add the bindings"
+					routingKeys
+						do: [ :aRoutingKey | 
+							binding := RMQBindingWithQueue new.
+							binding destination: aQueue.
+							aQueue destinationBindings add: binding.
+							binding source: exchange.
+							exchange sourceBindings add: binding.
+							binding routingKey: aRoutingKey.
+							aRoutingKey binding: binding.
+							aModel allRMQBindings
+								detect: [ :el | 
+									el source = binding source
+										and: [ el destination = binding destination
+												and: [ el routingKey = binding routingKey ] ] ]
+								ifFound: [ :elementFound |  ]
+								ifNone: [ aModel add: binding ] ] ].
+
+
 			"set the exchange format"
-		   aModel allRMQExchangeFormats
-		   detect: [ :el | el exchangeFormatSchema  = (((aRMQObject at: 'properties') at: 'headers') at: 'X-ExchangeFormatSchema') ]
-		   ifFound: [ :elementFound | 
-			exchangeFormat := elementFound. ]
-		   ifNone: [ 
-			  exchangeFormat := RMQExchangeFormat new. 
-			  exchangeFormat exchangeFormatSchema: (((aRMQObject at: 'properties') at: 'headers') at: 'X-ExchangeFormatSchema'). 
-			  exchangeFormat exchangeFormatType: (((aRMQObject at: 'properties') at: 'headers') at: 'X-ExchangeFormatId').
-			  exchangeFormat mooseModel: aModel.
-		     aModel add: exchangeFormat].
-		     message exchangeFormat: exchangeFormat. 
-		     exchangeFormat messages add: message. 
-		
+			aModel allRMQExchangeFormats
+				detect: [ :el | 
+					el exchangeFormatSchema
+						=
+							(((aRMQObject at: 'properties') at: 'headers')
+								at: 'X-ExchangeFormatSchema') ]
+				ifFound: [ :elementFound | exchangeFormat := elementFound ]
+				ifNone: [ exchangeFormat := RMQExchangeFormat new.
+					exchangeFormat
+						exchangeFormatSchema:
+							(((aRMQObject at: 'properties') at: 'headers')
+								at: 'X-ExchangeFormatSchema').
+					exchangeFormat
+						exchangeFormatType:
+							(((aRMQObject at: 'properties') at: 'headers')
+								at: 'X-ExchangeFormatId').
+					exchangeFormat mooseModel: aModel.
+					aModel add: exchangeFormat ].
+			message exchangeFormat: exchangeFormat.
+			exchangeFormat messages add: message.
 			messageType := self populateType: aRMQObject.
 			message messageType: messageType.
 			messageType messages add: message.
-			
-			(aRMQObject at: 'properties') at: 'app_id' ifPresent:[
-				component := aModel selectOrAddEntityNamed: ((aRMQObject at: 'properties') at: 'app_id') withType: RMQComponent.
-				component senderMessages add: message.
-				message senderComponent:component.
-			
-				component subscribedChannels 
-					detect: [:ch| ch = channel ]
-					ifNone: [
-						component subscribedChannels add: channel.
-						channel subscribedComponent: component.
-					].
-			
-				component exchanges 
-					detect: [:exch| exch = exchange ]
-					ifNone: [
-						component exchanges add: exchange.
-						exchange components add: component.
-					].
-			].
-			
+			(aRMQObject at: 'properties')
+				at: 'app_id'
+				ifPresent: [ component := aModel
+						selectOrAddEntityNamed: ((aRMQObject at: 'properties') at: 'app_id')
+						withType: RMQComponent
+						sourceName: nil.
+					component senderMessages add: message.
+					message senderComponent: component.
+					component subscribedChannels
+						detect: [ :ch | ch = channel ]
+						ifNone: [ component subscribedChannels add: channel.
+							channel subscribedComponent: component ].
+					component exchanges
+						detect: [ :exch | exch = exchange ]
+						ifNone: [ component exchanges add: exchange.
+							exchange components add: component ] ].
 			delivMode := self populateDeliveryMode: aRMQObject.
 			message deliveryMode: delivMode.
-			delivMode messages add: message.
-			
-			 ].
-	
+			delivMode messages add: message ].
 	MooseModel root add: aModel
 ]
 

@@ -114,31 +114,29 @@ Class {
 { #category : #parsing }
 RMQRESTParserApiExchanges class >> populate: aModel withJson: aString [
 	| parser rmqObjects exchangeName exchange vhost user_who_performed_action |
-	parser := PPParserResource current
-		parserAt: PPJsonParser.
+	parser := PPParserResource current parserAt: PPJsonParser.
 	rmqObjects := parser parse: aString.
-	
-
-	rmqObjects do: [ :anObject |
-		
-		exchangeName := (anObject at: 'name').
-		exchange := aModel selectOrAddEntityNamed: exchangeName withType: RMQExchange.
-		
-		exchange type: (anObject at: 'type').
-		exchange type exchanges add: exchange.						
-			
-		vhost := aModel selectOrAddEntityNamed: (anObject at: 'vhost') withType: RMQVHost.
-		exchange vhost: vhost.
-		vhost exchanges add: exchange.
-		
-		
-		user_who_performed_action := aModel selectOrAddEntityNamed: (anObject at: 'user_who_performed_action') withType: RMQUser.
-		
-		exchange user_who_performed_action:  user_who_performed_action.
-		user_who_performed_action initializedExchanges add: exchange.
-		
-		
-		exchange durability: (anObject at: 'durable').
-		exchange internal: (anObject at: 'internal').
-	]
+	rmqObjects
+		do: [ :anObject | 
+			exchangeName := anObject at: 'name'.
+			exchange := aModel
+				selectOrAddEntityNamed: exchangeName
+				withType: RMQExchange
+				sourceName: nil.
+			exchange type: (anObject at: 'type').
+			exchange type exchanges add: exchange.
+			vhost := aModel
+				selectOrAddEntityNamed: (anObject at: 'vhost')
+				withType: RMQVHost
+				sourceName: nil.
+			exchange vhost: vhost.
+			vhost exchanges add: exchange.
+			user_who_performed_action := aModel
+				selectOrAddEntityNamed: (anObject at: 'user_who_performed_action')
+				withType: RMQUser
+				sourceName: nil.
+			exchange user_who_performed_action: user_who_performed_action.
+			user_who_performed_action initializedExchanges add: exchange.
+			exchange durability: (anObject at: 'durable').
+			exchange internal: (anObject at: 'internal') ]
 ]

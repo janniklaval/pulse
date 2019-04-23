@@ -15,40 +15,40 @@ Class {
 
 { #category : #initialization }
 RMQEventParserTestPermissionDeleted >> setUp [
-
- | newPermission user vhost |
-"todo : go further and create the events queue and bing it to the exchange queue ?"
-
+	| newPermission user vhost |
+	"todo : go further and create the events queue and bing it to the exchange queue ?"
 	model := PulseModel new.
 	model name: 'test'.
-	
-	parser := RMQEventParser new. 
-	
-	consumer := ConsumeEvents new. 
-	consumer model: model. 
+	parser := RMQEventParser new.
+	consumer := ConsumeEvents new.
+	consumer model: model.
 	consumer parser: parser.
-	
+
 	"create the elements in the model"
 	newPermission := RMQPermission new.
-   "add the user to the model if it doest not exist"
-   user := model selectOrAddEntityNamed: 'testuser' withType: RMQUser.
+	"add the user to the model if it doest not exist"
+	user := model
+		selectOrAddEntityNamed: 'testuser'
+		withType: RMQUser
+		sourceName: nil.
 	newPermission user: user.
 	user permissions add: newPermission.
-							
+
 	"add the vhost to the model if it doest not exist"
-	vhost := model selectOrAddEntityNamed: '/' withType: RMQVHost.
+	vhost := model
+		selectOrAddEntityNamed: '/'
+		withType: RMQVHost
+		sourceName: nil.
 	newPermission vhost: vhost.
 	vhost permissions add: newPermission.
-						
 	model add: newPermission.
-	
-	"consume from the events queues"
-	consumer consumeQueue: 'events.permission.deleted'; start. 
-	1 seconds wait.
-	consumer stop. 
-	
-	
 
+	"consume from the events queues"
+	consumer
+		consumeQueue: 'events.permission.deleted';
+		start.
+	1 seconds wait.
+	consumer stop
 ]
 
 { #category : #tests }

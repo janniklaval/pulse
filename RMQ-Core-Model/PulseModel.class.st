@@ -216,14 +216,24 @@ PulseModel >> initialize [
 ]
 
 { #category : #'add-select' }
-PulseModel >> selectOrAddEntityNamed: aName withType: aType [ 
+PulseModel >> selectOrAddEntityNamed: aName withType: aType sourceName: aSourceName [ 
 
-	^ self entityNamed: aName withType: aType 
+	| entity source |
+	entity := self entityNamed: aName withType: aType 
 			ifAbsent:[ 
-				|newEntity |
+				| newEntity |
 				newEntity := aType new
 					pulseName: aName;
 					mooseModel: self.
-				
 				newEntity ].
+	
+	source := self entityNamed: aSourceName withType: PulseSource ifAbsent:[
+					| newSource |
+					newSource := PulseSource new path: aSourceName; mooseModel: self.
+					newSource.
+				].
+	source entities add: entity.
+	entity sources add: source.
+				
+	^ entity
 ]

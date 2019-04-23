@@ -15,6 +15,13 @@ PulseEntity class >> isVoyageRoot [
 ]
 
 { #category : #accessing }
+PulseEntity >> initialize [
+
+	super initialize.	
+	sources := Set new.
+]
+
+{ #category : #accessing }
 PulseEntity >> name [
 	<MSEProperty: #name type: #String>
 	^ self pulseName
@@ -32,8 +39,10 @@ PulseEntity >> pulseName: anObject [
 
 { #category : #utility }
 PulseEntity >> selectEnum: anEnumObject [
-
-	^ self mooseModel selectOrAddEntityNamed: anEnumObject name withType: anEnumObject class. 
+	^ self mooseModel
+		selectOrAddEntityNamed: anEnumObject name
+		withType: anEnumObject class
+		sourceName: nil
 ]
 
 { #category : #accessing }

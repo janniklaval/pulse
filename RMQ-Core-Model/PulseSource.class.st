@@ -21,6 +21,13 @@ PulseSource >> entities: anObject [
 ]
 
 { #category : #accessing }
+PulseSource >> initialize [
+
+	super initialize.	
+	entities := Set new.
+]
+
+{ #category : #accessing }
 PulseSource >> path [
 	^ path
 ]
@@ -28,4 +35,10 @@ PulseSource >> path [
 { #category : #accessing }
 PulseSource >> path: anObject [
 	path := anObject
+]
+
+{ #category : #accessing }
+PulseSource >> pulseName [
+	<MSEProperty: #pulseName type: #String>
+	^ path
 ]
