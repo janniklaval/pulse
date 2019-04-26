@@ -123,6 +123,8 @@ RMQRESTParserApiExchanges class >> populate: aModel withJson: aString [
 		
 		exchangeName := (anObject at: 'name').
 		exchange := aModel selectOrAddEntityNamed: exchangeName withType: RMQExchange.
+		"set topicId"
+	   ((exchangeName substrings: '.') at: 1 = 'pubsub' )  ifTrue: [ exchange topicID: ((exchangeName substrings: '.') at: 3) ].
 		
 		"exchange type: (anObject at: 'type').
 		exchange type exchanges add: exchange."	

@@ -308,11 +308,16 @@ RMQEventParser >> populate: aModel withConsumerDeleted: aDictionnary at: timesta
 RMQEventParser >> populate: aModel withExchangeCreated: aDictionnary at: timestamp [
 "a Dictionary( 'durable'->true 'vhost'->'/' 'internal'->false 'auto_delete'->false  'name'->'exchangeName' 'arguments'->a Dictionary() 'type'->topic 'policy'->string )"
 	
-		| exchangeObject vhost args altExchName altExch|
+		| exchangeObject vhost args altExchName altExch exchangeName |
 		
 		
 		"if the exchange does not exist, create it"
-		exchangeObject := aModel selectOrAddEntityNamed: (aDictionnary at: 'name') withType: RMQExchange. 
+		exchangeName := (aDictionnary at: 'name').
+		exchangeObject := aModel selectOrAddEntityNamed: exchangeName withType: RMQExchange. 
+		
+		"set topicId"
+	   ((exchangeName substrings: '.') at: 1 = 'pubsub' )  ifTrue: [ exchangeObject topicID: ((exchangeName substrings: '.') at: 3) ].
+	   
 		
 		exchangeObject creationDate: timestamp.
 			

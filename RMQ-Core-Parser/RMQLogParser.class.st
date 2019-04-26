@@ -40,69 +40,60 @@ RMQLogParser class >> parse: aJSonFilePath [
 
 { #category : #parsing }
 RMQLogParser class >> populate: aModel withJson: aString [
-	| parser rmqObjects |
+	| parser rmqObjects exchangeName |
 	parser := PPParserResource current parserAt: PPJsonParser.
 	rmqObjects := parser parse: aString.
 	
 	rmqObjects do: [:aRMQObject | 
-			| message connection queue user node exchange vhost channel routingKeys binding payload component delivMode routedQueues messageType exchangeFormat |
+			| message connection queue user node exchange vhost channel routingKeys binding payload component delivMode routedQueues messageType exchangeFormat  publisherComponent consumerComponent tenantId queueName consumerComponentName |
+			
+			node := aModel selectOrAddEntityNamed: (aRMQObject at: 'node') withType: RMQNode.
+			
+			vhost := aModel selectOrAddEntityNamed: (aRMQObject at: 'vhost') withType: RMQVHost.
+			vhost node ifNil:[
+				node vhosts add: vhost.
+				vhost node: node.
+			].
+			
 			payload := aModel selectOrAddEntityNamed: (aRMQObject at: 'payload') withType: RMQPayload.
 			
+			"to do : search the message by the ID, see traceParser  "
 			message := self populateMessage: aRMQObject payload: payload.
 			message timestamp: (aRMQObject at: 'timestamp').
 			
 			connection := aModel selectOrAddEntityNamed: (aRMQObject at: 'connection') withType: RMQConnection.
 			
-			queue := aModel selectOrAddEntityNamed: (aRMQObject at: 'queue') withType: RMQQueue.
+			(vhost connections anySatisfy: [ :e | e = connection ])
+		   ifFalse: [ vhost connections add: connection. connection vhost: vhost ].
 			
-			message queue ifNil:[ "to do : revoir la verification"
-				queue deliveredMessages add: message.
-				message deliveredFromQueues add: queue.
-			].
-			
+		
 			user := aModel selectOrAddEntityNamed: (aRMQObject at: 'user') withType: RMQUser.
-			
 			user usedConnections 
 				detect: [:conn| conn = connection ]
 				ifNone: [
 					connection user: user.
 					user usedConnections add: connection.
 				].
-		
-			node := aModel selectOrAddEntityNamed: (aRMQObject at: 'node') withType: RMQNode.
-			
-			
-			exchange := aModel selectOrAddEntityNamed: (aRMQObject at: 'exchange') withType: RMQExchange.
-			exchange publishedMessages add: message.
-			message publishedToExchange: exchange.
-			
-			
-			vhost := aModel selectOrAddEntityNamed: (aRMQObject at: 'vhost') withType: RMQVHost.
-			user vhosts 
+		  	user vhosts 
 				detect: [:vh| vh = vhost ]
 				ifNone: [
 					vhost users add: user.
 					user vhosts add: vhost.
 				].
-
-			connection vhost ifNil:[
-				vhost connections add: connection.
-				connection vhost: vhost.
-			].
-			queue vhost ifNil:[
-				vhost queues add: queue.
-				queue vhost: vhost.
-			].
+			
+			exchangeName  := (aRMQObject at: 'exchange').
+			exchange := aModel selectOrAddEntityNamed: exchangeName withType: RMQExchange.
+			exchange publishedMessages add: message.
+			message publishedToExchange: exchange.
+			"set topicId"
+	      ((exchangeName substrings: '.') at: 1 = 'pubsub' )  ifTrue: [ exchange topicID: ((exchangeName substrings: '.') at: 3) ].
+			
 			exchange vhost ifNil:[
 				vhost exchanges add: exchange.
 				exchange vhost: vhost.
 			].
-			vhost node ifNil:[
-				node vhosts add: vhost.
-				vhost node: node.
-			].
 			
-			channel := aModel selectOrAddEntityNamed: (aRMQObject at: 'channel') asString withType: RMQChannel.
+			channel := aModel selectOrAddEntityNamed: ((aRMQObject at: 'connection'), ' (', ((aRMQObject at: 'channel') asStringWithCommas), ')' )  asString withType: RMQChannel.
 			channel vhost ifNil:[
 				vhost channels add: channel.
 				channel vhost: vhost.
@@ -117,6 +108,116 @@ RMQLogParser class >> populate: aModel withJson: aString [
 					channel user: user.
 					user usedChannels add: channel.
 				].
+			
+		   "update see traceParser "
+			delivMode := self populateDeliveryMode: aRMQObject.
+			message deliveryMode: delivMode.
+			delivMode messages add: message.
+			
+			
+			messageType := self populateType: aRMQObject.
+			message messageType: messageType.
+			messageType messages add: message.
+			
+			"messages can be : published or  receiv"
+	
+			"consumer or publisher : tow cases according to trace type"	
+			((aRMQObject at: 'type') = 'published' ) ifTrue:[  "case message published"
+				
+          "set the publisher"        
+			 (aRMQObject at: 'properties') at: 'app_id' ifPresent:[
+				publisherComponent := aModel selectOrAddEntityNamed: ((aRMQObject at: 'properties') at: 'app_id') withType: RMQPublisherComponent.
+				
+				publisherComponent appId: ((aRMQObject at: 'properties') at: 'app_id'). 
+				
+				publisherComponent messagesFromPublisher add: message.
+				message publisherComponent: publisherComponent.
+				
+				tenantId := aModel selectOrAddEntityNamed: (((aRMQObject at: 'properties') at: 'headers') at: 'X-TenantId') withType: RMQTenant. 
+				publisherComponent tenantId: tenantId. 
+			
+				publisherComponent usedChannels 
+					detect: [:ch| ch = channel ]
+					ifNone: [
+						publisherComponent usedChannels add: channel.
+						channel publisherComponent: publisherComponent.
+					].
+			
+				publisherComponent exchanges 
+					detect: [:exch| exch = exchange ]
+					ifNone: [
+						publisherComponent exchanges add: exchange.
+						exchange publisherComponents add: publisherComponent.
+					].
+			   ].
+		
+	         "if routed_queues is present and not null : message published and routed 
+	         if routed_queues is present and  null : message published and not routed  "
+	         "vérifier d'abord si'il y a plus d'un element dans la liste "
+			   "aDictionnary at: 'routed_queues' ifPresent: 
+			    [ 	
+              routedQueues := (aDictionnary at: 'routed_queues'). 
+              
+              ( routedQueues size = 1) 
+              ifTrue: [  routedQueue := aModel selectOrAddEntityNamed: routedQueues withType: RMQQueue.				
+				      ""link with messages""
+				      routedQueue routedMessages add: messageObject.
+				      messageObject routedToQueues add: routedQueue.	  
+					
+					   ""set vhost""		
+						routedQueue vhost: vhost. 
+						vhost queues add: routedQueue.  ]. 
+				  ( routedQueues size >= 1) 
+              ifTrue: [  routedQueues do: [ :aRoutedQueue |
+				      routedQueue := aModel selectOrAddEntityNamed: aRoutedQueue withType: RMQQueue.				
+				      ""link with messages""
+				      routedQueue routedMessages add: messageObject.
+				      messageObject routedToQueues add: routedQueue.	  
+					
+					   ""set vhost""		
+						routedQueue vhost: vhost. 
+						vhost queues add: routedQueue. 
+				    ].		
+					].	
+				 ]."
+			
+			] ifFalse: [   "case message delivered"
+			"set the consumer"
+			" if routed_queues is not present and trace type deliver : message delivered to consumer"
+			"get the module id to create the consumerComponent, the moduleId is part of the resource (here queue),  set subscribedChannel of consumerComponent, link channel to related queue, and queue to the message "	
+				
+             "set the queue from which the message was delivered "
+             queueName := (aRMQObject at: 'queue'). 
+			    queue := aModel selectOrAddEntityNamed: queueName withType: RMQQueue.
+			
+	     		 message queue ifNil:[ "to do : revoir la verification"
+				 queue deliveredMessages add: message.
+				 message deliveredFromQueues add: queue.].
+		    	
+			   queue vhost ifNil:[
+				vhost queues add: queue.
+				queue vhost: vhost. ].
+		
+				
+				  "set the consumer" " link with message ?"
+				  " get the consumer component id from the 4 th part of the queue name !!  "
+				 ((queueName substrings: '.') at: 1 = 'pubsub' )  ifTrue: [ consumerComponentName := ((queueName substrings: '.') at: 4). 
+				  consumerComponent := aModel selectOrAddEntityNamed: consumerComponentName withType: RMQConsumerComponent.
+				
+				  consumerComponent appId: (( queueName substrings: '.') at: 4 ). 
+			
+				  consumerComponent subscribedChannels 
+					detect: [:ch| ch = channel ]
+					ifNone: [
+						consumerComponent subscribedChannels add: channel.
+						channel consumerComponent: consumerComponent.
+					].
+				   ].
+						
+				   channel consumedQueues add: queue. 
+				   queue consumerChannels add: channel. 
+				
+			 ].
 			
 		
 			routingKeys := self populateRoutingKeys: aRMQObject.
@@ -170,34 +271,6 @@ RMQLogParser class >> populate: aModel withJson: aString [
 		     message exchangeFormat: exchangeFormat. 
 		     exchangeFormat messages add: message. 
 		
-			messageType := self populateType: aRMQObject.
-			message messageType: messageType.
-			messageType messages add: message.
-			
-			(aRMQObject at: 'properties') at: 'app_id' ifPresent:[
-				component := aModel selectOrAddEntityNamed: ((aRMQObject at: 'properties') at: 'app_id') withType: RMQPublisherComponent.
-				component messagesFromPublisher add: message.
-				message publisherComponent:component.
-			
-				component subscribedChannels "to do : publisher ? consumer ? used or subscribed channel ?"
-					detect: [:ch| ch = channel ]
-					ifNone: [
-						component subscribedChannels add: channel.
-						channel publisherComponent: component.
-					].
-			
-				component exchanges 
-					detect: [:exch| exch = exchange ]
-					ifNone: [
-						component exchanges add: exchange.
-						exchange publisherComponents add: component.
-					].
-			].
-			
-			delivMode := self populateDeliveryMode: aRMQObject.
-			message deliveryMode: delivMode.
-			delivMode messages add: message.
-			
 			 ].
 	
 	MooseModel root add: aModel

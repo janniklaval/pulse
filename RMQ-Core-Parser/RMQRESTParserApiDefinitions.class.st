@@ -68,6 +68,10 @@ RMQRESTParserApiDefinitions class >> populate: aModel withExchanges: anArray [
 		
 		element := aModel selectOrAddEntityNamed: exchangeName withType:RMQExchange.
 		
+		"set topicId"
+	   ((exchangeName substrings: '.') at: 1 = 'pubsub' )  ifTrue: [ element topicID: ((exchangeName substrings: '.') at: 3) ]. 
+		
+		
 		"element type: (anExchange at: 'type')."
 		
 		((anExchange at: 'type') = 'topic') ifTrue: [ element type: (ExchangeType topic).  element type exchanges add: element].

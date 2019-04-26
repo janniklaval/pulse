@@ -35,6 +35,13 @@ RMQConsumer >> consumeQueue: key [
 ]
 
 { #category : #amqp }
+RMQConsumer >> consumeQueueAndReject: key [
+	" consumes a predifined queue, named 'key' " 
+   consumerTag := channel consumeFrom: key callback: self selector: #handleDelivery:.
+
+]
+
+{ #category : #amqp }
 RMQConsumer >> consumeTracesQueue [
 " consumes a predifined queue for events, named eventsqueue"
    consumerTag := channel consumeFrom: 'messages_traces' callback: self selector: #handleDeliveryTracesQueue:.
@@ -223,8 +230,8 @@ RMQConsumer >> handleDeliveryTracesQueue: delivery [
 	routingKey := (delivery method routingKey) trimLeft: [ :e | e = '"' ] right: [ :e | e = '"' ].
 	headersDictionnary  := delivery properties headers. 
 	exchange := (headersDictionnary at: 'exchange_name'). 
-	traceType := (routingKey substrings: '.') at: 1 . 
-	resource := routingKey removePrefix: (traceType,'.').
+	traceType := (routingKey substrings: '.') at: 1 . " publish or deliver"
+	resource := routingKey removePrefix: (traceType,'.'). " exchange if publish and queue if deliver "
  
 	"Transcript cr; nextPutAll: 'headers : ', headersDictionnary; flush."
 	

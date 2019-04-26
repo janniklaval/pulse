@@ -16,7 +16,8 @@ Class {
 		'deletionDate',
 		'user_who_performed_action',
 		'publishedMessages',
-		'publisherComponents'
+		'publisherComponents',
+		'topicID'
 	],
 	#category : #'RMQ-Core-Model'
 }
@@ -170,6 +171,16 @@ RMQExchange >> sourceBindings [
 { #category : #accessing }
 RMQExchange >> sourceBindings: anObject [
 	sourceBindings := anObject
+]
+
+{ #category : #accessing }
+RMQExchange >> topicID [
+	^ topicID
+]
+
+{ #category : #accessing }
+RMQExchange >> topicID: anObject [
+	topicID := anObject
 ]
 
 { #category : #accessing }

@@ -276,7 +276,7 @@ the dictionnary represents the properties headers :
  user:	guest  *
  routed_queues:	pubsub.default.consoleSaasUserAccess.module-profile-updated.subscribe"
  
-			| messageObject messageId connection queue user node exchange vhost channel publisherComponent consumerComponent exchangeFormat tenantId routedQueue routedQueues routingKey |
+			| messageObject messageId connection queue user node exchange vhost channel publisherComponent consumerComponent exchangeFormat tenantId routedQueue routedQueues routingKey exchangeName  consumerComponenetName consumerComponentName |
 			
 			
 			node := aModel selectOrAddEntityNamed: (aDictionnary at: 'node') withType: RMQNode.
@@ -358,15 +358,17 @@ the dictionnary represents the properties headers :
 		     messageObject exchangeFormat: exchangeFormat. 
 		     exchangeFormat messages add: messageObject. 
 		
-		  
-		    "consumer or publisher : tow cases according to trace type"	
-			(traceType = 'publish' ) ifTrue:[  "case message published"
-				
-			 "set the exchange"
-			   exchange := aModel selectOrAddEntityNamed: ( aDictionnary at: 'exchange_name') withType: RMQExchange.
+		     "set the exchange in both cases : received or published"
+			   exchangeName := ( aDictionnary at: 'exchange_name'). 
+			   exchange := aModel selectOrAddEntityNamed: exchangeName withType: RMQExchange.
 			   exchange publishedMessages add: messageObject.
 			   messageObject publishedToExchange: exchange.
 			   exchange vhost ifNil:[ vhost exchanges add: exchange. exchange vhost: vhost. ].
+			   "set topicId"
+	         ((exchangeName substrings: '.') at: 1 = 'pubsub' )  ifTrue: [ exchange topicID: ((exchangeName substrings: '.') at: 3) ].  
+		
+		    "consumer or publisher : tow cases according to trace type"	
+			(traceType = 'publish' ) ifTrue:[  "case message published"
 				
           "set the publisher"        
 			 (aDictionnary at: 'properties') at: 'app_id' ifPresent:[
@@ -441,7 +443,9 @@ the dictionnary represents the properties headers :
 				  vhost queues add: queue. 
 				
 				  "set the consumer" " link with message ?"
-				  consumerComponent := aModel selectOrAddEntityNamed: ((aDictionnary at: 'properties') at: 'app_id') withType: RMQConsumerComponent.
+				  " get the consumer component id from the 4 th part of the queue name !!  "
+				 ((resource substrings: '.') at: 1 = 'pubsub' )  ifTrue: [ consumerComponentName := ((resource substrings: '.') at: 4).
+				  consumerComponent := aModel selectOrAddEntityNamed: consumerComponentName withType: RMQConsumerComponent.
 				
 				  consumerComponent appId: (( resource substrings: '.') at: 4 ). 
 			
@@ -451,6 +455,7 @@ the dictionnary represents the properties headers :
 						consumerComponent subscribedChannels add: channel.
 						channel consumerComponent: consumerComponent.
 					].
+				   ].
 						
 				   channel consumedQueues add: queue. 
 				   queue consumerChannels add: channel. 
