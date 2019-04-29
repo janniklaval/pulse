@@ -365,7 +365,7 @@ the dictionnary represents the properties headers :
 			   messageObject publishedToExchange: exchange.
 			   exchange vhost ifNil:[ vhost exchanges add: exchange. exchange vhost: vhost. ].
 			   "set topicId"
-	         ((exchangeName substrings: '.') at: 1 = 'pubsub' )  ifTrue: [ exchange topicID: ((exchangeName substrings: '.') at: 3) ].  
+	         (((exchangeName substrings: '.') at: 1) = 'pubsub' )  ifTrue: [ exchange topicID: ((exchangeName substrings: '.') at: 3) ].  
 		
 		    "consumer or publisher : tow cases according to trace type"	
 			(traceType = 'publish' ) ifTrue:[  "case message published"
@@ -444,7 +444,7 @@ the dictionnary represents the properties headers :
 				
 				  "set the consumer" " link with message ?"
 				  " get the consumer component id from the 4 th part of the queue name !!  "
-				 ((resource substrings: '.') at: 1 = 'pubsub' )  ifTrue: [ consumerComponentName := ((resource substrings: '.') at: 4).
+				 (((resource substrings: '.') at: 1) = 'pubsub' )  ifTrue: [ consumerComponentName := ((resource substrings: '.') at: 4).
 				  consumerComponent := aModel selectOrAddEntityNamed: consumerComponentName withType: RMQConsumerComponent.
 				
 				  consumerComponent appId: (( resource substrings: '.') at: 4 ). 

@@ -86,7 +86,7 @@ RMQLogParser class >> populate: aModel withJson: aString [
 			exchange publishedMessages add: message.
 			message publishedToExchange: exchange.
 			"set topicId"
-	      ((exchangeName substrings: '.') at: 1 = 'pubsub' )  ifTrue: [ exchange topicID: ((exchangeName substrings: '.') at: 3) ].
+	      (((exchangeName substrings: '.') at: 1) = 'pubsub' )  ifTrue: [ exchange topicID: ((exchangeName substrings: '.') at: 3) ].
 			
 			exchange vhost ifNil:[
 				vhost exchanges add: exchange.
@@ -190,18 +190,18 @@ RMQLogParser class >> populate: aModel withJson: aString [
              queueName := (aRMQObject at: 'queue'). 
 			    queue := aModel selectOrAddEntityNamed: queueName withType: RMQQueue.
 			
-	     		 message queue ifNil:[ "to do : revoir la verification"
+	     
 				 queue deliveredMessages add: message.
-				 message deliveredFromQueues add: queue.].
+				 message deliveredFromQueues add: queue.
 		    	
-			   queue vhost ifNil:[
-				vhost queues add: queue.
-				queue vhost: vhost. ].
+			    queue vhost ifNil:[
+				 vhost queues add: queue.
+				 queue vhost: vhost. ].
 		
 				
 				  "set the consumer" " link with message ?"
 				  " get the consumer component id from the 4 th part of the queue name !!  "
-				 ((queueName substrings: '.') at: 1 = 'pubsub' )  ifTrue: [ consumerComponentName := ((queueName substrings: '.') at: 4). 
+				 (((queueName substrings: '.') at: 1) = 'pubsub' )  ifTrue: [ consumerComponentName := ((queueName substrings: '.') at: 4). 
 				  consumerComponent := aModel selectOrAddEntityNamed: consumerComponentName withType: RMQConsumerComponent.
 				
 				  consumerComponent appId: (( queueName substrings: '.') at: 4 ). 
