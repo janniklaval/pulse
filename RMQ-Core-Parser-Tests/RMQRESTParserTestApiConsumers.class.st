@@ -88,14 +88,14 @@ RMQRESTParserTestApiConsumers >> testExistingPopulate [
 
 	| t1 t2 vh ch1 ch2 q1 q2 u1 u2 c1 c2 node |
 	self assert: model size = 16.
-	self assert: model allRMQComponents size = 3.
+	self assert: model allRMQConsumerProcesses size = 3.
 	
 	
-	self assert: (model allRMQComponents anySatisfy: [:e | e name = '0ee13b3c-5863-3a22-a38a-bfc00325e051.pubsub.default.consoleSaasUserAccess.user-access-logger-socle.subscribe']).
-	self assert: (model allRMQComponents anySatisfy: [:e | e name = 'f736f22f-c4b3-31f9-b4c2-1827c5c62022.pubsub.default.consoleSaasUserAccess.blsenior-interop-module-default.subscribe']).
+	self assert: (model allRMQConsumerProcesses anySatisfy: [:e | e name = '0ee13b3c-5863-3a22-a38a-bfc00325e051.pubsub.default.consoleSaasUserAccess.user-access-logger-socle.subscribe']).
+	self assert: (model allRMQConsumerProcesses anySatisfy: [:e | e name = 'f736f22f-c4b3-31f9-b4c2-1827c5c62022.pubsub.default.consoleSaasUserAccess.blsenior-interop-module-default.subscribe']).
 	
-	t1 := model allRMQComponents detect: [:e | e name = '0ee13b3c-5863-3a22-a38a-bfc00325e051.pubsub.default.consoleSaasUserAccess.user-access-logger-socle.subscribe'].
-	t2 := model allRMQComponents detect: [:e | e name = 'f736f22f-c4b3-31f9-b4c2-1827c5c62022.pubsub.default.consoleSaasUserAccess.blsenior-interop-module-default.subscribe'].
+	t1 := model allRMQConsumerProcesses detect: [:e | e name = '0ee13b3c-5863-3a22-a38a-bfc00325e051.pubsub.default.consoleSaasUserAccess.user-access-logger-socle.subscribe'].
+	t2 := model allRMQConsumerProcesses detect: [:e | e name = 'f736f22f-c4b3-31f9-b4c2-1827c5c62022.pubsub.default.consoleSaasUserAccess.blsenior-interop-module-default.subscribe'].
 
 	self assert: t1 ackRequired = true.
 	self assert: t2 ackRequired = true.
@@ -163,14 +163,14 @@ RMQRESTParserTestApiConsumers >> testExistingPopulate [
 	RMQRESTParserApiConsumers populate: model withJson: self data.
 	
 	self assert: model size = 16.
-	self assert: model allRMQComponents size = 3.
+	self assert: model allRMQConsumerProcesses size = 3.
 	
 	
-	self assert: (model allRMQComponents anySatisfy: [:e | e name = '0ee13b3c-5863-3a22-a38a-bfc00325e051.pubsub.default.consoleSaasUserAccess.user-access-logger-socle.subscribe']).
-	self assert: (model allRMQComponents anySatisfy: [:e | e name = 'f736f22f-c4b3-31f9-b4c2-1827c5c62022.pubsub.default.consoleSaasUserAccess.blsenior-interop-module-default.subscribe']).
+	self assert: (model allRMQConsumerProcesses anySatisfy: [:e | e name = '0ee13b3c-5863-3a22-a38a-bfc00325e051.pubsub.default.consoleSaasUserAccess.user-access-logger-socle.subscribe']).
+	self assert: (model allRMQConsumerProcesses anySatisfy: [:e | e name = 'f736f22f-c4b3-31f9-b4c2-1827c5c62022.pubsub.default.consoleSaasUserAccess.blsenior-interop-module-default.subscribe']).
 	
-	t1 := model allRMQComponents detect: [:e | e name = '0ee13b3c-5863-3a22-a38a-bfc00325e051.pubsub.default.consoleSaasUserAccess.user-access-logger-socle.subscribe'].
-	t2 := model allRMQComponents detect: [:e | e name = 'f736f22f-c4b3-31f9-b4c2-1827c5c62022.pubsub.default.consoleSaasUserAccess.blsenior-interop-module-default.subscribe'].
+	t1 := model allRMQConsumerProcesses detect: [:e | e name = '0ee13b3c-5863-3a22-a38a-bfc00325e051.pubsub.default.consoleSaasUserAccess.user-access-logger-socle.subscribe'].
+	t2 := model allRMQConsumerProcesses detect: [:e | e name = 'f736f22f-c4b3-31f9-b4c2-1827c5c62022.pubsub.default.consoleSaasUserAccess.blsenior-interop-module-default.subscribe'].
 
 	self assert: t1 ackRequired = true.
 	self assert: t2 ackRequired = true.
@@ -243,14 +243,14 @@ RMQRESTParserTestApiConsumers >> testExistingPopulate [
 RMQRESTParserTestApiConsumers >> testPopulate [
 
 	| t1 t2 vh ch1 ch2 q1 q2 u1 u2 c1 c2 node |
-	self assert: model allRMQComponents size = 3.
+	self assert: model allRMQConsumerProcesses size = 3.
 	
 	
-	self assert: (model allRMQComponents anySatisfy: [:e | e name = '0ee13b3c-5863-3a22-a38a-bfc00325e051.pubsub.default.consoleSaasUserAccess.user-access-logger-socle.subscribe']).
-	self assert: (model allRMQComponents anySatisfy: [:e | e name = 'f736f22f-c4b3-31f9-b4c2-1827c5c62022.pubsub.default.consoleSaasUserAccess.blsenior-interop-module-default.subscribe']).
+	self assert: (model allRMQConsumerProcesses anySatisfy: [:e | e name = '0ee13b3c-5863-3a22-a38a-bfc00325e051.pubsub.default.consoleSaasUserAccess.user-access-logger-socle.subscribe']).
+	self assert: (model allRMQConsumerProcesses anySatisfy: [:e | e name = 'f736f22f-c4b3-31f9-b4c2-1827c5c62022.pubsub.default.consoleSaasUserAccess.blsenior-interop-module-default.subscribe']).
 	
-	t1 := model allRMQComponents detect: [:e | e name = '0ee13b3c-5863-3a22-a38a-bfc00325e051.pubsub.default.consoleSaasUserAccess.user-access-logger-socle.subscribe'].
-	t2 := model allRMQComponents detect: [:e | e name = 'f736f22f-c4b3-31f9-b4c2-1827c5c62022.pubsub.default.consoleSaasUserAccess.blsenior-interop-module-default.subscribe'].
+	t1 := model allRMQConsumerProcesses detect: [:e | e name = '0ee13b3c-5863-3a22-a38a-bfc00325e051.pubsub.default.consoleSaasUserAccess.user-access-logger-socle.subscribe'].
+	t2 := model allRMQConsumerProcesses detect: [:e | e name = 'f736f22f-c4b3-31f9-b4c2-1827c5c62022.pubsub.default.consoleSaasUserAccess.blsenior-interop-module-default.subscribe'].
 
 	self assert: t1 ackRequired = true.
 	self assert: t2 ackRequired = true.

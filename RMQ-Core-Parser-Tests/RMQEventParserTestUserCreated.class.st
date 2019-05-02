@@ -24,7 +24,7 @@ RMQEventParserTestUserCreated >> setUp [
 	
 	parser := RMQEventParser new. 
 	
-	consumer := ConsumeEvents new. 
+	consumer := RMQConsumer new.
 	consumer model: model. 
 	consumer parser: parser.
 	

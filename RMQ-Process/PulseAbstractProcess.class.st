@@ -1,3 +1,15 @@
+"
+Abstract place to be inhereted by the processes 
+ 
+Internal Representation and Key Implementation Points.
+
+    Instance Variables
+	frequency:		<Object>
+	process:		<Object>
+
+
+    Implementation Points
+"
 Class {
 	#name : #PulseAbstractProcess,
 	#superclass : #Object,

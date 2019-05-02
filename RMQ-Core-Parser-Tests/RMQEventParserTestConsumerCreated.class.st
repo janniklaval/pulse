@@ -21,9 +21,9 @@ RMQEventParserTestConsumerCreated >> setUp [
 	model := PulseModel new.
 	model name: 'test'.
 	
-	parser := RMQEventParser new. 
+	parser := RMQEventParser new.
 	
-	consumer := ConsumeEvents new. 
+	consumer := RMQConsumer new. 
 	consumer model: model. 
 	consumer parser: parser.
 	
@@ -38,10 +38,9 @@ RMQEventParserTestConsumerCreated >> setUp [
 
 { #category : #tests }
 RMQEventParserTestConsumerCreated >> testModelPopulation [
-
 	"self assert: (model allRMQChannels anySatisfy: [:element | element vhost name ='/']).
 	self assert: (model allRMQConnections anySatisfy: [:element | element user name = 'guest'])."
-	self assert: (model allRMQComponents anySatisfy: [:element | element creationDate isNotNil 
+	self assert: (model allRMQConsumerProcesses anySatisfy: [:element | element creationDate isNotNil 
 		                                                          and:[ element subscribedChannels anySatisfy: [ :el | el vhost name = '/'
 				                                                    and: [ element subscribedChannels anySatisfy: [ :elem | elem consumedQueues isNotNil
 						                                              and: [ element exclusive = 0 and: [ element ackRequired = 1  ] ] ] ]]]] ).

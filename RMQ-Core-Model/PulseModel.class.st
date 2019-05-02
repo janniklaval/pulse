@@ -107,15 +107,21 @@ PulseModel >> allRMQClusters [
 ]
 
 { #category : #accessing }
-PulseModel >> allRMQComponents [
+PulseModel >> allRMQConnections [
 	<navigation: 'All RMQ components group'>
-	^self allWithType: RMQComponent
+	^self allWithType: RMQConnection
 ]
 
 { #category : #accessing }
-PulseModel >> allRMQConnections [
-	<navigation: 'All RMQ connections group'>
-	^self allWithType: RMQConnection
+PulseModel >> allRMQConsumerComponent [
+	<navigation: 'All RMQ consumer components group'>
+	^self allWithType: RMQConsumerComponent
+]
+
+{ #category : #accessing }
+PulseModel >> allRMQConsumerProcesses [
+	<navigation: 'All RMQ consumer processes group'>
+	^self allWithType: RMQConsumerProcess
 ]
 
 { #category : #accessing }
@@ -128,12 +134,6 @@ PulseModel >> allRMQExchangeFormats [
 PulseModel >> allRMQExchanges [
 	<navigation: 'All RMQ exchanges group'>
 	^self allWithType: RMQExchange
-]
-
-{ #category : #accessing }
-PulseModel >> allRMQHeaders [
-	<navigation: 'All RMQ headers group'>
-	^self allWithType: RMQHeader
 ]
 
 { #category : #accessing }
@@ -158,6 +158,12 @@ PulseModel >> allRMQPayloads [
 PulseModel >> allRMQPermissions [
 	<navigation: 'All RMQ permissions group'>
 	^self allWithType: RMQPermission
+]
+
+{ #category : #accessing }
+PulseModel >> allRMQPublisherComponent [
+	<navigation: 'All RMQ publisher components group'>
+	^self allWithType: RMQPublisherComponent
 ]
 
 { #category : #accessing }

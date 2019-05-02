@@ -52,7 +52,7 @@ PulseEventProcess >> initialiseModel: name [
 	
 	parser := RMQEventParser new. 
 	
-	consumer := ConsumeEvents new. 
+	consumer := RMQConsumer new. 
 	consumer model: model. 
 	consumer parser: parser.
 	
@@ -86,7 +86,7 @@ PulseEventProcess >> initialiseModel: name host: host port: port username: usern
 	
 	parser := RMQEventParser new. 
 	
-	consumer := ConsumeEvents new. 
+	consumer := RMQConsumer new. 
 	consumer model: model. 
 	consumer parser: parser.
 	

@@ -20,9 +20,9 @@ RMQEventParserTestBindingCreated >> setUp [
 	model := PulseModel new.
 	model name: 'test'.
 	
-	parser := RMQEventParser new. 
+	parser := RMQEventParser new.
 	
-	consumer := ConsumeEvents new. 
+	consumer := RMQConsumer new. 
 	consumer model: model. 
 	consumer parser: parser.
 	

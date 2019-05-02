@@ -68,7 +68,17 @@ RMQRESTParserApiDefinitions class >> populate: aModel withExchanges: anArray [
 		
 		element := aModel selectOrAddEntityNamed: exchangeName withType:RMQExchange.
 		
-		element type: (anExchange at: 'type').
+		"set topicId"
+	   ((exchangeName substrings: '.') at: 1 = 'pubsub' )  ifTrue: [ element topicID: ((exchangeName substrings: '.') at: 3) ]. 
+		
+		
+		"element type: (anExchange at: 'type')."
+		
+		((anExchange at: 'type') = 'topic') ifTrue: [ element type: (ExchangeType topic).  element type exchanges add: element].
+		((anExchange at: 'type') = 'direct') ifTrue: [ element type: (ExchangeType direct).  element type exchanges add: element].
+		((anExchange at: 'type') = 'fanout') ifTrue: [ element type: (ExchangeType fanout).  element type exchanges add: element].
+		((anExchange at: 'type') = 'headers') ifTrue: [ element type: (ExchangeType headers).  element type exchanges add: element].	
+		
 		element internal: (anExchange at: 'internal').
 		element autoDelete: (anExchange at: 'auto_delete').
 		
@@ -77,7 +87,11 @@ RMQRESTParserApiDefinitions class >> populate: aModel withExchanges: anArray [
 		element vhost: vhost.
 		vhost exchanges add: element.
 
-		element durability:(anExchange at: 'durable').
+		"element durability:(anExchange at: 'durable')."
+		
+		((anExchange at: 'durable') = 1) ifTrue: [ element durability: (Durability durable).  element durability exchanges add: element].
+		((anExchange at: 'durable') = 0) ifTrue: [ element durability: (Durability transient).  element durability exchanges add: element].
+		
 		arg := (anExchange at: 'arguments').
 		
 		altExchName := (arg at: 'alternate-exchange' ifAbsent:[nil]).

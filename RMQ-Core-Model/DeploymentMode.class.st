@@ -2,7 +2,8 @@ Class {
 	#name : #DeploymentMode,
 	#superclass : #PulseEnum,
 	#instVars : [
-		'components'
+		'consumerComponents',
+		'publisherComponents'
 	],
 	#category : #'RMQ-Core-Model'
 }
@@ -24,13 +25,25 @@ DeploymentMode class >> server [
 ]
 
 { #category : #accessing }
-DeploymentMode >> components [
-	<MSEProperty: #components type: #RMQComponent opposite:#deploymentMode>
+DeploymentMode >> consumerComponents [
+	<MSEProperty: #consumerComponents type: #RMQConsumerComponent opposite:#deploymentMode>
 	<multivalued>
-	^ components
+	^ consumerComponents
 ]
 
 { #category : #accessing }
-DeploymentMode >> components: anObject [
-	components := anObject
+DeploymentMode >> consumerComponents: anObject [
+	consumerComponents := anObject
+]
+
+{ #category : #accessing }
+DeploymentMode >> publisherComponents [
+	<MSEProperty: #publisherComponents type: #RMQPublisherComponent opposite:#deploymentMode>
+	<multivalued>
+	^ publisherComponents
+]
+
+{ #category : #accessing }
+DeploymentMode >> publisherComponents: anObject [
+	publisherComponents := anObject
 ]

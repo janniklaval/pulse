@@ -84,9 +84,9 @@ RMQRESTParserApiConsumers class >> populate: aModel withJson: aString [
 		
 		consumerTag := (anObject at: 'consumer_tag').
 		
-		component := aModel allRMQComponents detect: [:e | e consumerTag = consumerTag] ifNone:[ 
+		component := aModel allRMQConsumerProcesses detect: [:e | e consumerTag = consumerTag] ifNone:[ 
 				|newComponent |
-				newComponent := RMQComponent new
+				newComponent := RMQConsumerProcess new
 					consumerTag: consumerTag.
 				aModel add: newComponent.
 				newComponent ].
@@ -104,6 +104,9 @@ RMQRESTParserApiConsumers class >> populate: aModel withJson: aString [
 		
 		channelName := ((anObject at: 'channel_details') at: 'name').
 		channel := aModel selectOrAddEntityNamed: channelName withType: RMQChannel.
+		
+		component subscribedChannels add: channel.
+		channel consumerProcess: component. 
 		
 		channel consumedQueues add: queue.
 		queue consumerChannels add: channel.

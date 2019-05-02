@@ -241,16 +241,16 @@ RMQEventParser >> populate: aModel withConsumerCreated: aDictionnary at: timesta
       | componentObject vhost channel relatedQueue |
 
 		vhost:= aModel selectOrAddEntityNamed: (aDictionnary at: 'vhost') withType: RMQVHost.
-		
+		"to do: change to ConsumerProcess"
 		"// find the consumer with the right channel and vhost"
-	   aModel allRMQComponents
+	   aModel allRMQConsumerProcesses
 		detect: [ :element | element consumerTag = (aDictionnary at: 'consumer_tag') 
 			and: [ element subscribedChannels anySatisfy: [ :el | el pid = (aDictionnary at: 'channel') and: [ el  vhost = vhost] ] ]		
 			 ]
 		ifFound: [ :elementFound | 
 			componentObject := elementFound ]
 		ifNone: [  
-            componentObject := RMQComponent new.
+            componentObject := RMQConsumerProcess new.
             componentObject consumerTag: (aDictionnary at: 'consumer_tag').
             componentObject mooseModel: aModel.
 				aModel add: componentObject ].
@@ -268,7 +268,7 @@ RMQEventParser >> populate: aModel withConsumerCreated: aDictionnary at: timesta
 					ifFound: [ :elementFound | 
 			                 channel := elementFound ]
 		          ifNone: [ channel := RMQChannel new.
-			                 channel subscribedComponent: componentObject.
+			                 channel consumerProcess: componentObject.
 			                 channel pid: (aDictionnary at: 'channel').
 			                 channel consumedQueues add: relatedQueue. 
 			                 channel vhost: vhost.
@@ -283,12 +283,13 @@ RMQEventParser >> populate: aModel withConsumerCreated: aDictionnary at: timesta
 { #category : #parsing }
 RMQEventParser >> populate: aModel withConsumerDeleted: aDictionnary at: timestamp [
     "aDictionnary ( vhost, consumer_tag, channel, queue)"
+    "to do : create the consumer component from the module id information in the queue ? "
 	
 		| componentObject  vhost |
 
 		vhost := aModel entityNamed: (aDictionnary at: 'vhost') withType: RMQVHost.
 		
-	   aModel allRMQComponents
+	   aModel allRMQConsumerProcesses
 		detect: [ :element | element consumerTag = (aDictionnary at: 'consumer_tag') 
 			"and the channels of the consumer are on the right vhost"
 			and: [ element subscribedChannels anySatisfy: [ :el | el pid = (aDictionnary at: 'channel') and: [ el  vhost = vhost] ] ]				
@@ -307,11 +308,16 @@ RMQEventParser >> populate: aModel withConsumerDeleted: aDictionnary at: timesta
 RMQEventParser >> populate: aModel withExchangeCreated: aDictionnary at: timestamp [
 "a Dictionary( 'durable'->true 'vhost'->'/' 'internal'->false 'auto_delete'->false  'name'->'exchangeName' 'arguments'->a Dictionary() 'type'->topic 'policy'->string )"
 	
-		| exchangeObject vhost args altExchName altExch|
+		| exchangeObject vhost args altExchName altExch exchangeName |
 		
 		
 		"if the exchange does not exist, create it"
-		exchangeObject := aModel selectOrAddEntityNamed: (aDictionnary at: 'name') withType: RMQExchange. 
+		exchangeName := (aDictionnary at: 'name').
+		exchangeObject := aModel selectOrAddEntityNamed: exchangeName withType: RMQExchange. 
+		
+		"set topicId"
+	   ((exchangeName substrings: '.') at: 1 = 'pubsub' )  ifTrue: [ exchangeObject topicID: ((exchangeName substrings: '.') at: 3) ].
+	   
 		
 		exchangeObject creationDate: timestamp.
 			

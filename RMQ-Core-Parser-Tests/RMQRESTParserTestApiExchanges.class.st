@@ -135,8 +135,8 @@ RMQRESTParserTestApiExchanges >> testExistingPopulate [
 	t1 := model allRMQExchanges detect: [:e | e name = 'pubsub.default.consoleSaasUserAccess.publish'].
 	t2 := model allRMQExchanges detect: [:e | e name = 'amq.rabbitmq.event'].
 
-	self assert: t1 durability = true.
-	self assert: t2 durability = true.
+	self assert: t1 durability = 'durable'.
+	self assert: t2 durability = 'durable'.
 	
 	self assert: t1 internal = false.
 	self assert: t2 internal = true.
@@ -172,8 +172,8 @@ RMQRESTParserTestApiExchanges >> testExistingPopulate [
 	t1 := model allRMQExchanges detect: [:e | e name = 'pubsub.default.consoleSaasUserAccess.publish'].
 	t2 := model allRMQExchanges detect: [:e | e name = 'amq.rabbitmq.event'].
 
-	self assert: t1 durability = true.
-	self assert: t2 durability = true.
+	self assert: t1 durability = 'durable'.
+	self assert: t2 durability = 'durable'.
 	
 	self assert: t1 internal = false.
 	self assert: t2 internal = true.
@@ -214,8 +214,8 @@ RMQRESTParserTestApiExchanges >> testPopulate [
 	t1 := model allRMQExchanges detect: [:e | e name = 'pubsub.default.consoleSaasUserAccess.publish'].
 	t2 := model allRMQExchanges detect: [:e | e name = 'amq.rabbitmq.event'].
 
-	self assert: t1 durability = true.
-	self assert: t2 durability = true.
+	self assert: t1 durability = 'durable'.
+	self assert: t2 durability = 'durable'.
 	
 	self assert: t1 internal = false.
 	self assert: t2 internal = true.
