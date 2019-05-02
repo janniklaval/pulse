@@ -45,7 +45,7 @@ RMQLogParser class >> populate: aModel withJson: aString [
 	rmqObjects := parser parse: aString.
 	
 	rmqObjects do: [:aRMQObject | 
-			| message connection queue user node exchange vhost channel routingKeys binding payload component delivMode routedQueues messageType exchangeFormat  publisherComponent consumerComponent tenantId queueName consumerComponentName |
+			| message connection queue user node exchange vhost channel routingKeys binding payload delivMode routedQueues messageType exchangeFormat  publisherComponent consumerComponent tenantId queueName consumerComponentName |
 			
 			node := aModel selectOrAddEntityNamed: (aRMQObject at: 'node') withType: RMQNode.
 			
@@ -57,8 +57,12 @@ RMQLogParser class >> populate: aModel withJson: aString [
 			
 			payload := aModel selectOrAddEntityNamed: (aRMQObject at: 'payload') withType: RMQPayload.
 			
-			"to do : search the message by the ID, see traceParser  "
-			message := self populateMessage: aRMQObject payload: payload.
+			" search the message by its ID "
+			"message := self populateMessage: aRMQObject payload: payload."
+			"message := self populateMessage: aRMQObject messageId:  ((aRMQObject at: 'properties') at: 'message_id')."
+			message := aModel selectOrAddEntityNamed: ((aRMQObject at: 'properties') at: 'message_id') withType: RMQMessage.
+			message payload: payload. 
+			payload messages add: message. 
 			message timestamp: (aRMQObject at: 'timestamp').
 			
 			connection := aModel selectOrAddEntityNamed: (aRMQObject at: 'connection') withType: RMQConnection.
@@ -114,10 +118,10 @@ RMQLogParser class >> populate: aModel withJson: aString [
 			message deliveryMode: delivMode.
 			delivMode messages add: message.
 			
-			
-			messageType := self populateType: aRMQObject.
+			"ne pas peupler le message type, à récupérer depuis les references dans deliveredFromQueue"
+			"messageType := self populateType: aRMQObject.
 			message messageType: messageType.
-			messageType messages add: message.
+			messageType messages add: message."
 			
 			"messages can be : published or  receiv"
 	
@@ -258,7 +262,20 @@ RMQLogParser class >> populate: aModel withJson: aString [
 					
 			
 			"set the exchange format"
-		   aModel allRMQExchangeFormats
+			
+			exchangeFormat := aModel selectOrAddEntityNamed: (((aRMQObject at: 'properties') at: 'headers') at: 'X-ExchangeFormatSchema') withType: RMQExchangeFormat.
+		   "aModel allRMQExchangeFormats
+		   detect: [ :el | el exchangeFormatSchema  = (((aDictionnary at: 'properties') at: 'headers') at: 'X-ExchangeFormatSchema') ]
+		   ifFound: [ :elementFound | 
+			exchangeFormat := elementFound. ]
+		   ifNone: [ 
+			  exchangeFormat := RMQExchangeFormat new. 
+			  exchangeFormat exchangeFormatSchema: (((aDictionnary at: 'properties') at: 'headers') at: 'X-ExchangeFormatSchema'). 
+			  exchangeFormat mooseModel: aModel.
+		     aModel add: exchangeFormat]."
+	        exchangeFormat exchangeFormatType: (((aRMQObject at: 'properties') at: 'headers') at: 'X-ExchangeFormatId').
+			
+		   "aModel allRMQExchangeFormats
 		   detect: [ :el | el exchangeFormatSchema  = (((aRMQObject at: 'properties') at: 'headers') at: 'X-ExchangeFormatSchema') ]
 		   ifFound: [ :elementFound | 
 			exchangeFormat := elementFound. ]
@@ -267,7 +284,7 @@ RMQLogParser class >> populate: aModel withJson: aString [
 			  exchangeFormat exchangeFormatSchema: (((aRMQObject at: 'properties') at: 'headers') at: 'X-ExchangeFormatSchema'). 
 			  exchangeFormat exchangeFormatType: (((aRMQObject at: 'properties') at: 'headers') at: 'X-ExchangeFormatId').
 			  exchangeFormat mooseModel: aModel.
-		     aModel add: exchangeFormat].
+		     aModel add: exchangeFormat]."
 		     message exchangeFormat: exchangeFormat. 
 		     exchangeFormat messages add: message. 
 		
@@ -286,6 +303,22 @@ RMQLogParser class >> populateDeliveryMode: aRMQObject [
 			^elementFound]
 		ifNone: [ model add: newType.
 			^newType ]
+]
+
+{ #category : #parsing }
+RMQLogParser class >> populateMessage: aRMQObject messageId: id [
+	| message |
+	
+	model allRMQMessages
+		detect: [ :el | el messageID  = id  ]
+		ifFound: [ :elementFound | 
+			^elementFound. ]
+		ifNone: [ 
+			  message := RMQMessage new. 
+			  message messageID: id.
+			  message mooseModel: model. 
+			  model add: message.
+			^message ].
 ]
 
 { #category : #parsing }

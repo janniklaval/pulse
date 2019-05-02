@@ -114,13 +114,13 @@ PulseModel >> allRMQConnections [
 
 { #category : #accessing }
 PulseModel >> allRMQConsumerComponent [
-	<navigation: 'All RMQ components group'>
+	<navigation: 'All RMQ consumer components group'>
 	^self allWithType: RMQConsumerComponent
 ]
 
 { #category : #accessing }
 PulseModel >> allRMQConsumerProcesses [
-	<navigation: 'All RMQ components group'>
+	<navigation: 'All RMQ consumer processes group'>
 	^self allWithType: RMQConsumerProcess
 ]
 

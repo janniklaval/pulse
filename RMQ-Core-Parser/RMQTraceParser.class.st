@@ -285,17 +285,7 @@ the dictionnary represents the properties headers :
 			vhost := aModel selectOrAddEntityNamed: (aDictionnary at: 'vhost') withType: RMQVHost.
 		  	vhost node ifNil:[ node vhosts add: vhost.	vhost node: node. ].
 			
-			messageId := ((aDictionnary at: 'properties') at: 'message_id'). 
-			
-			aModel allRMQMessages
-		   detect: [ :el | el messageID  = messageId ]
-		   ifFound: [ :elementFound | 
-			messageObject := elementFound. ]
-		   ifNone: [ 
-			  messageObject := RMQMessage new. 
-			  messageObject messageID: messageId.
-			  messageObject mooseModel: aModel. 
-			  aModel add: messageObject  ].
+			messageObject := aModel selectOrAddEntityNamed: ((aDictionnary at: 'properties') at: 'message_id') withType: RMQMessage.
 		   
 			messageObject timestamp: ((aDictionnary at: 'properties') at: 'timestamp').
 			
@@ -345,16 +335,18 @@ the dictionnary represents the properties headers :
 			 messageObject deliveryMode messages add: messageObject.          
 		
 		   "set the exchange format"
-		   aModel allRMQExchangeFormats
+		   exchangeFormat := aModel selectOrAddEntityNamed: (((aDictionnary at: 'properties') at: 'headers') at: 'X-ExchangeFormatSchema') withType: RMQExchangeFormat.
+		   "aModel allRMQExchangeFormats
 		   detect: [ :el | el exchangeFormatSchema  = (((aDictionnary at: 'properties') at: 'headers') at: 'X-ExchangeFormatSchema') ]
 		   ifFound: [ :elementFound | 
 			exchangeFormat := elementFound. ]
 		   ifNone: [ 
 			  exchangeFormat := RMQExchangeFormat new. 
 			  exchangeFormat exchangeFormatSchema: (((aDictionnary at: 'properties') at: 'headers') at: 'X-ExchangeFormatSchema'). 
-			  exchangeFormat exchangeFormatType: (((aDictionnary at: 'properties') at: 'headers') at: 'X-ExchangeFormatId').
 			  exchangeFormat mooseModel: aModel.
-		     aModel add: exchangeFormat].
+		     aModel add: exchangeFormat]."
+	        exchangeFormat exchangeFormatType: (((aDictionnary at: 'properties') at: 'headers') at: 'X-ExchangeFormatId').
+	        
 		     messageObject exchangeFormat: exchangeFormat. 
 		     exchangeFormat messages add: messageObject. 
 		
