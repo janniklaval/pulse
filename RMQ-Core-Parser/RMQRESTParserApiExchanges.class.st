@@ -114,29 +114,41 @@ Class {
 { #category : #parsing }
 RMQRESTParserApiExchanges class >> populate: aModel withJson: aString [
 	| parser rmqObjects exchangeName exchange vhost user_who_performed_action |
-	parser := PPParserResource current parserAt: PPJsonParser.
+	parser := PPParserResource current
+		parserAt: PPJsonParser.
 	rmqObjects := parser parse: aString.
-	rmqObjects
-		do: [ :anObject | 
-			exchangeName := anObject at: 'name'.
-			exchange := aModel
-				selectOrAddEntityNamed: exchangeName
-				withType: RMQExchange
-				sourceName: nil.
-			exchange type: (anObject at: 'type').
-			exchange type exchanges add: exchange.
-			vhost := aModel
-				selectOrAddEntityNamed: (anObject at: 'vhost')
-				withType: RMQVHost
-				sourceName: nil.
-			exchange vhost: vhost.
-			vhost exchanges add: exchange.
-			user_who_performed_action := aModel
-				selectOrAddEntityNamed: (anObject at: 'user_who_performed_action')
-				withType: RMQUser
-				sourceName: nil.
-			exchange user_who_performed_action: user_who_performed_action.
-			user_who_performed_action initializedExchanges add: exchange.
-			exchange durability: (anObject at: 'durable').
-			exchange internal: (anObject at: 'internal') ]
+	
+
+	rmqObjects do: [ :anObject |
+		
+		exchangeName := (anObject at: 'name').
+		exchange := aModel selectOrAddEntityNamed: exchangeName withType: RMQExchange.
+		"set topicId"
+	   ((exchangeName substrings: '.') at: 1 = 'pubsub' )  ifTrue: [ exchange topicID: ((exchangeName substrings: '.') at: 3) ].
+		
+		"exchange type: (anObject at: 'type').
+		exchange type exchanges add: exchange."	
+		((anObject at: 'type') = 'topic') ifTrue: [ exchange type: (ExchangeType topic).  exchange type exchanges add: exchange].
+		((anObject at: 'type') = 'direct') ifTrue: [ exchange type: (ExchangeType direct).  exchange type exchanges add: exchange].
+		((anObject at: 'type') = 'fanout') ifTrue: [ exchange type: (ExchangeType fanout).  exchange type exchanges add: exchange].
+		((anObject at: 'type') = 'headers') ifTrue: [ exchange type: (ExchangeType headers).  exchange type exchanges add: exchange].					
+			
+		vhost := aModel selectOrAddEntityNamed: (anObject at: 'vhost') withType: RMQVHost.
+		exchange vhost: vhost.
+		vhost exchanges add: exchange.
+		
+		
+		user_who_performed_action := aModel selectOrAddEntityNamed: (anObject at: 'user_who_performed_action') withType: RMQUser.
+		
+		exchange user_who_performed_action:  user_who_performed_action.
+		user_who_performed_action initializedExchanges add: exchange.
+		
+		
+		"exchange durability: (exchange at: 'durable')."
+		
+	   ((anObject at: 'durable') = true) ifTrue: [ exchange durability: (Durability durable).  exchange durability exchanges add: exchange].
+		((anObject at: 'durable') = false) ifTrue: [ exchange durability: (Durability transient).  exchange durability exchanges add: exchange].
+		
+		exchange internal: (anObject at: 'internal').
+	]
 ]

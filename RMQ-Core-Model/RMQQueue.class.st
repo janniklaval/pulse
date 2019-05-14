@@ -8,9 +8,7 @@ Class {
 		'rmqState',
 		'exclusive',
 		'vhost',
-		'messages',
 		'destinationBindings',
-		'sendedMessages',
 		'dead_letter_exchange',
 		'dead_letter_routing_key',
 		'idleSince',
@@ -20,7 +18,9 @@ Class {
 		'maxPriority',
 		'creationDate',
 		'deletionDate',
-		'consumerChannels'
+		'consumerChannels',
+		'routedMessages',
+		'deliveredMessages'
 	],
 	#category : #'RMQ-Core-Model'
 }
@@ -93,6 +93,18 @@ RMQQueue >> deletionDate: anObject [
 ]
 
 { #category : #accessing }
+RMQQueue >> deliveredMessages [
+   <MSEProperty: #deliveredMessages type: #RMQMessage opposite:#deliveredFromQueues>
+   <multivalued>
+	^ deliveredMessages
+]
+
+{ #category : #accessing }
+RMQQueue >> deliveredMessages: anObject [
+	deliveredMessages := anObject
+]
+
+{ #category : #accessing }
 RMQQueue >> destinationBindings [
 	<MSEProperty: #destinationBindings type: #RMQBindingWithQueue opposite:#destination>
 	<multivalued>
@@ -152,10 +164,10 @@ RMQQueue >> idleSince: anObject [
 RMQQueue >> initialize [
 
 	super initialize.
-	messages := Set new.
-	sendedMessages := Set new.
 	consumerChannels := Set new.
 	destinationBindings := Set new.
+	routedMessages := Set new. 
+	deliveredMessages := Set new. 
 ]
 
 { #category : #accessing }
@@ -203,18 +215,6 @@ RMQQueue >> messageTTL: anObject [
 ]
 
 { #category : #accessing }
-RMQQueue >> messages [
-	<MSEProperty: #messages type: #RMQMessage opposite:#routedQueues>
-	<multivalued>
-	^ messages
-]
-
-{ #category : #accessing }
-RMQQueue >> messages: anObject [
-	messages := anObject
-]
-
-{ #category : #accessing }
 RMQQueue >> rmqState [
 	<MSEProperty: #rmqState type: #State opposite:#queues>
 	^ rmqState ifNil: [ self rmqState: State idle.  rmqState]
@@ -227,14 +227,15 @@ RMQQueue >> rmqState: anObject [
 ]
 
 { #category : #accessing }
-RMQQueue >> sendedMessages [
-	<MSEProperty: #sendedMessages type: #RMQMessage opposite:#queue>
-	^ sendedMessages
+RMQQueue >> routedMessages [
+   <MSEProperty: #routedMessages type: #RMQMessage opposite:#routedToQueues>
+   <multivalued>
+	^ routedMessages
 ]
 
 { #category : #accessing }
-RMQQueue >> sendedMessages: anObject [
-	sendedMessages := anObject
+RMQQueue >> routedMessages: anObject [
+	routedMessages := anObject
 ]
 
 { #category : #accessing }

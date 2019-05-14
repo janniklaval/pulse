@@ -14,9 +14,10 @@ Class {
 		'alternate_exchange_for',
 		'creationDate',
 		'deletionDate',
-		'messages',
-		'components',
-		'user_who_performed_action'
+		'user_who_performed_action',
+		'publishedMessages',
+		'publisherComponents',
+		'topicID'
 	],
 	#category : #'RMQ-Core-Model'
 }
@@ -42,18 +43,6 @@ RMQExchange >> autoDelete [
 { #category : #accessing }
 RMQExchange >> autoDelete: anObject [
 	autoDelete := anObject
-]
-
-{ #category : #accessing }
-RMQExchange >> components [
-	<MSEProperty: #components type: #RMQComponent opposite:#exchanges>
-	<multivalued>
-	^ components
-]
-
-{ #category : #accessing }
-RMQExchange >> components: anObject [
-	components := anObject
 ]
 
 { #category : #accessing }
@@ -108,8 +97,8 @@ RMQExchange >> initialize [
 	super initialize.
 	sourceBindings := Set new.
 	destinationBindings := Set new.
-	components := Set new.
-	messages := Set new.
+	publisherComponents := Set new.
+	publishedMessages := Set new.
 	queues_for_dead_letter := Set new.
 	alternate_exchange_for := Set new.
 ]
@@ -126,18 +115,6 @@ RMQExchange >> internal: anObject [
 ]
 
 { #category : #accessing }
-RMQExchange >> messages [
-	<MSEProperty: #messages type: #RMQMessage opposite:#exchange>
-	<multivalued>
-	^ messages
-]
-
-{ #category : #accessing }
-RMQExchange >> messages: anObject [
-	messages := anObject
-]
-
-{ #category : #accessing }
 RMQExchange >> my_alternate_exchange [
 	<MSEProperty: #my_alternate_exchange type: #RMQExchange opposite:#alternate_exchange_for>
 	^ my_alternate_exchange
@@ -146,6 +123,30 @@ RMQExchange >> my_alternate_exchange [
 { #category : #accessing }
 RMQExchange >> my_alternate_exchange: anObject [
 	my_alternate_exchange := anObject
+]
+
+{ #category : #accessing }
+RMQExchange >> publishedMessages [
+	<MSEProperty: #publishedMessages type: #RMQMessage opposite:#publishedToExchange>
+	<multivalued>
+	^ publishedMessages
+]
+
+{ #category : #accessing }
+RMQExchange >> publishedMessages: anObject [
+	publishedMessages := anObject
+]
+
+{ #category : #accessing }
+RMQExchange >> publisherComponents [
+	<MSEProperty: #publisherComponents type: #RMQPublisherComponent opposite:#exchanges>
+	<multivalued>
+	^ publisherComponents
+]
+
+{ #category : #accessing }
+RMQExchange >> publisherComponents: anObject [
+	publisherComponents := anObject
 ]
 
 { #category : #accessing }
@@ -173,6 +174,16 @@ RMQExchange >> sourceBindings: anObject [
 ]
 
 { #category : #accessing }
+RMQExchange >> topicID [
+	^ topicID
+]
+
+{ #category : #accessing }
+RMQExchange >> topicID: anObject [
+	topicID := anObject
+]
+
+{ #category : #accessing }
 RMQExchange >> type [
 	<MSEProperty: #type type: #ExchangeType opposite: #exchanges>
 	^ type
@@ -191,7 +202,6 @@ RMQExchange >> type: anObject [
 { #category : #accessing }
 RMQExchange >> user_who_performed_action [
 	<MSEProperty: #user_who_performed_action type: #RMQUser opposite:#initializedExchanges>
-
 	^ user_who_performed_action
 ]
 

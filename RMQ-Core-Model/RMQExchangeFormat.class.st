@@ -12,12 +12,12 @@ Class {
 { #category : #accessing }
 RMQExchangeFormat >> exchangeFormatSchema [
 	<MSEProperty: #exchangeFormatSchema type: #String>
-	^ exchangeFormatSchema
+	^ self pulseName
 ]
 
 { #category : #accessing }
 RMQExchangeFormat >> exchangeFormatSchema: anObject [
-	exchangeFormatSchema := anObject
+	^self pulseName: anObject
 ]
 
 { #category : #accessing }

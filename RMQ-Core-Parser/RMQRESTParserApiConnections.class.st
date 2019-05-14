@@ -404,68 +404,69 @@ Class {
 { #category : #parsing }
 RMQRESTParserApiConnections class >> populate: aModel withJson: aString [
 	| parser rmqObjects connectionName connection vhost node user user_who_performed_action |
-	parser := PPParserResource current parserAt: PPJsonParser.
+	parser := PPParserResource current
+		parserAt: PPJsonParser.
 	rmqObjects := parser parse: aString.
-	rmqObjects
-		do: [ :anObject | 
-			connectionName := anObject at: 'name'.
-			connection := aModel
-				selectOrAddEntityNamed: connectionName
-				withType: RMQConnection
-				sourceName: nil.
-			connection host: (anObject at: 'host').
-			connection port: (anObject at: 'port').
-			connection peerHost: (anObject at: 'peer_host').
-			connection peerPort: (anObject at: 'peer_port').
-			connection connectedAt: (anObject at: 'connected_at').
-			(anObject at: 'auth_mechanism') = 'PLAIN'
-				ifTrue: [ connection authMechanism: AuthMechanism plain.
-					connection authMechanism connections add: connection ].
-			(anObject at: 'auth_mechanism') = 'AMQPLAIN'
-				ifTrue: [ connection authMechanism: AuthMechanism amqPlain.
-					connection authMechanism connections add: connection ].
-			(anObject at: 'auth_mechanism') = 'RABBIT_CR_DEMO'
-				ifTrue: [ connection authMechanism: AuthMechanism rabbit_cr_demo.
-					connection authMechanism connections add: connection ].
-			connection sslProtocol: (anObject at: 'ssl_protocol').
-			connection ssl: (anObject at: 'ssl').
-			connection sslHash: (anObject at: 'ssl_hash').
-			connection protocol: (anObject at: 'protocol').
-			vhost := aModel
-				selectOrAddEntityNamed: (anObject at: 'vhost')
-				withType: RMQVHost
-				sourceName: nil.
-			connection vhost: vhost.
-			vhost connections add: connection.
-			node := aModel
-				entityNamed: (anObject at: 'node')
-				withType: RMQNode
-				ifAbsent: [ | newNode |
-					newNode := RMQNode new
-						pulseName: (anObject at: 'node');
-						mooseModel: aModel.
-					vhost node: newNode.
-					newNode vhosts add: vhost.
-					newNode ].
-			user := aModel
-				selectOrAddEntityNamed: (anObject at: 'user')
-				withType: RMQUser
-				sourceName: nil.
-			connection user: user.
-			user usedConnections add: connection.
-			user_who_performed_action := aModel
-				selectOrAddEntityNamed: (anObject at: 'user_who_performed_action')
-				withType: RMQUser
-				sourceName: nil.
-			connection user_who_performed_connection: user_who_performed_action.
-			user_who_performed_action initializedConnections add: connection.
-			(anObject at: 'state') = 'running'
-				ifTrue: [ connection rmqState: State running.
-					connection rmqState connections add: connection ].
-			(anObject at: 'state') = 'idle'
-				ifTrue: [ connection rmqState: State idle.
-					connection rmqState connections add: connection ].
-			(anObject at: 'state') = 'other'
-				ifTrue: [ connection rmqState: State other.
-					connection rmqState connections add: connection ] ]
+	
+	rmqObjects do: [ :anObject |
+		connectionName := (anObject at: 'name').
+		connection := aModel selectOrAddEntityNamed: connectionName withType: RMQConnection.
+		
+		connection host: (anObject at: 'host').
+		connection port: (anObject at: 'port').
+		connection peerHost:(anObject at: 'peer_host').
+		connection peerPort:(anObject at: 'peer_port').
+		
+		connection connectedAt: (anObject at: 'connected_at').
+		
+		(anObject at: 'auth_mechanism') = 'PLAIN' ifTrue: [ 			connection authMechanism: (AuthMechanism plain).
+			connection authMechanism connections add: connection].
+		(anObject at: 'auth_mechanism') = 'AMQPLAIN' ifTrue: [ 			connection authMechanism: (AuthMechanism amqPlain).
+			connection authMechanism connections add: connection].
+		(anObject at: 'auth_mechanism') = 'RABBIT_CR_DEMO' ifTrue: [ 			connection authMechanism: (AuthMechanism rabbit_cr_demo).
+			connection authMechanism connections add: connection].
+		
+		connection sslProtocol: (anObject at: 'ssl_protocol').
+		connection ssl: (anObject at: 'ssl').
+		connection sslHash: (anObject at: 'ssl_hash').
+		
+		connection protocol: (anObject at: 'protocol').
+		
+		
+		vhost := aModel selectOrAddEntityNamed: (anObject at: 'vhost') withType: RMQVHost.
+		
+		connection vhost: vhost.
+		vhost connections add: connection.
+		
+		
+		node := aModel entityNamed: (anObject at: 'node') withType: RMQNode
+			ifAbsent:[  
+				|newNode |
+				newNode := RMQNode new
+					pulseName: (anObject at: 'node');
+					mooseModel: aModel.
+				vhost node: newNode.
+				newNode vhosts add: vhost.
+				newNode ].
+			
+		user := aModel selectOrAddEntityNamed:  (anObject at: 'user') withType: RMQUser.
+		connection user: user.
+		user usedConnections add: connection.
+		
+		
+		user_who_performed_action := aModel selectOrAddEntityNamed: (anObject at: 'user_who_performed_action') withType: RMQUser.
+		
+		connection user_who_performed_connection:  user_who_performed_action.
+		user_who_performed_action initializedConnections add: connection.
+			
+		(anObject at: 'state') = 'running' ifTrue: [ 			connection	rmqState: (State running).
+			connection rmqState connections add: connection].
+		
+		(anObject at: 'state') = 'idle' ifTrue: [ 			connection	rmqState: (State idle).
+			connection rmqState connections add: connection].
+		
+		(anObject at: 'state') = 'other' ifTrue: [ 			connection	rmqState: (State other).
+			connection rmqState connections add: connection].
+		
+	]
 ]

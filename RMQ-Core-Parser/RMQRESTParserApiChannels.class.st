@@ -209,78 +209,74 @@ Class {
 { #category : #parsing }
 RMQRESTParserApiChannels class >> populate: aModel withJson: aString [
 	| parser rmqObjects user channel vhost user_who_performed_action channelName node connection |
-	parser := PPParserResource current parserAt: PPJsonParser.
+	parser := PPParserResource current
+		parserAt: PPJsonParser.
 	rmqObjects := parser parse: aString.
-	rmqObjects
-		do: [ :anObject | 
-			"(anObject at: 'consumer_count')."
-			channelName := anObject at: 'name'.
-			channel := aModel
-				selectOrAddEntityNamed: channelName
-				withType: RMQChannel
-				sourceName: nil.
-			(anObject at: 'confirm')
-				ifTrue: [ channel guaranteeMode: GuaranteeMode confirm.
-					channel guaranteeMode channels add: channel ].
-			(anObject at: 'transactional')
-				ifTrue: [ channel guaranteeMode: GuaranteeMode transactional.
-					channel guaranteeMode channels add: channel ].
-			(anObject at: 'state') = 'running'
-				ifTrue: [ channel rmqState: State running.
-					channel rmqState channels add: channel ].
-			(anObject at: 'state') = 'idle'
-				ifTrue: [ channel rmqState: State idle.
-					channel rmqState channels add: channel ].
-			(anObject at: 'state') = 'other'
-				ifTrue: [ channel rmqState: State other.
-					channel rmqState channels add: channel ].
-			channel idleSince: (anObject at: 'idle_since').
-			user_who_performed_action := aModel
-				selectOrAddEntityNamed: (anObject at: 'user_who_performed_action')
-				withType: RMQUser
-				sourceName: nil.
-			channel user_who_performed_connection: user_who_performed_action.
-			user_who_performed_action initializedChannels add: channel.
-			user := aModel
-				selectOrAddEntityNamed: (anObject at: 'user')
-				withType: RMQUser
-				sourceName: nil.
-			channel user: user.
-			user usedChannels add: channel.
-			vhost := aModel
-				selectOrAddEntityNamed: (anObject at: 'vhost')
-				withType: RMQVHost
-				sourceName: nil.
-			channel vhost: vhost.
-			vhost channels add: channel.
-			node := aModel
-				entityNamed: (anObject at: 'node')
-				withType: RMQNode
-				ifAbsent: [ | newNode |
-					newNode := RMQNode new
-						pulseName: (anObject at: 'node');
-						mooseModel: aModel.
-					vhost node: newNode.
-					newNode vhosts add: vhost.
-					newNode ].
-			connection := aModel
-				selectOrAddEntityNamed: ((anObject at: 'connection_details') at: 'name')
-				withType: RMQConnection
-				sourceName: nil.
-			connection
-				peerHost: ((anObject at: 'connection_details') at: 'peer_host').
-			connection
-				peerPort: ((anObject at: 'connection_details') at: 'peer_port').
-			connection
-				host:
-					((((anObject at: 'connection_details') at: 'name') substrings: '->')
-						second substrings: ':') first withBlanksCondensed.	"'10.238.15.51:49677 -> 10.238.28.5:5672'"
-			connection
-				port:
-					((((anObject at: 'connection_details') at: 'name') substrings: '->')
-						second substrings: ':') second withBlanksCondensed asInteger.	"'10.238.15.51:49677 -> 10.238.28.5:5672'"
-			connection channels add: channel.
-			channel connection: connection.
-			connection user: user.
-			user usedConnections add: connection ]
+	
+
+	rmqObjects do: [ :anObject |
+		
+		"(anObject at: 'consumer_count')."
+		
+		channelName := (anObject at: 'name').
+		
+		channel := aModel selectOrAddEntityNamed: channelName withType: RMQChannel.
+		
+	
+		(anObject at: 'confirm') ifTrue: [ 			channel	guaranteeMode: (GuaranteeMode confirm).
+			channel guaranteeMode channels add: channel].
+		 
+		(anObject at: 'transactional')ifTrue: [ 			channel	guaranteeMode: (GuaranteeMode transactional).
+			channel guaranteeMode channels add: channel].
+		
+		(anObject at: 'state') = 'running' ifTrue: [ 			channel	rmqState: (State running).
+			channel rmqState channels add: channel].
+		
+		(anObject at: 'state') = 'idle' ifTrue: [ 			channel	rmqState: (State idle).
+			channel rmqState channels add: channel].
+		
+		(anObject at: 'state') = 'other' ifTrue: [ 			channel	rmqState: (State other).
+			channel rmqState channels add: channel].
+		
+		channel idleSince: (anObject at: 'idle_since').
+		
+		user_who_performed_action := aModel selectOrAddEntityNamed: (anObject at: 'user_who_performed_action') withType: RMQUser.
+		channel user_who_performed_connection:  user_who_performed_action.
+		user_who_performed_action initializedChannels add: channel.
+		
+		
+		user := aModel selectOrAddEntityNamed: (anObject at: 'user') withType: RMQUser.
+		channel user: user.
+		user usedChannels add: channel.
+		
+		
+		
+		vhost := aModel selectOrAddEntityNamed: (anObject at: 'vhost') withType: RMQVHost.
+		channel vhost: vhost.
+		vhost channels add: channel.
+		
+		node := aModel entityNamed: (anObject at: 'node') withType: RMQNode
+			ifAbsent:[  
+				|newNode |
+				newNode := RMQNode new
+					pulseName: (anObject at: 'node');
+					mooseModel: aModel.
+				vhost node: newNode.
+				newNode vhosts add: vhost.
+				newNode ].
+		
+		
+		
+		connection := aModel selectOrAddEntityNamed: ((anObject at: 'connection_details') at: 'name') withType: RMQConnection.
+		connection peerHost: ((anObject at: 'connection_details') at: 'peer_host').
+		connection peerPort: ((anObject at: 'connection_details') at: 'peer_port').
+		
+		connection host: (((((anObject at: 'connection_details') at: 'name')"'10.238.15.51:49677 -> 10.238.28.5:5672'" substrings: '->') second) substrings: ':') first withBlanksCondensed.
+		connection port: (((((anObject at: 'connection_details') at: 'name')"'10.238.15.51:49677 -> 10.238.28.5:5672'" substrings: '->') second) substrings: ':') second withBlanksCondensed asInteger.
+		
+		connection channels add: channel.
+		channel connection: connection.
+		connection user: user.
+		user usedConnections add: connection.
+	]
 ]

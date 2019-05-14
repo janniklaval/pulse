@@ -2,7 +2,8 @@ Class {
 	#name : #ComponentType,
 	#superclass : #PulseEnum,
 	#instVars : [
-		'components'
+		'publisherComponents',
+		'consumerComponents'
 	],
 	#category : #'RMQ-Core-Model'
 }
@@ -36,13 +37,25 @@ ComponentType class >> service [
 ]
 
 { #category : #accessing }
-ComponentType >> components [
-	<MSEProperty: #components type: #RMQComponent opposite:#componentType>
+ComponentType >> consumerComponents [
+	<MSEProperty: #consumerComponents type: #RMQConsumerComponent opposite:#componentType>
 	<multivalued>
-	^ components
+	^ consumerComponents
 ]
 
 { #category : #accessing }
-ComponentType >> components: anObject [
-	components := anObject
+ComponentType >> consumerComponents: anObject [
+	consumerComponents := anObject
+]
+
+{ #category : #accessing }
+ComponentType >> publisherComponents [
+	<MSEProperty: #publisherComponents type: #RMQPublisherComponent opposite:#componentType>
+	<multivalued>
+	^ publisherComponents
+]
+
+{ #category : #accessing }
+ComponentType >> publisherComponents: anObject [
+	publisherComponents := anObject
 ]

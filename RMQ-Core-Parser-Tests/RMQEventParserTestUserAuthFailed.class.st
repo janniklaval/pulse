@@ -25,8 +25,8 @@ RMQEventParserTestUserAuthFailed >> setUp [
 	
 	parser := RMQEventParser new. 
 	
-	consumer := ConsumeEvents new. 
-	consumer model: model. 
+	consumer := RMQConsumer new. 
+	consumer model: model.
 	consumer parser: parser.
 	
 	"populate the model with the resource "

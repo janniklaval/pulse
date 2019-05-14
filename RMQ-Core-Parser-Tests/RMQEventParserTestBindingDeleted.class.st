@@ -14,68 +14,51 @@ Class {
 
 { #category : #initialization }
 RMQEventParserTestBindingDeleted >> setUp [
-	"todo : go further and create the events queue and bing it to the exchange queue ?"
 
-	| newBinding source destination routingKey |
+"todo : go further and create the events queue and bing it to the exchange queue ?"
+| newBinding source destination routingKey|
 	model := PulseModel new.
 	model name: 'test'.
-	parser := RMQEventParser new.
-	consumer := ConsumeEvents new.
-	consumer model: model.
+	
+	parser := RMQEventParser new. 
+	
+	consumer := RMQConsumer new. 
+	consumer model: model. 
 	consumer parser: parser.
-
+	
 	"purge events queue to make sur it is empty"
 	"consumer purgeQueue: 'events.binding.created'."
-
+	
 	"set up the MM"
 	newBinding := RMQBindingWithQueue new.
-	source := model
-		selectOrAddEntityNamed: 'test.create.exchangeforbinding'
-		withType: RMQExchange
-		sourceName: nil.
-	destination := model
-		selectOrAddEntityNamed: 'test.create.queueforbinding'
-		withType: RMQQueue
-		sourceName: nil.
+	source:= model selectOrAddEntityNamed: 'test.create.exchangeforbinding' withType: RMQExchange.
+	destination:= model selectOrAddEntityNamed: 'test.create.queueforbinding' withType: RMQQueue.
 	destination destinationBindings add: newBinding.
 	source sourceBindings add: newBinding.
-	newBinding
+	newBinding 
 		source: source;
-		destination: destination.
-	model add: newBinding.
-	routingKey := model
-		selectOrAddEntityNamed: 'key'
-		withType: RMQRoutingKey
-		sourceName: nil.
+		destination: destination. 	
+   model add: newBinding.
+	routingKey := model selectOrAddEntityNamed: 'key' withType: RMQRoutingKey.
 	newBinding routingKey: routingKey.
 	routingKey binding: newBinding.
-
+	
 	"cretate an exchange, a queue and bind them"
-	consumer
-		createExchange: 'test.create.exchangeforbinding'
-		type: 'topic'.
+	consumer createExchange: 'test.create.exchangeforbinding'  type: 'topic'.
 	consumer createQueue: 'test.create.queueforbinding'.
-	consumer
-		bindQueue: 'test.create.queueforbinding'
-		withExchange: 'test.create.exchangeforbinding'
-		routingKey: 'key'.
-	consumer
-		unbindQueue: 'test.create.queueforbinding'
-		withExchange: 'test.create.exchangeforbinding'
-		routingKey: 'key'.
+	consumer bindQueue: 'test.create.queueforbinding' withExchange: 'test.create.exchangeforbinding' routingKey: 'key'. 
+	consumer unbindQueue: 'test.create.queueforbinding' withExchange: 'test.create.exchangeforbinding' routingKey: 'key'. 
 	1 seconds wait.
-
+	
 	"delete the created resource"
 	consumer deleteExchange: 'test.create.exchangeforbinding'.
-	consumer deleteQueue: 'test.create.queueforbinding'.
+	consumer deleteQueue: 'test.create.queueforbinding'. 
 	1 seconds wait.
-
+	
 	"consume from the events queue"
-	consumer
-		consumeQueue: 'events.binding.deleted';
-		start.
+	consumer consumeQueue: 'events.binding.deleted'; start. 
 	1 seconds wait.
-	consumer stop
+	consumer stop. 
 ]
 
 { #category : #tests }
