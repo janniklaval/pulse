@@ -16,27 +16,28 @@ Class {
 
 { #category : #initialization }
 RMQEventParserTestVhostDeleted >> setUp [
-
-"todo : go further and create the events queue and bind it to the exchange queue ?"
+	"todo : go further and create the events queue and bind it to the exchange queue ?"
 
 	model := PulseModel new.
 	model name: 'test'.
-	
-	parser := RMQEventParser new. 
-	
+	parser := RMQEventParser new.
 	consumer := RMQConsumer new.
-	consumer model: model. 
+	consumer model: model.
 	consumer parser: parser.
-	
+
 	"set up the model for the test"
-	model selectOrAddEntityNamed: 'testtest' withType: RMQVHost.
-	2 second wait. 
-	
+	model
+		selectOrAddEntityNamed: 'testtest'
+		withType: RMQVHost
+		sourceName: self sourceName.
+	2 second wait.
+
 	"consume from the events queues"
-	consumer consumeQueue: 'events.vhost.deleted'; start. 
+	consumer
+		consumeQueue: 'events.vhost.deleted';
+		start.
 	1 seconds wait.
-	consumer stop. 
-	
+	consumer stop
 ]
 
 { #category : #tests }

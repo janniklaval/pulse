@@ -222,7 +222,7 @@ PulseModel >> initialize [
 ]
 
 { #category : #'add-select' }
-PulseModel >> selectOrAddEntityNamed: aName withType: aType [ 
+PulseModel >> selectOrAddEntityNamed: aName withType: aType sourceName: anObject [ 
 
 	^ self entityNamed: aName withType: aType 
 			ifAbsent:[ 

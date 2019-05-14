@@ -1,11 +1,18 @@
 Class {
 	#name : #RMQParser,
 	#superclass : #Object,
+	#instVars : [
+		'sourceName'
+	],
 	#category : #'RMQ-Core-Parser'
 }
 
-{ #category : #parsing }
-RMQParser class >> populate: aModel withJson: aString [
+{ #category : #accessing }
+RMQParser >> sourceName [
+	^ sourceName
+]
 
-	self subclassResponsibility 
+{ #category : #accessing }
+RMQParser >> sourceName: anObject [
+	sourceName := anObject
 ]

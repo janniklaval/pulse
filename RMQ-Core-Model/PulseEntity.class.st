@@ -2,7 +2,8 @@ Class {
 	#name : #PulseEntity,
 	#superclass : #MooseEntity,
 	#instVars : [
-		'pulseName'
+		'pulseName',
+		'sources'
 	],
 	#category : #'RMQ-Core-Model'
 }
@@ -11,6 +12,13 @@ Class {
 PulseEntity class >> isVoyageRoot [
 
 	^true
+]
+
+{ #category : #accessing }
+PulseEntity >> initialize [
+
+	super initialize.	
+	sources := Set new.
 ]
 
 { #category : #accessing }
@@ -31,6 +39,18 @@ PulseEntity >> pulseName: anObject [
 
 { #category : #utility }
 PulseEntity >> selectEnum: anEnumObject [
+	^ self mooseModel
+		selectOrAddEntityNamed: anEnumObject name
+		withType: anEnumObject class
+		sourceName: 'none'
+]
 
-	^ self mooseModel selectOrAddEntityNamed: anEnumObject name withType: anEnumObject class. 
+{ #category : #accessing }
+PulseEntity >> sources [
+	^ sources
+]
+
+{ #category : #accessing }
+PulseEntity >> sources: anObject [
+	sources := anObject
 ]
