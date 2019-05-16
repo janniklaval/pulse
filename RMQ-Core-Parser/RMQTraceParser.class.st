@@ -392,7 +392,7 @@ the dictionnary represents the properties headers :
  user:	guest  *
  routed_queues:	pubsub.default.consoleSaasUserAccess.module-profile-updated.subscribe"
  
-			| messageObject messageId connection queue user node exchange vhost channel publisherComponent consumerComponent exchangeFormat tenantId routedQueue routedQueues routingKey exchangeName  consumerComponenetName consumerComponentName |
+			| messageObject messageId connection queue user node exchange vhost channel publisherComponent consumerComponent exchangeFormat tenantId routedQueue routedQueues routingKey exchangeName  consumerComponentName |
 			
 			
 			node := aModel selectOrAddEntityNamed: (aDictionnary at: 'node') withType: RMQNode.
