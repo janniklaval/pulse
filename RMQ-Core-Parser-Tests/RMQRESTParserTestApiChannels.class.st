@@ -211,9 +211,12 @@ RMQRESTParserTestApiChannels >> data [
 { #category : #initialization }
 RMQRESTParserTestApiChannels >> setUp [
 
+	| logP |
 	model := PulseModel new.
 	model name: 'test'.
-	RMQRESTParserApiChannels populate: model withJson: self data.
+	logP := RMQRESTParserApiChannels new.
+	logP sourceName: 'test'.
+	logP populate: model withJson: self data.
 	
 	
 ]
@@ -221,7 +224,7 @@ RMQRESTParserTestApiChannels >> setUp [
 { #category : #'testing - simple' }
 RMQRESTParserTestApiChannels >> testExistingPopulate [
 
-	| vh ch1 ch2 u1 u2 c1 c2 node |
+	| vh ch1 ch2 u1 u2 c1 c2 node logP |
 	
 	self assert: model size = 11.
 	"channels"
@@ -291,7 +294,11 @@ RMQRESTParserTestApiChannels >> testExistingPopulate [
 	self assert: (u2 usedConnections anySatisfy: [ :e | e =c2 ]).
 	self assert: model size = 12.
 	
-	RMQRESTParserApiChannels populate: model withJson: self data.
+	logP := RMQRESTParserApiChannels new.
+	logP sourceName: 'test2'.
+	logP populate: model withJson: self data.
+	
+	
 	self assert: model size = 12.
 	"channels"
 	self assert: model allRMQChannels size = 3.

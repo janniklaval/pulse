@@ -405,18 +405,18 @@ RMQRESTParserTestApiConnections >> data [
 
 { #category : #initialization }
 RMQRESTParserTestApiConnections >> setUp [
-
+	| logP |
 	model := PulseModel new.
 	model name: 'test'.
-	RMQRESTParserApiConnections populate: model withJson: self data.
-	
-	
+	logP := RMQRESTParserApiConnections new.
+	logP sourceName: 'test'.
+	logP populate: model withJson: self data.
 ]
 
 { #category : #'testing - simple' }
 RMQRESTParserTestApiConnections >> testExistingPopulate [
 
-	| vh u1 u2 c1 c2 node |
+	| vh u1 u2 c1 c2 node logP |
 	
 	self assert: model size = 12.
 	"connection"
@@ -471,7 +471,11 @@ RMQRESTParserTestApiConnections >> testExistingPopulate [
 	self assert: (c2 rmqState connections anySatisfy: [:e | e = c2 ]).	
 	
 	self assert: model size = 12.
-	RMQRESTParserApiConnections populate: model withJson: self data.
+	
+	logP := RMQRESTParserApiConnections new.
+	logP sourceName: 'test2'.
+	logP populate: model withJson: self data.
+
 	self assert: model size = 12.
 	
 	"connection"

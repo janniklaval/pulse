@@ -1,6 +1,9 @@
 Class {
 	#name : #RMQLogParser,
 	#superclass : #RMQParser,
+	#instVars : [
+		'model'
+	],
 	#classInstVars : [
 		'model'
 	],
@@ -34,13 +37,14 @@ RMQLogParser >> parse: aJSonFilePath [
 	json := self initializeContents: aJSonFilePath.
 	model := PulseModel new.
 	model name: aJSonFilePath asFileReference basenameWithoutExtension.
-	
+	self sourceName: aJSonFilePath.
 	self populate: model withJson: json
 ]
 
 { #category : #parsing }
 RMQLogParser >> populate: aModel withJson: aString [
 	| parser rmqObjects exchangeName |
+	model := aModel.
 	parser := PPParserResource current parserAt: PPJsonParser.
 	rmqObjects := parser parse: aString.
 	rmqObjects

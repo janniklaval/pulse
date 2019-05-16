@@ -75,10 +75,13 @@ RMQRESTParserTestApiConsumers >> data [
 
 { #category : #initialization }
 RMQRESTParserTestApiConsumers >> setUp [
-
+	| logP |
 	model := PulseModel new.
 	model name: 'test'.
-	RMQRESTParserApiConsumers populate: model withJson: self data.
+	logP := RMQRESTParserApiConsumers new.
+	logP sourceName: 'test'.
+	logP populate: model withJson: self data.
+	
 	
 	
 ]
@@ -86,7 +89,7 @@ RMQRESTParserTestApiConsumers >> setUp [
 { #category : #'testing - simple' }
 RMQRESTParserTestApiConsumers >> testExistingPopulate [
 
-	| t1 t2 vh ch1 ch2 q1 q2 u1 u2 c1 c2 node |
+	| t1 t2 vh ch1 ch2 q1 q2 u1 u2 c1 c2 node logP |
 	self assert: model size = 16.
 	self assert: model allRMQConsumerProcesses size = 3.
 	
@@ -160,7 +163,9 @@ RMQRESTParserTestApiConsumers >> testExistingPopulate [
 	self assert: (node vhosts anySatisfy: [ :e | e =vh ]).
 	self assert: node vhosts size = 1.
 	
-	RMQRESTParserApiConsumers populate: model withJson: self data.
+	logP := RMQRESTParserApiConsumers new.
+	logP sourceName: 'test2'.
+	logP populate: model withJson: self data.
 	
 	self assert: model size = 16.
 	self assert: model allRMQConsumerProcesses size = 3.

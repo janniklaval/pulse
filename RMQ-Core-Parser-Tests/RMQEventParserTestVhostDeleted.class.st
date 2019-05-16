@@ -20,7 +20,7 @@ RMQEventParserTestVhostDeleted >> setUp [
 
 	model := PulseModel new.
 	model name: 'test'.
-	parser := RMQEventParser new.
+	parser := RMQEventParser newOn: 'test'.
 	consumer := RMQConsumer new.
 	consumer model: model.
 	consumer parser: parser.
