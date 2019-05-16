@@ -72,67 +72,68 @@ Class {
 }
 
 { #category : #parsing }
-RMQRESTParserApiConsumers class >> populate: aModel withJson: aString [
+RMQRESTParserApiConsumers >> populate: aModel withJson: aString [
 	| parser rmqObjects queueName queue vhost consumerTag component channelName channel user node connection |
-	parser := PPParserResource current
-		parserAt: PPJsonParser.
+	parser := PPParserResource current parserAt: PPJsonParser.
+	sourceName := aString.
 	rmqObjects := parser parse: aString.
-	
-
-	rmqObjects do: [ :anObject |
-		
-		
-		consumerTag := (anObject at: 'consumer_tag').
-		
-		component := aModel allRMQConsumerProcesses detect: [:e | e consumerTag = consumerTag] ifNone:[ 
-				|newComponent |
-				newComponent := RMQConsumerProcess new
-					consumerTag: consumerTag.
-				aModel add: newComponent.
-				newComponent ].
-		component ackRequired: (anObject at: 'ack_required'). 
-		component exclusive: (anObject at: 'exclusive'). 
-		
-		
-		queueName := ((anObject at: 'queue') at: 'name').
-		queue := aModel selectOrAddEntityNamed: queueName withType: RMQQueue.
-		
-		vhost := aModel selectOrAddEntityNamed: ((anObject at: 'queue') at: 'vhost') withType: RMQVHost.
-		queue vhost: vhost.
-		vhost queues add: queue.
-		
-		
-		channelName := ((anObject at: 'channel_details') at: 'name').
-		channel := aModel selectOrAddEntityNamed: channelName withType: RMQChannel.
-		
-		component subscribedChannels add: channel.
-		channel consumerProcess: component. 
-		
-		channel consumedQueues add: queue.
-		queue consumerChannels add: channel.
-		
-		user := aModel selectOrAddEntityNamed: ((anObject at: 'channel_details') at: 'user') withType: RMQUser.
-		channel user: user.
-		user usedChannels add: channel.
-		
-		node := aModel entityNamed: ((anObject at: 'channel_details') at: 'node') withType: RMQNode
-			ifAbsent:[  
-				|newNode |
-				newNode := RMQNode new
-					pulseName: ((anObject at: 'channel_details') at: 'node');
-					mooseModel: aModel.
-				vhost node: newNode.
-				newNode vhosts add: vhost.
-				newNode ].
-		
-		
-		connection := aModel selectOrAddEntityNamed: ((anObject at: 'channel_details') at: 'connection_name') withType: RMQConnection.
-		connection peerHost: ((anObject at: 'channel_details') at: 'peer_host').
-		connection peerPort: ((anObject at: 'channel_details') at: 'peer_port').
-		
-		connection channels add: channel.
-		channel connection: connection.
-		connection user: user.
-		user usedConnections add: connection.
-	]
+	rmqObjects
+		do: [ :anObject | 
+			consumerTag := anObject at: 'consumer_tag'.
+			component := aModel allRMQConsumerProcesses
+				detect: [ :e | e consumerTag = consumerTag ]
+				ifNone: [ | newComponent |
+					newComponent := RMQConsumerProcess new consumerTag: consumerTag.
+					aModel add: newComponent.
+					newComponent ].
+			component ackRequired: (anObject at: 'ack_required').
+			component exclusive: (anObject at: 'exclusive').
+			queueName := (anObject at: 'queue') at: 'name'.
+			queue := aModel
+				selectOrAddEntityNamed: queueName
+				withType: RMQQueue
+				sourceName: self sourceName.
+			vhost := aModel
+				selectOrAddEntityNamed: ((anObject at: 'queue') at: 'vhost')
+				withType: RMQVHost
+				sourceName: self sourceName.
+			queue vhost: vhost.
+			vhost queues add: queue.
+			channelName := (anObject at: 'channel_details') at: 'name'.
+			channel := aModel
+				selectOrAddEntityNamed: channelName
+				withType: RMQChannel
+				sourceName: self sourceName.
+			component subscribedChannels add: channel.
+			channel consumerProcess: component.
+			channel consumedQueues add: queue.
+			queue consumerChannels add: channel.
+			user := aModel
+				selectOrAddEntityNamed: ((anObject at: 'channel_details') at: 'user')
+				withType: RMQUser
+				sourceName: self sourceName.
+			channel user: user.
+			user usedChannels add: channel.
+			node := aModel
+				entityNamed: ((anObject at: 'channel_details') at: 'node')
+				withType: RMQNode
+				ifAbsent: [ | newNode |
+					newNode := RMQNode new
+						pulseName: ((anObject at: 'channel_details') at: 'node');
+						mooseModel: aModel.
+					vhost node: newNode.
+					newNode vhosts add: vhost.
+					newNode ].
+			connection := aModel
+				selectOrAddEntityNamed: ((anObject at: 'channel_details') at: 'connection_name')
+				withType: RMQConnection
+				sourceName: self sourceName.
+			connection
+				peerHost: ((anObject at: 'channel_details') at: 'peer_host').
+			connection
+				peerPort: ((anObject at: 'channel_details') at: 'peer_port').
+			connection channels add: channel.
+			channel connection: connection.
+			connection user: user.
+			user usedConnections add: connection ]
 ]

@@ -11,166 +11,120 @@ Class {
 RMQLogParserTest >> data [
 
 	^ '[{
-	"channel": 1,
-	"connection": "<rabbit@b782bc5f4af0.1.3541.0>",
-	"exchange": "test",
-	"node": "rabbit@b782bc5f4af0",
-	"payload": "dGVzdCBKU09O",
-	"properties": {
-		"delivery_mode": 1,
-		"headers": {
-			
-		}
-	},
-	"queue": "none",
-	"routed_queues": ["testRMQ"],
-	"routing_keys": [""],
-	"timestamp": "2018-02-13 10:38:44:903",
+	"timestamp": "2018-06-08 13:45:01:120",
 	"type": "published",
+	"node": "rabbit@cf39ec4fb77b",
+	"connection": "172.17.0.1:35008 -> 172.17.0.2:5672",
+	"vhost": "/",
 	"user": "guest",
-	"vhost": "/"
-},{
 	"channel": 1,
-	"connection": "<rabbit@b782bc5f4af0.1.4286.0>",
-	"exchange": "test",
-	"node": "rabbit@b782bc5f4af0",
-	"payload": "dGVzdA==",
-	"properties": {
-		"delivery_mode": 1,
-		"headers": {
-			"h1": "h1test"
-		}
-	},
+	"exchange": "pubsub.blauthTenant.blAuthCredentials.publish",
 	"queue": "none",
-	"routed_queues": [],
-	"routing_keys": ["RoutingT"],
-	"timestamp": "2018-02-13 11:02:29:030",
-	"type": "published",
-	"user": "guest",
-	"vhost": "/"
-},{
-	"channel": 1,
-	"connection": "<rabbit@b782bc5f4af0.1.4307.0>",
-	"exchange": "test",
-	"node": "rabbit@b782bc5f4af0",
-	"payload": "dGVzdA==",
+	"routed_queues": ["pubsub.blauthTenant.blAuthCredentials.bl-console-saas.subscribe"],
+	"routing_keys": ["message"],
 	"properties": {
-		"delivery_mode": 1,
+		"app_id": "bl-auth",
+		"timestamp": 1528457211,
+		"message_id": "7fd640c6-c767-45e9-95f5-90990eb5c677",
+		"delivery_mode": 2,
 		"headers": {
-			"h1": "h1test"
+			"X-ExchangeFormatId": "AVRO",
+			"X-TenantId": "default",
+			"X-ClientId": "bl-console-saas",
+			"X-TopicId": "consoleSaasUserAccess",
+			"X-ExchangeFormatSchema": "{\"type\":\"record\",\"name\":\"UserAccessEvent\",\"namespace\":\"com.bl.consolesaas.message.user\",\"fields\":[{\"name\":\"eventType\",\"type\":{\"type\":\"enum\",\"name\":\"UserAccessEventType\",\"symbols\":[\"USER_CREATED\",\"USER_UPDATED\",\"USER_DELETED\",\"PROFILE_CREATED\",\"PROFILE_UPDATED\",\"PROFILE_DELETED\"]}},{\"name\":\"header\",\"type\":{\"type\":\"record\",\"name\":\"EventHeader\",\"namespace\":\"com.bl.consolesaas.message.common\",\"fields\":[{\"name\":\"id\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"},\"max_length\":\"64\"},{\"name\":\"version\",\"type\":\"long\"},{\"name\":\"timestamp\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"},\"date_format\":\"yyyy-MM-dd''T''HH:mm:ss.SSS''Z''\",\"max_length\":\"24\"}]}},{\"name\":\"userAccess\",\"type\":{\"type\":\"record\",\"name\":\"UserAccessConsoleSaas\",\"namespace\":\"com.bl.consolesaas.message.user.misc\",\"fields\":[{\"name\":\"user\",\"type\":{\"type\":\"record\",\"name\":\"UserConsoleSaas\",\"fields\":[{\"name\":\"id\",\"type\":\"long\"},{\"name\":\"username\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"},\"max_length\":\"80\"},{\"name\":\"oldUsername\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null,\"max_length\":\"80\"},{\"name\":\"title\",\"type\":{\"type\":\"enum\",\"name\":\"TitleConsoleSaas\",\"symbols\":[\"MR\",\"MME\",\"MELLE\"]}},{\"name\":\"lastName\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"},\"max_length\":\"80\"},{\"name\":\"firstName\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"},\"max_length\":\"80\"},{\"name\":\"email\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"},\"max_length\":\"80\"},{\"name\":\"password\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null,\"max_length\":\"100\"},{\"name\":\"passwordAlgorithm\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null,\"max_length\":\"50\"},{\"name\":\"oldEmail\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null,\"max_length\":\"80\"},{\"name\":\"phoneNumber\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null,\"max_length\":\"30\"},{\"name\":\"type\",\"type\":{\"type\":\"enum\",\"name\":\"UserTypeConsoleSaas\",\"symbols\":[\"STANDARD\",\"TECHNICAL\"]},\"default\":\"USER_STANDARD\"},{\"name\":\"cristalId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null,\"max_length\":\"30\"},{\"name\":\"creationDate\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"},\"date_format\":\"yyyy-MM-dd''T''HH:mm:ss.SSS''Z''\",\"max_length\":\"24\"},{\"name\":\"isValidated\",\"type\":\"boolean\"}]}},{\"name\":\"clients\",\"type\":{\"type\":\"array\",\"items\":{\"type\":\"record\",\"name\":\"UserClientConsoleSaas\",\"fields\":[{\"name\":\"code\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"},\"max_length\":\"80\"},{\"name\":\"designation\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null,\"max_length\":\"80\"}]}}},{\"name\":\"profiles\",\"type\":[\"null\",{\"type\":\"array\",\"items\":{\"type\":\"record\",\"name\":\"ProfileConsoleSaas\",\"fields\":[{\"name\":\"roleCode\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"},\"max_length\":\"100\"},{\"name\":\"applicationCode\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"},\"max_length\":\"80\"},{\"name\":\"clientCode\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"},\"max_length\":\"80\"},{\"name\":\"isValid\",\"type\":\"boolean\"}]}}],\"default\":null}]}}]}"
 		}
 	},
+	"payload": "CEg1ZTEwZTM0YS0xMDgzLTQwNzUtYjkyYS1kNDNjNmZmNzJhODEaMDIwMTgtMDYtMDhUMTE6MjY6NTEuMTM3WgpEYW50aG9ueS5sYWdyZWRlQGJlcmdlci1sZXZyYXVsdC5mcgAADmxhZ3JlZGUOYW50aG9ueTxhZG1pbi50ZXN0QGJlcmdlci1sZXZyYXVsdC5jb20AAAACAAIAMDIwMTgtMDMtMTJUMDk6MTA6MDAuMDAwWgAELkNBSVNTRVNfRUNPTEVTX1RPVUxPVVNFACBNQUlSSUVfREVfTEFCRUdFAAACAhRST0xFX0FETUlOBlBGQSBNQUlSSUVfREVfTEFCRUdFAQA="
+}, {
+	"timestamp": "2018-06-08 13:45:01:125",
+	"type": "received",
+	"node": "rabbit@cf39ec4fb77b",
+	"connection": "172.17.0.1:35010 -> 172.17.0.2:5672",
+	"vhost": "/",
+	"user": "guest",
+	"channel": 1,
+	"exchange": "pubsub.blauthTenant.blAuthCredentials.publish",
+	"queue": "pubsub.blauthTenant.blAuthCredentials.bl-console-saas.subscribe",
+	"routed_queues": "none",
+	"routing_keys": ["message"],
+	"properties": {
+		"app_id": "bl-auth",
+		"timestamp": 1528457211,
+		"message_id": "7fd640c6-c767-45e9-95f5-90990eb5c677",
+		"delivery_mode": 2,
+		"headers": {
+			"X-ExchangeFormatId": "AVRO",
+			"X-TenantId": "default",
+			"X-ClientId": "bl-console-saas",
+			"X-TopicId": "consoleSaasUserAccess",
+			"X-ExchangeFormatSchema": "{\"type\":\"record\",\"name\":\"UserAccessEvent\",\"namespace\":\"com.bl.consolesaas.message.user\",\"fields\":[{\"name\":\"eventType\",\"type\":{\"type\":\"enum\",\"name\":\"UserAccessEventType\",\"symbols\":[\"USER_CREATED\",\"USER_UPDATED\",\"USER_DELETED\",\"PROFILE_CREATED\",\"PROFILE_UPDATED\",\"PROFILE_DELETED\"]}},{\"name\":\"header\",\"type\":{\"type\":\"record\",\"name\":\"EventHeader\",\"namespace\":\"com.bl.consolesaas.message.common\",\"fields\":[{\"name\":\"id\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"},\"max_length\":\"64\"},{\"name\":\"version\",\"type\":\"long\"},{\"name\":\"timestamp\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"},\"date_format\":\"yyyy-MM-dd''T''HH:mm:ss.SSS''Z''\",\"max_length\":\"24\"}]}},{\"name\":\"userAccess\",\"type\":{\"type\":\"record\",\"name\":\"UserAccessConsoleSaas\",\"namespace\":\"com.bl.consolesaas.message.user.misc\",\"fields\":[{\"name\":\"user\",\"type\":{\"type\":\"record\",\"name\":\"UserConsoleSaas\",\"fields\":[{\"name\":\"id\",\"type\":\"long\"},{\"name\":\"username\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"},\"max_length\":\"80\"},{\"name\":\"oldUsername\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null,\"max_length\":\"80\"},{\"name\":\"title\",\"type\":{\"type\":\"enum\",\"name\":\"TitleConsoleSaas\",\"symbols\":[\"MR\",\"MME\",\"MELLE\"]}},{\"name\":\"lastName\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"},\"max_length\":\"80\"},{\"name\":\"firstName\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"},\"max_length\":\"80\"},{\"name\":\"email\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"},\"max_length\":\"80\"},{\"name\":\"password\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null,\"max_length\":\"100\"},{\"name\":\"passwordAlgorithm\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null,\"max_length\":\"50\"},{\"name\":\"oldEmail\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null,\"max_length\":\"80\"},{\"name\":\"phoneNumber\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null,\"max_length\":\"30\"},{\"name\":\"type\",\"type\":{\"type\":\"enum\",\"name\":\"UserTypeConsoleSaas\",\"symbols\":[\"STANDARD\",\"TECHNICAL\"]},\"default\":\"USER_STANDARD\"},{\"name\":\"cristalId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null,\"max_length\":\"30\"},{\"name\":\"creationDate\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"},\"date_format\":\"yyyy-MM-dd''T''HH:mm:ss.SSS''Z''\",\"max_length\":\"24\"},{\"name\":\"isValidated\",\"type\":\"boolean\"}]}},{\"name\":\"clients\",\"type\":{\"type\":\"array\",\"items\":{\"type\":\"record\",\"name\":\"UserClientConsoleSaas\",\"fields\":[{\"name\":\"code\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"},\"max_length\":\"80\"},{\"name\":\"designation\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null,\"max_length\":\"80\"}]}}},{\"name\":\"profiles\",\"type\":[\"null\",{\"type\":\"array\",\"items\":{\"type\":\"record\",\"name\":\"ProfileConsoleSaas\",\"fields\":[{\"name\":\"roleCode\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"},\"max_length\":\"100\"},{\"name\":\"applicationCode\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"},\"max_length\":\"80\"},{\"name\":\"clientCode\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"},\"max_length\":\"80\"},{\"name\":\"isValid\",\"type\":\"boolean\"}]}}],\"default\":null}]}}]}"
+		}
+	},
+	"payload": "CEg1ZTEwZTM0YS0xMDgzLTQwNzUtYjkyYS1kNDNjNmZmNzJhODEaMDIwMTgtMDYtMDhUMTE6MjY6NTEuMTM3WgpEYW50aG9ueS5sYWdyZWRlQGJlcmdlci1sZXZyYXVsdC5mcgAADmxhZ3JlZGUOYW50aG9ueTxhZG1pbi50ZXN0QGJlcmdlci1sZXZyYXVsdC5jb20AAAACAAIAMDIwMTgtMDMtMTJUMDk6MTA6MDAuMDAwWgAELkNBSVNTRVNfRUNPTEVTX1RPVUxPVVNFACBNQUlSSUVfREVfTEFCRUdFAAACAhRST0xFX0FETUlOBlBGQSBNQUlSSUVfREVfTEFCRUdFAQA="
+}, {
+	"timestamp": "2018-06-08 11:26:51:219",
+	"type": "published",
+	"node": "rabbit@cf39ec4fb77b",
+	"connection": "172.17.0.1:35008 -> 172.17.0.2:5672",
+	"vhost": "/",
+	"user": "guest",
+	"channel": 1,
+	"exchange": "pubsub.consoleTenant.consoleSaasUserAccess.publish",
 	"queue": "none",
-	"routed_queues": ["testRMQ"],
-	"routing_keys": [""],
-	"timestamp": "2018-02-13 11:02:36:099",
-	"type": "published",
-	"user": "guest",
-	"vhost": "/"
-},{
-	"channel": 1,
-	"connection": "<rabbit@b782bc5f4af0.1.4584.0>",
-	"exchange": "test",
-	"node": "rabbit@b782bc5f4af0",
-	"payload": "dGVzdA==",
+	"routed_queues": ["pubsub.consoleTenant.consoleSaasUserAccess.bl-socle.subscribe", "pubsub.consoleTenant.consoleSaasUserAccess.logger.subscribe", "pubsub.consoleTenant.consoleSaasUserAccess.bl-auth.subscribe"],
+	"routing_keys": ["message"],
 	"properties": {
-		"delivery_mode": 1,
+		"app_id": "bl-console-saas",
+		"timestamp": 1528457211,
+		"message_id": "7fd640c6-c767-45e9-95f5-90990eb5c677",
+		"delivery_mode": 2,
 		"headers": {
-			
+			"X-ExchangeFormatId": "AVRO",
+			"X-TenantId": "default",
+			"X-ClientId": "bl-console-saas",
+			"X-TopicId": "consoleSaasUserAccess",
+			"X-ExchangeFormatSchema": "{\"type\":\"record\",\"name\":\"UserAccessEvent\",\"namespace\":\"com.bl.consolesaas.message.user\",\"fields\":[{\"name\":\"eventType\",\"type\":{\"type\":\"enum\",\"name\":\"UserAccessEventType\",\"symbols\":[\"USER_CREATED\",\"USER_UPDATED\",\"USER_DELETED\",\"PROFILE_CREATED\",\"PROFILE_UPDATED\",\"PROFILE_DELETED\"]}},{\"name\":\"header\",\"type\":{\"type\":\"record\",\"name\":\"EventHeader\",\"namespace\":\"com.bl.consolesaas.message.common\",\"fields\":[{\"name\":\"id\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"},\"max_length\":\"64\"},{\"name\":\"version\",\"type\":\"long\"},{\"name\":\"timestamp\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"},\"date_format\":\"yyyy-MM-dd''T''HH:mm:ss.SSS''Z''\",\"max_length\":\"24\"}]}},{\"name\":\"userAccess\",\"type\":{\"type\":\"record\",\"name\":\"UserAccessConsoleSaas\",\"namespace\":\"com.bl.consolesaas.message.user.misc\",\"fields\":[{\"name\":\"user\",\"type\":{\"type\":\"record\",\"name\":\"UserConsoleSaas\",\"fields\":[{\"name\":\"id\",\"type\":\"long\"},{\"name\":\"username\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"},\"max_length\":\"80\"},{\"name\":\"oldUsername\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null,\"max_length\":\"80\"},{\"name\":\"title\",\"type\":{\"type\":\"enum\",\"name\":\"TitleConsoleSaas\",\"symbols\":[\"MR\",\"MME\",\"MELLE\"]}},{\"name\":\"lastName\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"},\"max_length\":\"80\"},{\"name\":\"firstName\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"},\"max_length\":\"80\"},{\"name\":\"email\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"},\"max_length\":\"80\"},{\"name\":\"password\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null,\"max_length\":\"100\"},{\"name\":\"passwordAlgorithm\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null,\"max_length\":\"50\"},{\"name\":\"oldEmail\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null,\"max_length\":\"80\"},{\"name\":\"phoneNumber\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null,\"max_length\":\"30\"},{\"name\":\"type\",\"type\":{\"type\":\"enum\",\"name\":\"UserTypeConsoleSaas\",\"symbols\":[\"STANDARD\",\"TECHNICAL\"]},\"default\":\"USER_STANDARD\"},{\"name\":\"cristalId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null,\"max_length\":\"30\"},{\"name\":\"creationDate\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"},\"date_format\":\"yyyy-MM-dd''T''HH:mm:ss.SSS''Z''\",\"max_length\":\"24\"},{\"name\":\"isValidated\",\"type\":\"boolean\"}]}},{\"name\":\"clients\",\"type\":{\"type\":\"array\",\"items\":{\"type\":\"record\",\"name\":\"UserClientConsoleSaas\",\"fields\":[{\"name\":\"code\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"},\"max_length\":\"80\"},{\"name\":\"designation\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null,\"max_length\":\"80\"}]}}},{\"name\":\"profiles\",\"type\":[\"null\",{\"type\":\"array\",\"items\":{\"type\":\"record\",\"name\":\"ProfileConsoleSaas\",\"fields\":[{\"name\":\"roleCode\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"},\"max_length\":\"100\"},{\"name\":\"applicationCode\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"},\"max_length\":\"80\"},{\"name\":\"clientCode\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"},\"max_length\":\"80\"},{\"name\":\"isValid\",\"type\":\"boolean\"}]}}],\"default\":null}]}}]}"
 		}
 	},
-	"queue": "testRMQ",
-	"routed_queues": "none",
-	"routing_keys": [""],
-	"timestamp": "2018-02-13 11:09:30:753",
+	"payload": "CEg1ZTEwZTM0YS0xMDgzLTQwNzUtYjkyYS1kNDNjNmZmNzJhODEaMDIwMTgtMDYtMDhUMTE6MjY6NTEuMTM3WgpEYW50aG9ueS5sYWdyZWRlQGJlcmdlci1sZXZyYXVsdC5mcgAADmxhZ3JlZGUOYW50aG9ueTxhZG1pbi50ZXN0QGJlcmdlci1sZXZyYXVsdC5jb20AAAACAAIAMDIwMTgtMDMtMTJUMDk6MTA6MDAuMDAwWgAELkNBSVNTRVNfRUNPTEVTX1RPVUxPVVNFACBNQUlSSUVfREVfTEFCRUdFAAACAhRST0xFX0FETUlOBlBGQSBNQUlSSUVfREVfTEFCRUdFAQA="
+} ,{
+	"timestamp": "2018-06-08 11:26:51:220",
 	"type": "received",
+	"node": "rabbit@cf39ec4fb77b",
+	"connection": "172.17.0.1:35010 -> 172.17.0.2:5672",
+	"vhost": "/",
 	"user": "guest",
-	"vhost": "/"
-},{
 	"channel": 1,
-	"connection": "<rabbit@b782bc5f4af0.1.4605.0>",
-	"exchange": "test",
-	"node": "rabbit@b782bc5f4af0",
-	"payload": "dHR0",
+	"exchange": "pubsub.consoleTenant.consoleSaasUserAccess.publish",
+	"queue": "pubsub.consoleTenant.consoleSaasUserAccess.bl-socle.subscribe",
+	"routed_queues": "none",
+	"routing_keys": ["message"],
 	"properties": {
-		"delivery_mode": 1,
+		"app_id": "bl-console-saas",
+		"timestamp": 1528457211,
+		"message_id": "7fd640c6-c767-45e9-95f5-90990eb5c677",
+		"delivery_mode": 2,
 		"headers": {
-			
+			"X-ExchangeFormatId": "AVRO",
+			"X-TenantId": "default",
+			"X-ClientId": "bl-console-saas",
+			"X-TopicId": "consoleSaasUserAccess",
+			"X-ExchangeFormatSchema": "{\"type\":\"record\",\"name\":\"UserAccessEvent\",\"namespace\":\"com.bl.consolesaas.message.user\",\"fields\":[{\"name\":\"eventType\",\"type\":{\"type\":\"enum\",\"name\":\"UserAccessEventType\",\"symbols\":[\"USER_CREATED\",\"USER_UPDATED\",\"USER_DELETED\",\"PROFILE_CREATED\",\"PROFILE_UPDATED\",\"PROFILE_DELETED\"]}},{\"name\":\"header\",\"type\":{\"type\":\"record\",\"name\":\"EventHeader\",\"namespace\":\"com.bl.consolesaas.message.common\",\"fields\":[{\"name\":\"id\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"},\"max_length\":\"64\"},{\"name\":\"version\",\"type\":\"long\"},{\"name\":\"timestamp\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"},\"date_format\":\"yyyy-MM-dd''T''HH:mm:ss.SSS''Z''\",\"max_length\":\"24\"}]}},{\"name\":\"userAccess\",\"type\":{\"type\":\"record\",\"name\":\"UserAccessConsoleSaas\",\"namespace\":\"com.bl.consolesaas.message.user.misc\",\"fields\":[{\"name\":\"user\",\"type\":{\"type\":\"record\",\"name\":\"UserConsoleSaas\",\"fields\":[{\"name\":\"id\",\"type\":\"long\"},{\"name\":\"username\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"},\"max_length\":\"80\"},{\"name\":\"oldUsername\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null,\"max_length\":\"80\"},{\"name\":\"title\",\"type\":{\"type\":\"enum\",\"name\":\"TitleConsoleSaas\",\"symbols\":[\"MR\",\"MME\",\"MELLE\"]}},{\"name\":\"lastName\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"},\"max_length\":\"80\"},{\"name\":\"firstName\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"},\"max_length\":\"80\"},{\"name\":\"email\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"},\"max_length\":\"80\"},{\"name\":\"password\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null,\"max_length\":\"100\"},{\"name\":\"passwordAlgorithm\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null,\"max_length\":\"50\"},{\"name\":\"oldEmail\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null,\"max_length\":\"80\"},{\"name\":\"phoneNumber\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null,\"max_length\":\"30\"},{\"name\":\"type\",\"type\":{\"type\":\"enum\",\"name\":\"UserTypeConsoleSaas\",\"symbols\":[\"STANDARD\",\"TECHNICAL\"]},\"default\":\"USER_STANDARD\"},{\"name\":\"cristalId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null,\"max_length\":\"30\"},{\"name\":\"creationDate\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"},\"date_format\":\"yyyy-MM-dd''T''HH:mm:ss.SSS''Z''\",\"max_length\":\"24\"},{\"name\":\"isValidated\",\"type\":\"boolean\"}]}},{\"name\":\"clients\",\"type\":{\"type\":\"array\",\"items\":{\"type\":\"record\",\"name\":\"UserClientConsoleSaas\",\"fields\":[{\"name\":\"code\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"},\"max_length\":\"80\"},{\"name\":\"designation\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null,\"max_length\":\"80\"}]}}},{\"name\":\"profiles\",\"type\":[\"null\",{\"type\":\"array\",\"items\":{\"type\":\"record\",\"name\":\"ProfileConsoleSaas\",\"fields\":[{\"name\":\"roleCode\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"},\"max_length\":\"100\"},{\"name\":\"applicationCode\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"},\"max_length\":\"80\"},{\"name\":\"clientCode\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"},\"max_length\":\"80\"},{\"name\":\"isValid\",\"type\":\"boolean\"}]}}],\"default\":null}]}}]}"
 		}
 	},
-	"queue": "testRMQ",
-	"routed_queues": "none",
-	"routing_keys": [""],
-	"timestamp": "2018-02-13 11:09:36:316",
-	"type": "received",
-	"user": "guest",
-	"vhost": "/"
-},{
-	"channel": 1,
-	"connection": "<rabbit@b782bc5f4af0.1.4624.0>",
-	"exchange": "test",
-	"node": "rabbit@b782bc5f4af0",
-	"payload": "dGVzdA==",
-	"properties": {
-		"delivery_mode": 1,
-		"headers": {
-			
-		}
-	},
-	"queue": "testRMQ",
-	"routed_queues": "none",
-	"routing_keys": [""],
-	"timestamp": "2018-02-13 11:09:37:144",
-	"type": "received",
-	"user": "guest",
-	"vhost": "/"
-},{
-	"channel": 1,
-	"connection": "<rabbit@b782bc5f4af0.1.4641.0>",
-	"exchange": "test",
-	"node": "rabbit@b782bc5f4af0",
-	"payload": "dGVzdCBKU09O",
-	"properties": {
-		"delivery_mode": 1,
-		"headers": {
-			
-		}
-	},
-	"queue": "testRMQ",
-	"routed_queues": "none",
-	"routing_keys": [""],
-	"timestamp": "2018-02-13 11:09:37:873",
-	"type": "received",
-	"user": "guest",
-	"vhost": "/"
-},{
-	"channel": 1,
-	"connection": "<rabbit@b782bc5f4af0.1.4658.0>",
-	"exchange": "test",
-	"node": "rabbit@b782bc5f4af0",
-	"payload": "dGVzdA==",
-	"properties": {
-		"delivery_mode": 1,
-		"headers": {
-			"h1": "h1test"
-		}
-	},
-	"queue": "testRMQ",
-	"routed_queues": "none",
-	"routing_keys": [""],
-	"timestamp": "2018-02-13 11:09:38:646",
-	"type": "received",
-	"user": "guest",
-	"vhost": "/"
+	"payload": "CEg1ZTEwZTM0YS0xMDgzLTQwNzUtYjkyYS1kNDNjNmZmNzJhODEaMDIwMTgtMDYtMDhUMTE6MjY6NTEuMTM3WgpEYW50aG9ueS5sYWdyZWRlQGJlcmdlci1sZXZyYXVsdC5mcgAADmxhZ3JlZGUOYW50aG9ueTxhZG1pbi50ZXN0QGJlcmdlci1sZXZyYXVsdC5jb20AAAACAAIAMDIwMTgtMDMtMTJUMDk6MTA6MDAuMDAwWgAELkNBSVNTRVNfRUNPTEVTX1RPVUxPVVNFACBNQUlSSUVfREVfTEFCRUdFAAACAhRST0xFX0FETUlOBlBGQSBNQUlSSUVfREVfTEFCRUdFAQA="
 }]'
 ]
 
 { #category : #initialization }
 RMQLogParserTest >> setUp [
 
+	| logP |
 	model := PulseModel new.
 	model name: 'test'.
-	RMQLogParser populate: model withJson: self data.
+	logP := RMQLogParser newOn: 'test'.
+	logP populate: model withJson: self data.
 	
 	
 ]
@@ -178,5 +132,5 @@ RMQLogParserTest >> setUp [
 { #category : #initialization }
 RMQLogParserTest >> testPopulate [
 
-	^false
+	^self assert: false.
 ]

@@ -1881,10 +1881,13 @@ RMQRESTParserTestApiQueues >> data [
 
 { #category : #initialization }
 RMQRESTParserTestApiQueues >> setUp [
-
+	| logP |
 	model := PulseModel new.
 	model name: 'test'.
-	RMQRESTParserApiQueues populate: model withJson: self data.
+	logP := RMQRESTParserApiQueues new.
+	logP sourceName: 'test'.
+	logP populate: model withJson: self data.
+
 	
 	
 ]
@@ -1892,7 +1895,7 @@ RMQRESTParserTestApiQueues >> setUp [
 { #category : #'testing-double-insert' }
 RMQRESTParserTestApiQueues >> testExistingPopulate [
 
-	| t1 t2 vh node |
+	| t1 t2 vh node logP |
 	self assert: model size = 21.
 	self assert: model allRMQQueues size = 18.
 	self assert: (model allRMQQueues anySatisfy: [:e | e name = 'smalltalk']).
@@ -1932,7 +1935,10 @@ RMQRESTParserTestApiQueues >> testExistingPopulate [
 	
 	
 	self assert: model size = 21.
-	RMQRESTParserApiQueues populate: model withJson: self data.
+	
+	logP := RMQRESTParserApiQueues new.
+	logP sourceName: 'test2'.
+	logP populate: model withJson: self data.
 	
 	self assert: model size = 21.
 	self assert: model allRMQQueues size = 18.

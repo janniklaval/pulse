@@ -115,10 +115,13 @@ RMQRESTParserTestApiExchanges >> data [
 
 { #category : #initialization }
 RMQRESTParserTestApiExchanges >> setUp [
-
+	| logP |
 	model := PulseModel new.
 	model name: 'test'.
-	RMQRESTParserApiExchanges populate: model withJson: self data.
+	logP := RMQRESTParserApiExchanges new.
+	logP sourceName: 'test'.
+	logP populate: model withJson: self data.
+	
 	
 	
 ]
@@ -126,7 +129,7 @@ RMQRESTParserTestApiExchanges >> setUp [
 { #category : #'testing - simple' }
 RMQRESTParserTestApiExchanges >> testExistingPopulate [
 
-	| t1 t2 vh user |
+	| t1 t2 vh user logP |
 	self assert: model size = 16.
 	self assert: model allRMQExchanges size = 9.
 	self assert: (model allRMQExchanges anySatisfy: [:e | e name = 'pubsub.default.consoleSaasUserAccess.publish']).
@@ -163,7 +166,11 @@ RMQRESTParserTestApiExchanges >> testExistingPopulate [
 	self assert: (user initializedExchanges  anySatisfy: [ :e | e =t2 ]).
 	self assert: (user initializedExchanges size = 8).	
 	self assert: model size = 16.
-	RMQRESTParserApiExchanges populate: model withJson: self data.
+	
+	logP := RMQRESTParserApiExchanges new.
+	logP sourceName: 'test2'.
+	logP populate: model withJson: self data.
+	
 	self assert: model size = 16.
 	self assert: model allRMQExchanges size = 9.
 	self assert: (model allRMQExchanges anySatisfy: [:e | e name = 'pubsub.default.consoleSaasUserAccess.publish']).
