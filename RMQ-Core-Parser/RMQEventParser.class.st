@@ -181,12 +181,12 @@ RMQEventParser >> populate: aModel withConnectionClosed: aDictionnary at: timest
 RMQEventParser >> populate: aModel withConnectionCreated: aDictionnary at: timestamp [
 "when connection is of network type : 
 a Dictionary( timestamp_in_ms:	1544109134439, type:	network, pid:	<rabbit@fceed0d94b94.3.8698.0>, name:	172.17.0.1:56246 -> 172.17.0.2:5672, port:	5672, peer_port:	56246, host:	{0,0,0,0,0,65535,44049,2}, peer_host:	{0,0,0,0,0,65535,44049,1}, ssl:	false, peer_cert_subject: , peer_cert_issuer:	, peer_cert_validity:	
-auth_mechanism:	PLAIN, ssl_protocol:, ssl_key_exchange:, ssl_cipher: ssl_hash:, protocol:	{0,9,1} user:	guest, vhost:	/, timeout:	60, frame_max:	131072, channel_max:	0, client_properties:	{<<""product"">>,longstr,<<""RabbitMQ Smalltalk"">>} connected_at:	1544109134432)
+auth_mechanism :	PLAIN, ssl_protocol:, ssl_key_exchange:, ssl_cipher: ssl_hash:, protocol:	{0,9,1} user:	guest, vhost:	/, timeout:	60, frame_max:	131072, channel_max:	0, client_properties:	{<<""product"">>,longstr,<<""RabbitMQ Smalltalk"">>} connected_at:	1544109134432)
 
 when connection is of direct type :
 aDictionnary (timestamp_in_ms:	1544196873787, pid:	<rabbit@fceed0d94b94.3.12113.0>, protocol:	{'Direct',{0,9,1}}, host:	unknown, port:	unknown, name:	<rabbit@fceed0d94b94.3.12113.0>, peer_host:	unknown, peer_port:	unknown, user:	guest, vhost:	/, client_properties:	, type:	direct, connected_at:	1544196873787)"
 
-	| connectionType connectionObject connectionName user vhost |
+	| connectionType connectionObject connectionName user vhost|
 	
 	connectionName := aDictionnary at: 'name'.
 	connectionType := aDictionnary at: 'type'.
@@ -206,14 +206,17 @@ aDictionnary (timestamp_in_ms:	1544196873787, pid:	<rabbit@fceed0d94b94.3.12113.
 			newConnection protocol: (aDictionnary at: 'protocol').
 			connectionType = 'network'
 				ifTrue: [ newConnection ssl: (aDictionnary at: 'ssl').
-					       ((aDictionnary at: 'auth_mechanism') = 'plain') ifTrue: [ newConnection authMechanism: (AuthMechanism plain).
+					       "((aDictionnary at: 'auth_mechanism') = 'plain') ifTrue: [ newConnection authMechanism: (AuthMechanism plain).
 			              newConnection authMechanism connections add: newConnection].
 		                ((aDictionnary at: 'auth_mechanism') = 'amqPlain') ifTrue: [ newConnection authMechanism: (AuthMechanism amqPlain).
 			              newConnection authMechanism connections add: newConnection].	
 			             ((aDictionnary at: 'auth_mechanism') = 'rabbit_cr_demo') ifTrue: [ newConnection authMechanism: (AuthMechanism rabbit_cr_demo).
-			              newConnection authMechanism connections add: newConnection].		
+			              newConnection authMechanism connections add: newConnection]."
+	
+				           newConnection authMechanism: (AuthMechanism perform: ((aDictionnary at: 'auth_mechanism') asSymbol)).	
+			              newConnection authMechanism connections add: newConnection.
 			
-					       (newConnection ssl = true)
+					       (newConnection ssl)
 						    ifTrue: [ newConnection sslProtocol: (aDictionnary at: 'ssl_protocol').
 							newConnection sslHash: (aDictionnary at: 'ssl_hash') ] ].
 			aModel add: newConnection.
@@ -229,8 +232,9 @@ aDictionnary (timestamp_in_ms:	1544196873787, pid:	<rabbit@fceed0d94b94.3.12113.
   	user := aModel selectOrAddEntityNamed: (aDictionnary at: 'user') withType: RMQUser.
 	(user usedConnections anySatisfy: [ :e | e = connectionObject ])
 		ifFalse: [ user usedConnections add: connectionObject.
-			        user vhosts add: vhost.
 			        connectionObject user: user ].
+		
+   (user vhosts anySatisfy: [ :e | e = connectionObject ]) ifFalse: [user vhosts add: vhost.]
 	
 ]
 
@@ -321,10 +325,14 @@ RMQEventParser >> populate: aModel withExchangeCreated: aDictionnary at: timesta
 		
 		exchangeObject creationDate: timestamp.
 			
-		((aDictionnary at: 'type') = 'topic') ifTrue: [ exchangeObject type: (ExchangeType topic).  exchangeObject type exchanges add: exchangeObject].
+		"((aDictionnary at: 'type') = 'topic') ifTrue: [ exchangeObject type: (ExchangeType topic).  exchangeObject type exchanges add: exchangeObject].
 		((aDictionnary at: 'type') = 'direct') ifTrue: [ exchangeObject type: (ExchangeType direct).  exchangeObject type exchanges add: exchangeObject].
 		((aDictionnary at: 'type') = 'fanout') ifTrue: [ exchangeObject type: (ExchangeType fanout).  exchangeObject type exchanges add: exchangeObject].
-		((aDictionnary at: 'type') = 'headers') ifTrue: [ exchangeObject type: (ExchangeType headers).  exchangeObject type exchanges add: exchangeObject].
+		((aDictionnary at: 'type') = 'headers') ifTrue: [ exchangeObject type: (ExchangeType headers).  exchangeObject type exchanges add: exchangeObject]."
+		
+		exchangeObject type: (AuthMechanism perform: ((aDictionnary at: 'type') asSymbol)). 
+		exchangeObject type exchanges add: exchangeObject. 
+		
 		exchangeObject internal: (aDictionnary at: 'internal').
 		exchangeObject autoDelete: (aDictionnary at: 'auto_delete').
 		((aDictionnary at: 'durable') = 1) ifTrue: [ exchangeObject durability: (Durability durable).  exchangeObject durability exchanges add: exchangeObject].
@@ -675,7 +683,7 @@ RMQEventParser >> populate: aModel withUserTagsSet: aDictionnary at: timestamp [
 				   mooseModel: aModel;
 					settingDate: timestamp.
 					
-				(aTagString = 'administrator') ifTrue: [ newRole tag: (Tag administrator).
+				"(aTagString = 'administrator') ifTrue: [ newRole tag: (Tag administrator).
 			   newRole tag roles add: newRole].	
 			   (aTagString = 'management') ifTrue: [ newRole tag: (Tag management).
 			   newRole tag roles add: newRole].
@@ -684,7 +692,10 @@ RMQEventParser >> populate: aModel withUserTagsSet: aDictionnary at: timestamp [
 		      (aTagString = 'policymaker') ifTrue: [ newRole tag: (Tag policymaker).
 			   newRole tag roles add: newRole].
 		      (aTagString = 'none') ifTrue: [ newRole tag: (Tag none).
-			   newRole tag roles add: newRole].
+			   newRole tag roles add: newRole]."
+		      
+		     newRole tag: (Tag perform: ((aTagString) asSymbol)).	
+		     newRole tag roles add: newRole. 
 		
 		      ((aTagString = 'administrator') or: [ (aTagString = 'management') or: [ (aTagString = 'monitoring') or: [(aTagString = 'policymaker') or: [ (aTagString = 'none') ] ] ] ]) 
 		      ifFalse: [newRole tag: (Tag new rmqState: aTagString)]. 
