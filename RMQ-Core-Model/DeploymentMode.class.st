@@ -34,3 +34,13 @@ DeploymentMode >> components [
 DeploymentMode >> components: anObject [
 	components := anObject
 ]
+
+{ #category : #extensions }
+DeploymentMode >> privateComponents [
+	^ components
+]
+
+{ #category : #extensions }
+DeploymentMode >> privateComponents: anObject [
+	components := anObject
+]
