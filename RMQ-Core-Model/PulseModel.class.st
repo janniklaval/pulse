@@ -5,6 +5,14 @@ Class {
 }
 
 { #category : #testing }
+PulseModel class >> annotation [
+
+	<MSEClass: #PulseModel super: #MooseModel>
+	<package: #Pulse>
+	^self
+]
+
+{ #category : #testing }
 PulseModel class >> isVoyageRoot [
 
 	^true

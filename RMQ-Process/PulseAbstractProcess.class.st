@@ -31,7 +31,14 @@ PulseAbstractProcess class >> new [
 
 { #category : #'instance creation' }
 PulseAbstractProcess class >> uniqueInstance [
-	^ UniqueInstance ifNil: [ UniqueInstance := self basicNew initialize ]
+	^ self uniqueInstanceOn: 'none'
+]
+
+{ #category : #'instance creation' }
+PulseAbstractProcess class >> uniqueInstanceOn: aSource [
+	UniqueInstance ifNil: [ UniqueInstance := self basicNew initialize ].
+	UniqueInstance source: aSource.
+	^ UniqueInstance 
 ]
 
 { #category : #accessing }
