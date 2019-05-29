@@ -8,6 +8,14 @@ Class {
 	#category : #'RMQ-Core-Model'
 }
 
+{ #category : #meta }
+PulseEntity class >> annotation [
+
+	<MSEClass: #MooseEntity super: #PulseEntity>
+	<package: #Pulse>
+	^self
+]
+
 { #category : #testing }
 PulseEntity class >> isVoyageRoot [
 

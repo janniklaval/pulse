@@ -12,6 +12,14 @@ Class {
 	#category : #'RMQ-Core-Model'
 }
 
+{ #category : #meta }
+RMQBinding class >> annotation [
+
+	<MSEClass: #PulseEntity super: #RMQBinding>
+	<package: #Pulse>
+	^self
+]
+
 { #category : #accessing }
 RMQBinding >> creationDate [
 	<MSEProperty: #creationDate type: #Number>
