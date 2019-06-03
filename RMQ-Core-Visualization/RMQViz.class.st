@@ -191,7 +191,7 @@ v := RTView new.
 		elementsOn: aModel allMessageTypes.
 		
 	v addAll: elements.
-	elements @ (RTLabeled new text: [ :s | s rmqState asString ]).
+	elements @ (RTLabeled new text: [ :s | s pulseState asString ]).
 	elements @ (RTPopup new text: [ :s | s logEntities size ]).
 	
 	l := RTHorizontalLineLayout new.
@@ -215,7 +215,7 @@ v := RTView new.
 	shape := RTBox new color: Color green trans; size: [ :s | s messages size log *20].
 	elements := shape elementsOn: aModel allMessageTypes.
 	v addAll: elements.
-	elements @ (RTLabeled new text: [ :s | s rmqState asString ]).
+	elements @ (RTLabeled new text: [ :s | s pulseState asString ]).
 	elements @ (RTPopup new text: [ :s | s messages size ]).
 	
 	l := RTHorizontalLineLayout new.

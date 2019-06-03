@@ -186,7 +186,7 @@ PulseMetamodelGenerator >> defineProperties [
 	((exchange property: #creationDate type: #Number) comment: 'TODO').
 	((exchange property: #deletionDate type: #Number) comment: 'TODO').
 	((exchange property: #internal type: #Boolean) comment: 'TODO').
-	((exchange property: #topicId type: #Number) comment: 'TODO').
+	((exchange property: #topicID type: #Number) comment: 'TODO').
 	((exchangeFormat property: #exchangeFormatSchema type: #String) comment: 'TODO').
 	((exchangeFormat property: #exchangeFormatType type: #String) comment: 'TODO').
 	((message property: #encrypted type: #Boolean) comment: 'TODO').
@@ -217,7 +217,7 @@ PulseMetamodelGenerator >> defineProperties [
 	((queue property: #creationDate type: #Number) comment: 'TODO').
 	((queue property: #deletionDate type: #Number) comment: 'TODO').
 	((queue property: #exclusive type: #Boolean) comment: 'TODO').
-	((queue property: #expireAfter type: #Number) comment: 'TODO').
+	((queue property: #expiresAfter type: #Number) comment: 'TODO').
 	((queue property: #idleSince type: #Number) comment: 'TODO').
 	((queue property: #maxLength type: #Number) comment: 'TODO').
 	((queue property: #maxLengthBytes type: #Number) comment: 'TODO').
@@ -300,6 +300,6 @@ PulseMetamodelGenerator >> defineRelations [
 	((queue property: #dead_letter_routing_key) comment: 'TODO') *- ((routingKey property: #queues_for_dead_letter) comment: 'TODO').
 	((queue property: #vhost) comment: 'TODO') *- ((vhost property: #queues) comment: 'TODO').
 	((role property: #user) comment: 'TODO') *- ((user property: #roles) comment: 'TODO').
-	((user property: #vhost) comment: 'TODO') *- ((vhost property: #users) comment: 'TODO').
+	((user property: #vhosts) comment: 'TODO') *-* ((vhost property: #users) comment: 'TODO').
 	
 ]

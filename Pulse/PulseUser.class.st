@@ -17,7 +17,7 @@ Class {
 		'#roles => FMMany type: #PulseRole opposite: #user',
 		'#usedChannels => FMMany type: #PulseChannel opposite: #user',
 		'#usedConnections => FMMany type: #PulseConnection opposite: #user',
-		'#vhost => FMOne type: #PulseVHost opposite: #users'
+		'#vhosts => FMMany type: #PulseVHost opposite: #users'
 	],
 	#category : #'Pulse-Entities'
 }
@@ -35,7 +35,7 @@ PulseUser class >> annotation [
 PulseUser class >> generatedSlotNames [
 	<generated>
 	'PulseUser class>>#generatedSlotNames'.
-	^ #(authentifications creationDate deletionDate hashingAlgorithm initializedChannels initializedConnections initializedExchanges password passwordChangingDate passwordClearingDate passwordHash permissions roles usedChannels usedConnections vhost)
+	^ #(authentifications creationDate deletionDate hashingAlgorithm initializedChannels initializedConnections initializedExchanges password passwordChangingDate passwordClearingDate passwordHash permissions roles usedChannels usedConnections vhosts)
 ]
 
 { #category : #generator }
@@ -299,17 +299,17 @@ PulseUser >> usedConnections: anObject [
 ]
 
 { #category : #accessing }
-PulseUser >> vhost [
+PulseUser >> vhosts [
 
 	<generated>
 	<MSEComment: 'TODO'>
-	^ vhost
+	^ vhosts
 ]
 
 { #category : #accessing }
-PulseUser >> vhost: anObject [
+PulseUser >> vhosts: anObject [
 
 	<generated>
-	vhost := anObject
+	vhosts value: anObject
 
 ]

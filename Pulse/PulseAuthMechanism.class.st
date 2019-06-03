@@ -9,7 +9,7 @@ Class {
 
 { #category : #meta }
 PulseAuthMechanism class >> amqPlain [
-	^  self new rmqState: #amqPlain
+	^  self new pulseState: #amqPlain
 ]
 
 { #category : #meta }
@@ -36,12 +36,12 @@ PulseAuthMechanism class >> generatedTraitNames [
 
 { #category : #meta }
 PulseAuthMechanism class >> plain [
-	^ self new rmqState: #plain
+	^ self new pulseState: #plain
 ]
 
 { #category : #meta }
 PulseAuthMechanism class >> rabbit_cr_demo [
-		^ self new rmqState: #rabbit_cr_demo
+		^ self new pulseState: #rabbit_cr_demo
 ]
 
 { #category : #meta }

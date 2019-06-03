@@ -12,7 +12,7 @@ Class {
 		'#permissions => FMMany type: #PulsePermission opposite: #vhost',
 		'#queues => FMMany type: #PulseQueue opposite: #vhost',
 		'#tracing',
-		'#users => FMMany type: #PulseUser opposite: #vhost'
+		'#users => FMMany type: #PulseUser opposite: #vhosts'
 	],
 	#category : #'Pulse-Entities'
 }

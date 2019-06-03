@@ -9,7 +9,7 @@ Class {
 
 { #category : #'as yet unclassified' }
 PulseMessageType class >> acknowledged [
-	^self new rmqState: #acknowledged
+	^self new pulseState: #acknowledged
 ]
 
 { #category : #meta }
@@ -36,22 +36,22 @@ PulseMessageType class >> generatedTraitNames [
 
 { #category : #'as yet unclassified' }
 PulseMessageType class >> published [
-	^ self new rmqState: #published
+	^ self new pulseState: #published
 ]
 
 { #category : #'as yet unclassified' }
 PulseMessageType class >> ready [
-	^ self new rmqState: #ready
+	^ self new pulseState: #ready
 ]
 
 { #category : #accessing }
 PulseMessageType class >> received [
-	^ self new rmqState: #received
+	^ self new pulseState: #received
 ]
 
 { #category : #accessing }
 PulseMessageType class >> redelivered [
-	^ self new rmqState: #redelivered
+	^ self new pulseState: #redelivered
 ]
 
 { #category : #meta }
@@ -63,7 +63,7 @@ PulseMessageType class >> requirements [
 
 { #category : #'as yet unclassified' }
 PulseMessageType class >> unacknowledged [
-	^ self new rmqState: #unacknowledged
+	^ self new pulseState: #unacknowledged
 ]
 
 { #category : #accessing }

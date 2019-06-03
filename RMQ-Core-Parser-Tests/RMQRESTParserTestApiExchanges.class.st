@@ -118,8 +118,7 @@ RMQRESTParserTestApiExchanges >> setUp [
 	| logP |
 	model := OldPulseModel new.
 	model name: 'test'.
-	logP := RMQRESTParserApiExchanges new.
-	logP sourceName: 'test'.
+	logP := RMQRESTParserApiExchanges newOn: 'test'.
 	logP populate: model withJson: self data.
 	
 	

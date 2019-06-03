@@ -1911,12 +1911,12 @@ RMQRESTParserApiQueues >> populate: aModel withJson: aString [
 					newNode vhosts add: vhost.
 					newNode ].
 			(anObject at: 'state') = 'running'
-				ifTrue: [ queue rmqState: PulseState running.
-					queue rmqState queues add: queue ].
+				ifTrue: [ queue pulseState: PulseState running.
+					queue pulseState queues add: queue ].
 			(anObject at: 'state') = 'idle'
-				ifTrue: [ queue rmqState: PulseState idle.
-					queue rmqState queues add: queue ].
+				ifTrue: [ queue pulseState: PulseState idle.
+					queue pulseState queues add: queue ].
 			(anObject at: 'state') = 'other'
-				ifTrue: [ queue rmqState: PulseState other.
-					queue rmqState queues add: queue ] ]
+				ifTrue: [ queue pulseState: PulseState other.
+					queue pulseState queues add: queue ] ]
 ]

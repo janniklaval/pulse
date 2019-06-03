@@ -9,7 +9,7 @@ Class {
 
 { #category : #'as yet unclassified' }
 PulseTag class >> administrator [
-	^self new rmqState: #administrator
+	^self new pulseState: #administrator
 ]
 
 { #category : #meta }
@@ -36,22 +36,22 @@ PulseTag class >> generatedTraitNames [
 
 { #category : #'as yet unclassified' }
 PulseTag class >> management [
-	^ self new rmqState: #management
+	^ self new pulseState: #management
 ]
 
 { #category : #'as yet unclassified' }
 PulseTag class >> monitoring [
-	^ self new rmqState: #monitoring
+	^ self new pulseState: #monitoring
 ]
 
 { #category : #'instance creation' }
 PulseTag class >> none [
-	^ self new rmqState: #none
+	^ self new pulseState: #none
 ]
 
 { #category : #'as yet unclassified' }
 PulseTag class >> policymaker [
-	^ self new rmqState: #policymaker
+	^ self new pulseState: #policymaker
 ]
 
 { #category : #meta }

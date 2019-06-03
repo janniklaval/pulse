@@ -461,12 +461,12 @@ RMQRESTParserApiConnections >> populate: aModel withJson: aString [
 			connection user_who_performed_connection: user_who_performed_action.
 			user_who_performed_action initializedConnections add: connection.
 			(anObject at: 'state') = 'running'
-				ifTrue: [ connection rmqState: PulseState running.
-					connection rmqState connections add: connection ].
+				ifTrue: [ connection pulseState: PulseState running.
+					connection pulseState connections add: connection ].
 			(anObject at: 'state') = 'idle'
-				ifTrue: [ connection rmqState: PulseState idle.
-					connection rmqState connections add: connection ].
+				ifTrue: [ connection pulseState: PulseState idle.
+					connection pulseState connections add: connection ].
 			(anObject at: 'state') = 'other'
-				ifTrue: [ connection rmqState: PulseState other.
-					connection rmqState connections add: connection ] ]
+				ifTrue: [ connection pulseState: PulseState other.
+					connection pulseState connections add: connection ] ]
 ]

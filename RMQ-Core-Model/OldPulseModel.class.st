@@ -33,193 +33,187 @@ OldPulseModel >> allComponentTypes [
 { #category : #accessing }
 OldPulseModel >> allDeliveryModes [
 	<navigation: 'All delivery modes group'>
-	^self allWithType: DeliveryMode
+	^self allWithType: PulseDeliveryMode
 ]
 
 { #category : #accessing }
 OldPulseModel >> allDeploymentModes [
 	<navigation: 'All Deployment modes group'>
-	^self allWithType: DeploymentMode
-]
-
-{ #category : #accessing }
-OldPulseModel >> allDurabilities [
-	<navigation: 'All Durabilities group'>
-	^self allWithType: Durability
+	^self allWithType: PulseDeploymentMode
 ]
 
 { #category : #accessing }
 OldPulseModel >> allEncodings [
 	<navigation: 'All Encodings group'>
-	^self allWithType: Encoding
+	^self allWithType: PulseEncoding
 ]
 
 { #category : #accessing }
 OldPulseModel >> allExchangeTypes [
 	<navigation: 'All ExchangeTypes group'>
-	^self allWithType: ExchangeType
+	^self allWithType: PulseExchangeType
 ]
 
 { #category : #accessing }
 OldPulseModel >> allGuaranteeModes [
 	<navigation: 'All GuaranteeModes group'>
-	^self allWithType: GuaranteeMode
+	^self allWithType: PulseGuaranteeMode
 ]
 
 { #category : #accessing }
 OldPulseModel >> allMessageTypes [
 	<navigation: 'All Message types group'>
-	^self allWithType: MessageType
+	^self allWithType: PulseMessageType
 ]
 
 { #category : #accessing }
 OldPulseModel >> allNodeTypes [
 	<navigation: 'All NodeTypes group'>
-	^self allWithType: NodeType
+	^self allWithType: PulseNodeType
 ]
 
 { #category : #accessing }
 OldPulseModel >> allRMQAuthentifications [
 	<navigation: 'All RMQ authentification group'>
-	^self allWithType: RMQAuthentification
+	^self allWithType: PulseAuthentification
 ]
 
 { #category : #accessing }
 OldPulseModel >> allRMQBindingWithExchanges [
 	<navigation: 'All RMQ Bindings with Exchanges group'>
-	^self allWithType: RMQBindingWithExchange
+	^self allWithType: PulseBindingWithExchange
 ]
 
 { #category : #accessing }
 OldPulseModel >> allRMQBindingWithQueues [
 	<navigation: 'All RMQ Bindings with Queues group'>
-	^self allWithType: RMQBindingWithQueue
+	^self allWithType: PulseBindingWithQueue
 ]
 
 { #category : #accessing }
 OldPulseModel >> allRMQBindings [
 	<navigation: 'All RMQ Bindings group'>
-	^((self allWithType: RMQBindingWithExchange) union: (self allWithType: RMQBindingWithQueue))
+	^((self allWithType: PulseBindingWithExchange) union: (self allWithType: PulseBindingWithQueue))
 ]
 
 { #category : #accessing }
 OldPulseModel >> allRMQChannels [
 	<navigation: 'All RMQ channels group'>
-	^self allWithType: RMQChannel
+	^self allWithType: PulseChannel
 ]
 
 { #category : #accessing }
 OldPulseModel >> allRMQClusters [
 	<navigation: 'All RMQ clusters group'>
-	^self allWithType: RMQCluster
+	^self allWithType: PulseCluster
 ]
 
 { #category : #accessing }
 OldPulseModel >> allRMQConnections [
 	<navigation: 'All RMQ components group'>
-	^self allWithType: RMQConnection
+	^self allWithType: PulseConnection
 ]
 
 { #category : #accessing }
 OldPulseModel >> allRMQConsumerComponent [
 	<navigation: 'All RMQ consumer components group'>
-	^self allWithType: RMQConsumerComponent
+	^self allWithType: PulseConsumerComponent
 ]
 
 { #category : #accessing }
 OldPulseModel >> allRMQConsumerProcesses [
 	<navigation: 'All RMQ consumer processes group'>
-	^self allWithType: RMQConsumerProcess
+	^self allWithType: PulseConsumerProcess
 ]
 
 { #category : #accessing }
 OldPulseModel >> allRMQExchangeFormats [
 	<navigation: 'All RMQ exchangeFormats group'>
-	^self allWithType: RMQExchangeFormat
+	^self allWithType: PulseExchangeFormat
 ]
 
 { #category : #accessing }
 OldPulseModel >> allRMQExchanges [
 	<navigation: 'All RMQ exchanges group'>
-	^self allWithType: RMQExchange
+	^self allWithType: PulseExchange
 ]
 
 { #category : #accessing }
 OldPulseModel >> allRMQMessages [
 	<navigation: 'All RMQ messages group'>
-	^self allWithType: RMQMessage
+	^self allWithType: PulseMessage
 ]
 
 { #category : #accessing }
 OldPulseModel >> allRMQNodes [
 	<navigation: 'All RMQ nodes group'>
-	^self allWithType: RMQNode
+	^self allWithType: PulseNode
 ]
 
 { #category : #accessing }
 OldPulseModel >> allRMQPayloads [
 	<navigation: 'All RMQ payloads group'>
-	^self allWithType: RMQPayload
+	^self allWithType: PulsePayload
 ]
 
 { #category : #accessing }
 OldPulseModel >> allRMQPermissions [
 	<navigation: 'All RMQ permissions group'>
-	^self allWithType: RMQPermission
+	^self allWithType: PulsePermission
 ]
 
 { #category : #accessing }
 OldPulseModel >> allRMQPublisherComponent [
 	<navigation: 'All RMQ publisher components group'>
-	^self allWithType: RMQPublisherComponent
+	^self allWithType: PulsePublisherComponent
 ]
 
 { #category : #accessing }
 OldPulseModel >> allRMQQueues [
 	<navigation: 'All RMQ queues group'>
-	^self allWithType: RMQQueue
+	^self allWithType: PulseQueue
 ]
 
 { #category : #accessing }
 OldPulseModel >> allRMQRoles [
 	<navigation: 'All RMQ roles group'>
-	^self allWithType: RMQRole
+	^self allWithType: PulseRole
 ]
 
 { #category : #accessing }
 OldPulseModel >> allRMQRoutingKeys [
 	<navigation: 'All RMQ routing keys group'>
-	^self allWithType: RMQRoutingKey
+	^self allWithType: PulseRoutingKey
 ]
 
 { #category : #accessing }
 OldPulseModel >> allRMQUsers [
 	<navigation: 'All RMQ users group'>
-	^self allWithType: RMQUser
+	^self allWithType: PulseUser
 ]
 
 { #category : #accessing }
 OldPulseModel >> allRMQVHosts [
 	<navigation: 'All RMQ vhosts group'>
-	^self allWithType: RMQVHost
+	^self allWithType: PulseVHost
 ]
 
 { #category : #accessing }
 OldPulseModel >> allStates [
 	<navigation: 'All States group'>
-	^self allWithType: State
+	^self allWithType: PulseState
 ]
 
 { #category : #accessing }
 OldPulseModel >> allTags [
 	<navigation: 'All Tags group'>
-	^self allWithType: Tag
+	^self allWithType: PulseTag
 ]
 
 { #category : #accessing }
-OldPulseModel >> allTransportPolitics [
-	<navigation: 'All TransportPolitics group'>
-	^self allWithType: TransportPolitic
+OldPulseModel >> allTransportPolitic [ 
+	<navigation: 'All Tags group'>
+	^self allWithType: PulseTransportPolitic 
 ]
 
 { #category : #'initialize-release' }
@@ -230,14 +224,23 @@ OldPulseModel >> initialize [
 ]
 
 { #category : #'add-select' }
-OldPulseModel >> selectOrAddEntityNamed: aName withType: aType sourceName: anObject [ 
-
-	^ self entityNamed: aName withType: aType 
+OldPulseModel >> selectOrAddEntityNamed: aName withType: aType sourceName: aSourceName [ 
+	| entity source |
+	entity := self entityNamed: aName withType: aType 
 			ifAbsent:[ 
-				|newEntity |
+				| newEntity |
 				newEntity := aType new
 					pulseName: aName;
 					mooseModel: self.
-				
 				newEntity ].
+	
+	source := self entityNamed: aSourceName withType: PulseSource ifAbsent:[
+					| newSource |
+					newSource := PulseSource new path: aSourceName; mooseModel: self.
+					newSource.
+				].
+	source entities add: entity.
+	entity sources add: source.
+				
+	^ entity
 ]

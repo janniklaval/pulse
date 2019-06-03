@@ -214,8 +214,7 @@ RMQRESTParserTestApiChannels >> setUp [
 	| logP |
 	model := OldPulseModel new.
 	model name: 'test'.
-	logP := RMQRESTParserApiChannels new.
-	logP sourceName: 'test'.
+	logP := RMQRESTParserApiChannels newOn: 'test'.
 	logP populate: model withJson: self data.
 	
 	
@@ -237,12 +236,12 @@ RMQRESTParserTestApiChannels >> testExistingPopulate [
 	self assert: ch2 guaranteeMode name = 'none'. 
 	self assert: (ch2 guaranteeMode channels anySatisfy: [ :e | e =ch2 ]).
 	
-	self assert: ch1 rmqState name = 'running'.
-	self assert: (ch1 rmqState channels anySatisfy: [:e | e = ch1 ]).
+	self assert: ch1 pulseState name = 'running'.
+	self assert: (ch1 pulseState channels anySatisfy: [:e | e = ch1 ]).
 	self assert: ch1 idleSince = '2018-11-08 9:47:09'.	
 	
-	self assert: ch2 rmqState name = 'running'.
-	self assert: (ch2 rmqState channels anySatisfy: [:e | e = ch2 ]).
+	self assert: ch2 pulseState name = 'running'.
+	self assert: (ch2 pulseState channels anySatisfy: [:e | e = ch2 ]).
 	self assert: ch2 idleSince = '2018-11-08 9:47:09'.	
 		
 	"users"
@@ -310,12 +309,12 @@ RMQRESTParserTestApiChannels >> testExistingPopulate [
 	self assert: ch2 guaranteeMode name = 'none'. 
 	self assert: (ch2 guaranteeMode channels anySatisfy: [ :e | e =ch2 ]).
 	
-	self assert: ch1 rmqState name = 'running'.
-	self assert: (ch1 rmqState channels anySatisfy: [:e | e = ch1 ]).
+	self assert: ch1 pulseState name = 'running'.
+	self assert: (ch1 pulseState channels anySatisfy: [:e | e = ch1 ]).
 	self assert: ch1 idleSince = '2018-11-08 9:47:09'.	
 	
-	self assert: ch2 rmqState name = 'running'.
-	self assert: (ch2 rmqState channels anySatisfy: [:e | e = ch2 ]).
+	self assert: ch2 pulseState name = 'running'.
+	self assert: (ch2 pulseState channels anySatisfy: [:e | e = ch2 ]).
 	self assert: ch2 idleSince = '2018-11-08 9:47:09'.	
 		
 	"users"
@@ -383,12 +382,12 @@ RMQRESTParserTestApiChannels >> testPopulate [
 	self assert: ch2 guaranteeMode name = 'none'. 
 	self assert: (ch2 guaranteeMode channels anySatisfy: [ :e | e =ch2 ]).
 	
-	self assert: ch1 rmqState name = 'running'.
-	self assert: (ch1 rmqState channels anySatisfy: [:e | e = ch1 ]).
+	self assert: ch1 pulseState name = 'running'.
+	self assert: (ch1 pulseState channels anySatisfy: [:e | e = ch1 ]).
 	self assert: ch1 idleSince = '2018-11-08 9:47:09'.	
 	
-	self assert: ch2 rmqState name = 'running'.
-	self assert: (ch2 rmqState channels anySatisfy: [:e | e = ch2 ]).
+	self assert: ch2 pulseState name = 'running'.
+	self assert: (ch2 pulseState channels anySatisfy: [:e | e = ch2 ]).
 	self assert: ch2 idleSince = '2018-11-08 9:47:09'.	
 		
 	"users"

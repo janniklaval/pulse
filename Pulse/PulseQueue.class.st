@@ -12,7 +12,7 @@ Class {
 		'#destinationBindings => FMMany type: #PulseBindingWithQueue opposite: #destination',
 		'#durability',
 		'#exclusive',
-		'#expireAfter',
+		'#expiresAfter',
 		'#idleSince',
 		'#maxLength',
 		'#maxLengthBytes',
@@ -38,7 +38,7 @@ PulseQueue class >> annotation [
 PulseQueue class >> generatedSlotNames [
 	<generated>
 	'PulseQueue class>>#generatedSlotNames'.
-	^ #(autoDelete consumerChannels creationDate dead_letter_exchange dead_letter_routing_key deletionDate deliveredMessages destinationBindings durability exclusive expireAfter idleSince maxLength maxLengthBytes maxPriority messageTTL pulseState routedMessages vhost)
+	^ #(autoDelete consumerChannels creationDate dead_letter_exchange dead_letter_routing_key deletionDate deliveredMessages destinationBindings durability exclusive expiresAfter idleSince maxLength maxLengthBytes maxPriority messageTTL pulseState routedMessages vhost)
 ]
 
 { #category : #generator }
@@ -220,19 +220,19 @@ PulseQueue >> exclusive: anObject [
 ]
 
 { #category : #accessing }
-PulseQueue >> expireAfter [
+PulseQueue >> expiresAfter [
 
-	<MSEProperty: #expireAfter type: #Number>
+	<MSEProperty: #expiresAfter type: #Number>
 	<generated>
 	<MSEComment: 'TODO'>
-	^ expireAfter
+	^ expiresAfter
 ]
 
 { #category : #accessing }
-PulseQueue >> expireAfter: anObject [
+PulseQueue >> expiresAfter: anObject [
 
 	<generated>
-	expireAfter := anObject
+	expiresAfter := anObject
 
 ]
 

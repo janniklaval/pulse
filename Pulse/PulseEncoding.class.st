@@ -18,7 +18,7 @@ PulseEncoding class >> annotation [
 
 { #category : #accessing }
 PulseEncoding class >> base64 [
-	^  self new rmqState: #base64
+	^  self new pulseState: #base64
 ]
 
 { #category : #generator }
@@ -43,7 +43,7 @@ PulseEncoding class >> requirements [
 
 { #category : #accessing }
 PulseEncoding class >> string [
-	^ self new rmqState: #string
+	^ self new pulseState: #string
 ]
 
 { #category : #accessing }

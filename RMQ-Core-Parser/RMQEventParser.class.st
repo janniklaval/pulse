@@ -709,7 +709,7 @@ RMQEventParser >> populate: aModel withUserTagsSet: aDictionnary at: timestamp [
 						or: [ aTagString = 'management'
 								or: [ aTagString = 'monitoring'
 										or: [ aTagString = 'policymaker' or: [ aTagString = 'none' ] ] ] ])
-						ifFalse: [ newRole tag: (PulseTag new rmqState: aTagString) ].
+						ifFalse: [ newRole tag: (PulseTag new pulseState: aTagString) ].
 					aModel add: newRole.
 					newRole ].
 			(user roles anySatisfy: [ :e | e = roleObject ])

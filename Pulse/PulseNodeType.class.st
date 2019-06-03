@@ -18,7 +18,7 @@ PulseNodeType class >> annotation [
 
 { #category : #'as yet unclassified' }
 PulseNodeType class >> disc [
-	^ self new rmqState: #disc
+	^ self new pulseState: #disc
 ]
 
 { #category : #generator }
@@ -36,7 +36,7 @@ PulseNodeType class >> generatedTraitNames [
 
 { #category : #'as yet unclassified' }
 PulseNodeType class >> ram [
-	^ self new rmqState: #ram
+	^ self new pulseState: #ram
 ]
 
 { #category : #meta }

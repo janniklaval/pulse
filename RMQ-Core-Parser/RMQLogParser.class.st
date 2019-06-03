@@ -118,7 +118,7 @@ RMQLogParser >> populate: aModel withJson: aString [
 				ifNil: [ vhost channels add: channel.
 					channel vhost: vhost ].
 			channel connection
-				ifNil: [ connection channels add: connection.
+				ifNil: [ connection channels add: channel.
 					channel connection: connection ].
 			user usedChannels
 				detect: [ :ch | ch = channel ]
@@ -246,7 +246,7 @@ RMQLogParser >> populate: aModel withJson: aString [
 							aQueue destinationBindings add: binding.
 							binding source: exchange.
 							exchange sourceBindings add: binding.
-							binding routingKey: aRoutingKey.
+							binding routingKey add: aRoutingKey.
 							aRoutingKey binding: binding.
 							aModel allRMQBindings
 								detect: [ :el | 
@@ -298,7 +298,7 @@ RMQLogParser >> populateDeliveryMode: aRMQObject [
 	| newType |
 	newType := PulseDeliveryMode perform: (((aRMQObject at: 'properties') at: 'delivery_mode') = 2 ifTrue:[#persistent] ifFalse:[#nonPersistent]).
 	model allDeliveryModes
-		detect: [ :el | el rmqState = newType rmqState ]
+		detect: [ :el | el pulseState = newType pulseState ]
 		ifFound: [ :elementFound | 
 			^elementFound]
 		ifNone: [ model add: newType.
@@ -390,7 +390,7 @@ RMQLogParser >> populateType: aRMQObject [
 	| newType |
 	newType := PulseMessageType perform: ((aRMQObject at: 'type') asSymbol).
 	model allMessageTypes
-		detect: [ :el | el rmqState = newType rmqState ]
+		detect: [ :el | el pulseState = newType pulseState ]
 		ifFound: [ :elementFound | 
 			^elementFound]
 		ifNone: [ model add: newType.

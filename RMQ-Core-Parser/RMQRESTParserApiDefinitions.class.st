@@ -73,7 +73,7 @@ RMQRESTParserApiDefinitions >> populate: aModel withExchanges: anArray [
 				sourceName: self sourceName.
 
 			"set topicId"
-			((exchangeName substrings: '.') at: 1 = 'pubsub')
+			(((exchangeName substrings: '.') at: 1) = 'pubsub')
 				ifTrue: [ element topicID: ((exchangeName substrings: '.') at: 3) ].
 
 

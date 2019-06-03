@@ -18,12 +18,12 @@ PulseExchangeType class >> annotation [
 
 { #category : #accessing }
 PulseExchangeType class >> direct [
-	^ self new rmqState: #direct
+	^ self new pulseState: #direct
 ]
 
 { #category : #accessing }
 PulseExchangeType class >> fanout [
-	^  self new rmqState: #fanout
+	^  self new pulseState: #fanout
 ]
 
 { #category : #generator }
@@ -41,7 +41,7 @@ PulseExchangeType class >> generatedTraitNames [
 
 { #category : #accessing }
 PulseExchangeType class >> headers [
-	^ self new rmqState: #headers
+	^ self new pulseState: #headers
 ]
 
 { #category : #meta }
@@ -53,7 +53,7 @@ PulseExchangeType class >> requirements [
 
 { #category : #accessing }
 PulseExchangeType class >> topic [
-	^ self new rmqState: #topic
+	^ self new pulseState: #topic
 ]
 
 { #category : #accessing }

@@ -19,13 +19,13 @@ PulseComponentType class >> annotation [
 
 { #category : #'System-FileRegistry' }
 PulseComponentType class >> connector [
-	^ self new rmqState: #connector
+	^ self new pulseState: #connector
 
 ]
 
 { #category : #'System-FileRegistry' }
 PulseComponentType class >> database [
-	^ self new rmqState: #database
+	^ self new pulseState: #database
 
 ]
 
@@ -44,13 +44,13 @@ PulseComponentType class >> generatedTraitNames [
 
 { #category : #'System-FileRegistry' }
 PulseComponentType class >> mediator [
-	^ self new rmqState: #mediator
+	^ self new pulseState: #mediator
 
 ]
 
 { #category : #'System-FileRegistry' }
 PulseComponentType class >> module [
-	^ self new rmqState: #module
+	^ self new pulseState: #module
 ]
 
 { #category : #meta }
@@ -62,7 +62,7 @@ PulseComponentType class >> requirements [
 
 { #category : #'System-FileRegistry' }
 PulseComponentType class >> service [
-	^ self new rmqState: #service
+	^ self new pulseState: #service
 ]
 
 { #category : #accessing }

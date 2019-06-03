@@ -31,13 +31,13 @@ PulseDeliveryMode class >> generatedTraitNames [
 
 { #category : #'as yet unclassified' }
 PulseDeliveryMode class >> nonPersistent [
-	^ self new rmqState: #nonPersistent
+	^ self new pulseState: #nonPersistent
 
 ]
 
 { #category : #'as yet unclassified' }
 PulseDeliveryMode class >> persistent [
-	^ self new rmqState: #persistent
+	^ self new pulseState: #persistent
 ]
 
 { #category : #meta }

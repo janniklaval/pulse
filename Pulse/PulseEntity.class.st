@@ -45,6 +45,12 @@ PulseEntity class >> requirements [
 ]
 
 { #category : #accessing }
+PulseEntity >> name [ 
+
+	^self pulseName
+]
+
+{ #category : #accessing }
 PulseEntity >> pulseName [
 
 	<MSEProperty: #pulseName type: #String>

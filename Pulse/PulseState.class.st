@@ -36,12 +36,12 @@ PulseState class >> generatedTraitNames [
 
 { #category : #accessing }
 PulseState class >> idle [
-	^ self new rmqState: #idle
+	^ self new pulseState: #idle
 ]
 
 { #category : #accessing }
 PulseState class >> other [
-	^ self new rmqState: #other
+	^ self new pulseState: #other
 ]
 
 { #category : #meta }
@@ -53,7 +53,7 @@ PulseState class >> requirements [
 
 { #category : #accessing }
 PulseState class >> running [
-	^ self new rmqState: #running
+	^ self new pulseState: #running
 ]
 
 { #category : #accessing }

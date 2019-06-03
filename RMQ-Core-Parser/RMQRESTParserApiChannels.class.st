@@ -227,14 +227,14 @@ RMQRESTParserApiChannels >> populate: aModel withJson: aString [
 				ifTrue: [ channel guaranteeMode: PulseGuaranteeMode transactional.
 					channel guaranteeMode channels add: channel ].
 			(anObject at: 'state') = 'running'
-				ifTrue: [ channel rmqState: PulseState running.
-					channel rmqState channels add: channel ].
+				ifTrue: [ channel pulseState: PulseState running.
+					channel pulseState channels add: channel ].
 			(anObject at: 'state') = 'idle'
-				ifTrue: [ channel rmqState: PulseState idle.
-					channel rmqState channels add: channel ].
+				ifTrue: [ channel pulseState: PulseState idle.
+					channel pulseState channels add: channel ].
 			(anObject at: 'state') = 'other'
-				ifTrue: [ channel rmqState: PulseState other.
-					channel rmqState channels add: channel ].
+				ifTrue: [ channel pulseState: PulseState other.
+					channel pulseState channels add: channel ].
 			channel idleSince: (anObject at: 'idle_since').
 			user_who_performed_action := aModel
 				selectOrAddEntityNamed: (anObject at: 'user_who_performed_action')

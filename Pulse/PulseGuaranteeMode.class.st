@@ -18,7 +18,7 @@ PulseGuaranteeMode class >> annotation [
 
 { #category : #'as yet unclassified' }
 PulseGuaranteeMode class >> confirm [
-	^ self new rmqState: #confirm
+	^ self new pulseState: #confirm
 ]
 
 { #category : #generator }
@@ -36,7 +36,7 @@ PulseGuaranteeMode class >> generatedTraitNames [
 
 { #category : #'instance creation' }
 PulseGuaranteeMode class >> none [
-	^ self new rmqState: #none
+	^ self new pulseState: #none
 ]
 
 { #category : #meta }
@@ -48,7 +48,7 @@ PulseGuaranteeMode class >> requirements [
 
 { #category : #'as yet unclassified' }
 PulseGuaranteeMode class >> transactional [
-	^ self new rmqState: #transactional
+	^ self new pulseState: #transactional
 ]
 
 { #category : #accessing }

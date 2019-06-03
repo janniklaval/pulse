@@ -28,7 +28,7 @@ RMQEventParserTestVhostDeleted >> setUp [
 	"set up the model for the test"
 	model
 		selectOrAddEntityNamed: 'testtest'
-		withType: RMQVHost
+		withType: PulseVHost
 		sourceName: self sourceName.
 	2 second wait.
 

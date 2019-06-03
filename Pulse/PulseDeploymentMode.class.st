@@ -19,7 +19,7 @@ PulseDeploymentMode class >> annotation [
 
 { #category : #'as yet unclassified' }
 PulseDeploymentMode class >> cloud [
-	^ self new rmqState: #cloud
+	^ self new pulseState: #cloud
 	
 ]
 
@@ -38,7 +38,7 @@ PulseDeploymentMode class >> generatedTraitNames [
 
 { #category : #'as yet unclassified' }
 PulseDeploymentMode class >> onPremise [
-	^ self new rmqState: #onPremise
+	^ self new pulseState: #onPremise
 ]
 
 { #category : #meta }
@@ -50,7 +50,7 @@ PulseDeploymentMode class >> requirements [
 
 { #category : #accessing }
 PulseDeploymentMode class >> server [
-	^ self new rmqState: #server
+	^ self new pulseState: #server
 ]
 
 { #category : #accessing }

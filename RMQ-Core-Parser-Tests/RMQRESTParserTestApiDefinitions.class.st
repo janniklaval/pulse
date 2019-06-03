@@ -28,7 +28,7 @@ RMQRESTParserTestApiDefinitions >> setUp [
 RMQRESTParserTestApiDefinitions >> testPopulateBindings [
 
 	| b1 b2 b3 |
-	RMQRESTParserApiDefinitions populate: model withBindings: (objects at: 'bindings').
+	(RMQRESTParserApiDefinitions newOn: 'test') populate: model withBindings: (objects at: 'bindings').
 	
 	self assert: model allRMQBindings size = 3.
 	
@@ -67,7 +67,7 @@ RMQRESTParserTestApiDefinitions >> testPopulateBindings [
 RMQRESTParserTestApiDefinitions >> testPopulateExchange [
 
 	| t1 t2 |
-	RMQRESTParserApiDefinitions populate: model withExchanges: (objects at: 'exchanges').
+	(RMQRESTParserApiDefinitions newOn: 'test') populate: model withExchanges: (objects at: 'exchanges').
 	
 	self assert: model allRMQExchanges size = 2.
 	self assert: (model allRMQExchanges anySatisfy: [:e | e name = 'testExchange']).
@@ -78,10 +78,10 @@ RMQRESTParserTestApiDefinitions >> testPopulateExchange [
 
 	self assert: t1 vhost = (model allRMQVHosts detect: [:e | e name = '/']).
 	self assert: t2 vhost = (model allRMQVHosts detect: [:e | e name = '/']).
-	self assert: t1 type name = 'direct'.
-	self assert: t2 type name = 'topic'.
-	self assert: t1 durability = 'durable'.
-	self assert: t2 durability = 'transient'.
+	self assert: t1 type pulseState = 'direct'.
+	self assert: t2 type pulseState = 'topic'.
+	self assert: t1 durability = true.
+	self assert: t2 durability = false.
 	self assert: t1 autoDelete = false.
 	self assert: t2 autoDelete = false.
 	self assert: t1 internal = false.
@@ -95,8 +95,8 @@ RMQRESTParserTestApiDefinitions >> testPopulateExchange [
 RMQRESTParserTestApiDefinitions >> testPopulateExistingBindings [
 
 	| b1 b2 b3 |
-	RMQRESTParserApiDefinitions populate: model withBindings: (objects at: 'bindings').
-	RMQRESTParserApiDefinitions populate: model withBindings: (objects at: 'bindings').
+	(RMQRESTParserApiDefinitions newOn: 'test') populate: model withBindings: (objects at: 'bindings').
+	(RMQRESTParserApiDefinitions newOn: 'test') populate: model withBindings: (objects at: 'bindings').
 	
 	self assert: model allRMQBindings size = 3.
 	
@@ -136,8 +136,8 @@ RMQRESTParserTestApiDefinitions >> testPopulateExistingBindings [
 RMQRESTParserTestApiDefinitions >> testPopulateExistingExchange [
 
 	| t1 t2 |
-	RMQRESTParserApiDefinitions populate: model withExchanges: (objects at: 'exchanges').
-	RMQRESTParserApiDefinitions populate: model withExchanges: (objects at: 'exchanges').
+	(RMQRESTParserApiDefinitions newOn: 'test') populate: model withExchanges: (objects at: 'exchanges').
+	(RMQRESTParserApiDefinitions newOn: 'test') populate: model withExchanges: (objects at: 'exchanges').
 	
 	self assert: model allRMQExchanges size = 2.
 	self assert: (model allRMQExchanges anySatisfy: [:e | e name = 'testExchange']).
@@ -148,10 +148,10 @@ RMQRESTParserTestApiDefinitions >> testPopulateExistingExchange [
 
 	self assert: t1 vhost = (model allRMQVHosts detect: [:e | e name = '/']).
 	self assert: t2 vhost = (model allRMQVHosts detect: [:e | e name = '/']).
-	self assert: t1 type name = 'direct'.
-	self assert: t2 type name= 'topic'.
-	self assert: t1 durability = 'durable'.
-	self assert: t2 durability = 'transient'.
+	self assert: t1 type pulseState = 'direct'.
+	self assert: t2 type pulseState= 'topic'.
+	self assert: t1 durability = true.
+	self assert: t2 durability = false.
 	self assert: t1 autoDelete = false.
 	self assert: t2 autoDelete = false.
 	self assert: t1 internal = false.
@@ -163,8 +163,8 @@ RMQRESTParserTestApiDefinitions >> testPopulateExistingExchange [
 
 { #category : #'testing-double-insert' }
 RMQRESTParserTestApiDefinitions >> testPopulateExistingGlobalParameters [
-	RMQRESTParserApiDefinitions populate: model withGlobalParameters: (objects at: 'global_parameters').
-	RMQRESTParserApiDefinitions populate: model withGlobalParameters: (objects at: 'global_parameters').
+	(RMQRESTParserApiDefinitions newOn: 'test') populate: model withGlobalParameters: (objects at: 'global_parameters').
+	(RMQRESTParserApiDefinitions newOn: 'test') populate: model withGlobalParameters: (objects at: 'global_parameters').
 	self assert: model allRMQClusters size = 1.
 	self assert: model allRMQClusters first name = 'rabbit@a12b253c30bd'
 ]
@@ -173,8 +173,8 @@ RMQRESTParserTestApiDefinitions >> testPopulateExistingGlobalParameters [
 RMQRESTParserTestApiDefinitions >> testPopulateExistingPermission [
 
 	| p1 p2 vh1 vh2 user |
-	RMQRESTParserApiDefinitions populate: model withPermissions: (objects at: 'permissions').
-	RMQRESTParserApiDefinitions populate: model withPermissions: (objects at: 'permissions').
+	(RMQRESTParserApiDefinitions newOn: 'test') populate: model withPermissions: (objects at: 'permissions').
+	(RMQRESTParserApiDefinitions newOn: 'test') populate: model withPermissions: (objects at: 'permissions').
 	
 	self assert: model allRMQPermissions size = 2.
 	
@@ -204,9 +204,9 @@ RMQRESTParserTestApiDefinitions >> testPopulateExistingPermission [
 RMQRESTParserTestApiDefinitions >> testPopulateExistingQueue [
 
 	| t1 t2 exch vh rtK |
-	RMQRESTParserApiDefinitions populate: model withQueues: (objects at: 'queues').
+	(RMQRESTParserApiDefinitions newOn: 'test') populate: model withQueues: (objects at: 'queues').
 	
-RMQRESTParserApiDefinitions populate: model withQueues: (objects at: 'queues').
+	(RMQRESTParserApiDefinitions newOn: 'test') populate: model withQueues: (objects at: 'queues').
 	
 	self assert: model allRMQQueues size = 2.
 	self assert: (model allRMQQueues anySatisfy: [:e | e name = 'testQueue']).
@@ -252,8 +252,8 @@ RMQRESTParserApiDefinitions populate: model withQueues: (objects at: 'queues').
 RMQRESTParserTestApiDefinitions >> testPopulateExistingUser [
 
 	| user any |
-	RMQRESTParserApiDefinitions populate: model withUsers: (objects at: 'users').
-	RMQRESTParserApiDefinitions populate: model withUsers: (objects at: 'users').
+	(RMQRESTParserApiDefinitions newOn: 'test') populate: model withUsers: (objects at: 'users').
+	(RMQRESTParserApiDefinitions newOn: 'test') populate: model withUsers: (objects at: 'users').
 	
 	self assert: model allRMQUsers size = 4.
 	
@@ -277,8 +277,8 @@ RMQRESTParserTestApiDefinitions >> testPopulateExistingUser [
 { #category : #'testing-double-insert' }
 RMQRESTParserTestApiDefinitions >> testPopulateExistingVHost [
 
-	RMQRESTParserApiDefinitions populate: model withVhosts: (objects at: 'vhosts').
-	RMQRESTParserApiDefinitions populate: model withVhosts: (objects at: 'vhosts').
+	(RMQRESTParserApiDefinitions newOn: 'test') populate: model withVhosts: (objects at: 'vhosts').
+	(RMQRESTParserApiDefinitions newOn: 'test') populate: model withVhosts: (objects at: 'vhosts').
 	
 	self assert: model allRMQVHosts size = 2.
 	self assert: (model allRMQVHosts anySatisfy: [:e | e name = '/']).
@@ -287,7 +287,7 @@ RMQRESTParserTestApiDefinitions >> testPopulateExistingVHost [
 
 { #category : #'testing - simple' }
 RMQRESTParserTestApiDefinitions >> testPopulateGlobalParameters [
-	RMQRESTParserApiDefinitions populate: model withGlobalParameters: (objects at: 'global_parameters').
+	(RMQRESTParserApiDefinitions newOn: 'test') populate: model withGlobalParameters: (objects at: 'global_parameters').
 	self assert: model allRMQClusters size = 1.
 	self assert: model allRMQClusters first name = 'rabbit@a12b253c30bd'.
 ]
@@ -296,7 +296,7 @@ RMQRESTParserTestApiDefinitions >> testPopulateGlobalParameters [
 RMQRESTParserTestApiDefinitions >> testPopulatePermission [
 
 	| p1 p2 vh1 vh2 user |
-	RMQRESTParserApiDefinitions populate: model withPermissions: (objects at: 'permissions').
+	(RMQRESTParserApiDefinitions newOn: 'test') populate: model withPermissions: (objects at: 'permissions').
 	
 	self assert: model allRMQPermissions size = 2.
 	
@@ -326,7 +326,7 @@ RMQRESTParserTestApiDefinitions >> testPopulatePermission [
 RMQRESTParserTestApiDefinitions >> testPopulateQueue [
 
 	| t1 t2 vh exch rtK |
-	RMQRESTParserApiDefinitions populate: model withQueues: (objects at: 'queues').
+	(RMQRESTParserApiDefinitions newOn: 'test') populate: model withQueues: (objects at: 'queues').
 	
 	self assert: model allRMQQueues size = 2.
 	self assert: (model allRMQQueues anySatisfy: [:e | e name = 'testQueue']).
@@ -377,7 +377,7 @@ RMQRESTParserTestApiDefinitions >> testPopulateUser [
 	self assert: (user vhosts anySatisfy:[:e | e = vh]).
 	self assert: (vh users anySatisfy: [ :e | e =user ])."
 	
-	RMQRESTParserApiDefinitions populate: model withUsers: (objects at: 'users').
+	(RMQRESTParserApiDefinitions newOn: 'test') populate: model withUsers: (objects at: 'users').
 	
 	self assert: model allRMQUsers size = 4.
 	self assert: (model allRMQUsers anySatisfy: [:e | e name = 'guest']).
@@ -403,7 +403,7 @@ RMQRESTParserTestApiDefinitions >> testPopulateUser [
 { #category : #'testing - simple' }
 RMQRESTParserTestApiDefinitions >> testPopulateVHost [
 
-	RMQRESTParserApiDefinitions populate: model withVhosts: (objects at: 'vhosts').
+	(RMQRESTParserApiDefinitions newOn: 'test') populate: model withVhosts: (objects at: 'vhosts').
 	
 	self assert: model allRMQVHosts size = 2.
 	self assert: (model allRMQVHosts anySatisfy: [:e | e name = '/']).

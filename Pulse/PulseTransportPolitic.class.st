@@ -15,12 +15,12 @@ PulseTransportPolitic class >> annotation [
 
 { #category : #'as yet unclassified' }
 PulseTransportPolitic class >> asynchronous [
-		^ self new rmqState: #asynchronous
+		^ self new pulseState: #asynchronous
 ]
 
 { #category : #accessing }
 PulseTransportPolitic class >> callback [
-	^ self new rmqState: #callback
+	^ self new pulseState: #callback
 ]
 
 { #category : #generator }
@@ -45,5 +45,5 @@ PulseTransportPolitic class >> requirements [
 
 { #category : #'as yet unclassified' }
 PulseTransportPolitic class >> synchronous [
-	^ self new rmqState: #synchronous
+	^ self new pulseState: #synchronous
 ]

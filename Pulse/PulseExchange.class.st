@@ -14,7 +14,7 @@ Class {
 		'#publisherComponents => FMMany type: #PulsePublisherComponent opposite: #exchanges',
 		'#queues_for_dead_letter => FMMany type: #PulseQueue opposite: #dead_letter_exchange',
 		'#sourceBindings => FMMany type: #PulseBinding opposite: #source',
-		'#topicId',
+		'#topicID',
 		'#type => FMOne type: #PulseExchangeType opposite: #exchanges',
 		'#user_who_performed_action => FMOne type: #PulseUser opposite: #initializedExchanges',
 		'#vhost => FMOne type: #PulseVHost opposite: #exchanges'
@@ -35,7 +35,7 @@ PulseExchange class >> annotation [
 PulseExchange class >> generatedSlotNames [
 	<generated>
 	'PulseExchange class>>#generatedSlotNames'.
-	^ #(alternate_exchange_for autoDelete creationDate deletionDate destinationBindings durability internal my_alternate_exchange publishedMessages publisherComponents queues_for_dead_letter sourceBindings topicId type user_who_performed_action vhost)
+	^ #(alternate_exchange_for autoDelete creationDate deletionDate destinationBindings durability internal my_alternate_exchange publishedMessages publisherComponents queues_for_dead_letter sourceBindings topicID type user_who_performed_action vhost)
 ]
 
 { #category : #generator }
@@ -249,19 +249,19 @@ PulseExchange >> sourceBindings: anObject [
 ]
 
 { #category : #accessing }
-PulseExchange >> topicId [
+PulseExchange >> topicID [
 
-	<MSEProperty: #topicId type: #Number>
+	<MSEProperty: #topicID type: #Number>
 	<generated>
 	<MSEComment: 'TODO'>
-	^ topicId
+	^ topicID
 ]
 
 { #category : #accessing }
-PulseExchange >> topicId: anObject [
+PulseExchange >> topicID: anObject [
 
 	<generated>
-	topicId := anObject
+	topicID := anObject
 
 ]
 

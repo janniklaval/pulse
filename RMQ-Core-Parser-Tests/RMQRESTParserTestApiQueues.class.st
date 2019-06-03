@@ -1884,8 +1884,7 @@ RMQRESTParserTestApiQueues >> setUp [
 	| logP |
 	model := OldPulseModel new.
 	model name: 'test'.
-	logP := RMQRESTParserApiQueues new.
-	logP sourceName: 'test'.
+	logP := RMQRESTParserApiQueues newOn: 'test'.
 	logP populate: model withJson: self data.
 
 	
@@ -1923,13 +1922,13 @@ RMQRESTParserTestApiQueues >> testExistingPopulate [
 	self assert: t2 durability = false.
 	
 	
-	self assert: t2 rmqState name = 'running'.
-	self assert: (t2 rmqState queues anySatisfy: [:e | e = t2 ]).
+	self assert: t2 pulseState name = 'running'.
+	self assert: (t2 pulseState queues anySatisfy: [:e | e = t2 ]).
 	self assert: t2 exclusive = true.
 	self assert: t2 idleSince = '2018-11-15 13:53:03'.
 	
-	self assert: t1 rmqState name = 'running'.
-	self assert: (t2 rmqState queues anySatisfy: [:e | e = t2 ]).
+	self assert: t1 pulseState name = 'running'.
+	self assert: (t2 pulseState queues anySatisfy: [:e | e = t2 ]).
 	self assert: t1 exclusive = false.
 	self assert: t1 idleSince = '2018-11-15 11:12:05'.
 	
@@ -1967,13 +1966,13 @@ RMQRESTParserTestApiQueues >> testExistingPopulate [
 	self assert: t2 durability = false.
 	
 	
-	self assert: t2 rmqState name = 'running'.
-	self assert: (t2 rmqState queues anySatisfy: [:e | e = t2 ]).
+	self assert: t2 pulseState name = 'running'.
+	self assert: (t2 pulseState queues anySatisfy: [:e | e = t2 ]).
 	self assert: t2 exclusive = true.
 	self assert: t2 idleSince = '2018-11-15 13:53:03'.
 	
-	self assert: t1 rmqState name = 'running'.
-	self assert: (t2 rmqState queues anySatisfy: [:e | e = t2 ]).
+	self assert: t1 pulseState name = 'running'.
+	self assert: (t2 pulseState queues anySatisfy: [:e | e = t2 ]).
 	self assert: t1 exclusive = false.
 	self assert: t1 idleSince = '2018-11-15 11:12:05'.
 	
@@ -2009,13 +2008,13 @@ RMQRESTParserTestApiQueues >> testPopulate [
 	self assert: t2 durability = false.
 	
 	
-	self assert: t2 rmqState name = 'running'.
-	self assert: (t2 rmqState queues anySatisfy: [:e | e = t2 ]).
+	self assert: t2 pulseState name = 'running'.
+	self assert: (t2 pulseState queues anySatisfy: [:e | e = t2 ]).
 	self assert: t2 exclusive = true.
 	self assert: t2 idleSince = '2018-11-15 13:53:03'.
 	
-	self assert: t1 rmqState name = 'running'.
-	self assert: (t2 rmqState queues anySatisfy: [:e | e = t2 ]).
+	self assert: t1 pulseState name = 'running'.
+	self assert: (t2 pulseState queues anySatisfy: [:e | e = t2 ]).
 	self assert: t1 exclusive = false.
 	self assert: t1 idleSince = '2018-11-15 11:12:05'.
 ]
