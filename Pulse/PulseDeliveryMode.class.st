@@ -12,7 +12,6 @@ PulseDeliveryMode class >> annotation [
 
 	<MSEClass: #DeliveryMode super: #PulseEnum>
 	<package: #Pulse>
-	<generated>
 	^self
 ]
 

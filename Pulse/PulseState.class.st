@@ -17,7 +17,6 @@ PulseState class >> annotation [
 
 	<MSEClass: #State super: #PulseEnum>
 	<package: #Pulse>
-	<generated>
 	^self
 ]
 

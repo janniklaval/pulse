@@ -13,7 +13,6 @@ PulseComponentType class >> annotation [
 
 	<MSEClass: #ComponentType super: #PulseEnum>
 	<package: #Pulse>
-	<generated>
 	^self
 ]
 

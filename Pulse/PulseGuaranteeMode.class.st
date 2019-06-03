@@ -12,7 +12,6 @@ PulseGuaranteeMode class >> annotation [
 
 	<MSEClass: #GuaranteeMode super: #PulseEnum>
 	<package: #Pulse>
-	<generated>
 	^self
 ]
 

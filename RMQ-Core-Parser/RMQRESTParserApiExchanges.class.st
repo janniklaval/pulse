@@ -125,7 +125,7 @@ RMQRESTParserApiExchanges >> populate: aModel withJson: aString [
 				withType: PulseExchange
 				sourceName: self sourceName.
 			"set topicId"
-			((exchangeName substrings: '.') at: 1 = 'pubsub')
+			(((exchangeName substrings: '.') at: 1) = 'pubsub')
 				ifTrue: [ exchange topicID: ((exchangeName substrings: '.') at: 3) ].
 
 			"exchange type: (anObject at: 'type').
@@ -158,10 +158,8 @@ RMQRESTParserApiExchanges >> populate: aModel withJson: aString [
 
 			"exchange durability: (exchange at: 'durable')."
 			(anObject at: 'durable') = true
-				ifTrue: [ exchange durability: true.
-					exchange durability exchanges add: exchange ].
+				ifTrue: [ exchange durability: true ].
 			(anObject at: 'durable') = false
-				ifTrue: [ exchange durability: false.
-					exchange durability exchanges add: exchange ].
+				ifTrue: [ exchange durability: false ].
 			exchange internal: (anObject at: 'internal') ]
 ]

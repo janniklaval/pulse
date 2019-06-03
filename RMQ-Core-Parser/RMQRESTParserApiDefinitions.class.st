@@ -56,7 +56,7 @@ RMQRESTParserApiDefinitions >> populate: aModel withBindings: anArray [
 				selectOrAddEntityNamed: rkName
 				withType: PulseRoutingKey
 				sourceName: self sourceName.
-			element routingKey: rk.
+			element routingKey add: rk.
 			rk binding: element ]
 ]
 

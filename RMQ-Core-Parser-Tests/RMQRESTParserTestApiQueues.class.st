@@ -2008,12 +2008,12 @@ RMQRESTParserTestApiQueues >> testPopulate [
 	self assert: t2 durability = false.
 	
 	
-	self assert: t2 pulseState name = 'running'.
+	self assert: t2 pulseState pulseState = 'running'.
 	self assert: (t2 pulseState queues anySatisfy: [:e | e = t2 ]).
 	self assert: t2 exclusive = true.
 	self assert: t2 idleSince = '2018-11-15 13:53:03'.
 	
-	self assert: t1 pulseState name = 'running'.
+	self assert: t1 pulseState pulseState = 'running'.
 	self assert: (t2 pulseState queues anySatisfy: [:e | e = t2 ]).
 	self assert: t1 exclusive = false.
 	self assert: t1 idleSince = '2018-11-15 11:12:05'.

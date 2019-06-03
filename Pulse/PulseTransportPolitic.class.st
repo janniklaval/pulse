@@ -9,7 +9,6 @@ PulseTransportPolitic class >> annotation [
 
 	<MSEClass: #TransportPolitic super: #PulseEnum>
 	<package: #Pulse>
-	<generated>
 	^self
 ]
 

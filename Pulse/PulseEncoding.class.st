@@ -12,7 +12,6 @@ PulseEncoding class >> annotation [
 
 	<MSEClass: #Encoding super: #PulseEnum>
 	<package: #Pulse>
-	<generated>
 	^self
 ]
 

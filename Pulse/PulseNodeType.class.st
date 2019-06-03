@@ -12,7 +12,6 @@ PulseNodeType class >> annotation [
 
 	<MSEClass: #NodeType super: #PulseEnum>
 	<package: #Pulse>
-	<generated>
 	^self
 ]
 

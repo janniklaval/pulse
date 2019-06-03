@@ -13,7 +13,6 @@ PulseDeploymentMode class >> annotation [
 
 	<MSEClass: #DeploymentMode super: #PulseEnum>
 	<package: #Pulse>
-	<generated>
 	^self
 ]
 

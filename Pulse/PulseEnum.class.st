@@ -12,7 +12,6 @@ PulseEnum class >> annotation [
 
 	<MSEClass: #Enum super: #PulseEntity>
 	<package: #Pulse>
-	<generated>
 	^self
 ]
 

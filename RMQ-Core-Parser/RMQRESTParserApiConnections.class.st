@@ -421,13 +421,13 @@ RMQRESTParserApiConnections >> populate: aModel withJson: aString [
 			connection connectedAt: (anObject at: 'connected_at').
 			(anObject at: 'auth_mechanism') = 'PLAIN'
 				ifTrue: [ connection authMechanism: PulseAuthMechanism plain.
-					connection authMechanism connections add: connection ].
+					"connection authMechanism connections add: connection" ].
 			(anObject at: 'auth_mechanism') = 'AMQPLAIN'
 				ifTrue: [ connection authMechanism: PulseAuthMechanism amqPlain.
-					connection authMechanism connections add: connection ].
+					"connection authMechanism connections add: connection" ].
 			(anObject at: 'auth_mechanism') = 'RABBIT_CR_DEMO'
 				ifTrue: [ connection authMechanism: PulseAuthMechanism rabbit_cr_demo.
-					connection authMechanism connections add: connection ].
+					"connection authMechanism connections add: connection" ].
 			connection sslProtocol: (anObject at: 'ssl_protocol').
 			connection ssl: (anObject at: 'ssl').
 			connection sslHash: (anObject at: 'ssl_hash').
@@ -437,7 +437,7 @@ RMQRESTParserApiConnections >> populate: aModel withJson: aString [
 				withType: PulseVHost
 				sourceName: self sourceName.
 			connection vhost: vhost.
-			vhost connections add: connection.
+			"vhost connections add: connection."
 			node := aModel
 				entityNamed: (anObject at: 'node')
 				withType: PulseNode
@@ -446,27 +446,27 @@ RMQRESTParserApiConnections >> populate: aModel withJson: aString [
 						pulseName: (anObject at: 'node');
 						mooseModel: aModel.
 					vhost node: newNode.
-					newNode vhosts add: vhost.
+					"newNode vhosts add: vhost."
 					newNode ].
 			user := aModel
 				selectOrAddEntityNamed: (anObject at: 'user')
 				withType: PulseUser
 				sourceName: self sourceName.
 			connection user: user.
-			user usedConnections add: connection.
+			"user usedConnections add: connection."
 			user_who_performed_action := aModel
 				selectOrAddEntityNamed: (anObject at: 'user_who_performed_action')
 				withType: PulseUser
 				sourceName: self sourceName.
 			connection user_who_performed_connection: user_who_performed_action.
-			user_who_performed_action initializedConnections add: connection.
+			"user_who_performed_action initializedConnections add: connection."
 			(anObject at: 'state') = 'running'
 				ifTrue: [ connection pulseState: PulseState running.
-					connection pulseState connections add: connection ].
+					"connection pulseState connections add: connection" ].
 			(anObject at: 'state') = 'idle'
 				ifTrue: [ connection pulseState: PulseState idle.
-					connection pulseState connections add: connection ].
+					"connection pulseState connections add: connection" ].
 			(anObject at: 'state') = 'other'
 				ifTrue: [ connection pulseState: PulseState other.
-					connection pulseState connections add: connection ] ]
+					"connection pulseState connections add: connection" ] ]
 ]

@@ -17,7 +17,7 @@ RMQTraceParserTest >> setUp [
 	model := OldPulseModel new.
 	model name: 'test'.
 	
-	parser := RMQTraceParser new. 
+	parser := RMQTraceParser newOn: 'test'. 
 	
 	consumer := RMQConsumer new. 
 	consumer model: model. 

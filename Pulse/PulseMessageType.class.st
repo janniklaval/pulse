@@ -17,7 +17,6 @@ PulseMessageType class >> annotation [
 
 	<MSEClass: #MessageType super: #PulseEnum>
 	<package: #Pulse>
-	<generated>
 	^self
 ]
 

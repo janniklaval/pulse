@@ -43,6 +43,12 @@ OldPulseModel >> allDeploymentModes [
 ]
 
 { #category : #accessing }
+OldPulseModel >> allEPulseSources [
+	<navigation: 'All Sources group'>
+	^self allWithType: PulseSource
+]
+
+{ #category : #accessing }
 OldPulseModel >> allEncodings [
 	<navigation: 'All Encodings group'>
 	^self allWithType: PulseEncoding

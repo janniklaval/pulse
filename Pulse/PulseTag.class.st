@@ -17,7 +17,6 @@ PulseTag class >> annotation [
 
 	<MSEClass: #Tag super: #PulseEnum>
 	<package: #Pulse>
-	<generated>
 	^self
 ]
 

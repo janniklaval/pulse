@@ -69,3 +69,9 @@ PulseSource >> path: anObject [
 	path := anObject
 
 ]
+
+{ #category : #accessing }
+PulseSource >> pulseName [
+
+	^ self path
+]

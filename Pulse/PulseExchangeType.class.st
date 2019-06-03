@@ -12,7 +12,6 @@ PulseExchangeType class >> annotation [
 
 	<MSEClass: #ExchangeType super: #PulseEnum>
 	<package: #Pulse>
-	<generated>
 	^self
 ]
 

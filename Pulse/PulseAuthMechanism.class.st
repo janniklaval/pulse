@@ -17,7 +17,6 @@ PulseAuthMechanism class >> annotation [
 
 	<MSEClass: #AuthMechanism super: #PulseEnum>
 	<package: #Pulse>
-	<generated>
 	^self
 ]
 

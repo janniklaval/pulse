@@ -10,17 +10,7 @@ Class {
 { #category : #accessing }
 RMQRESTParserTestApiExchanges >> data [
 	^ '[
-    {
-        "user_who_performed_action": "rmq-internal",
-        "arguments": {},
-        "internal": false,
-        "auto_delete": false,
-        "durable": true,
-        "type": "direct",
-        "vhost": "/",
-        "name": ""
-    },
-    {
+	{
         "user_who_performed_action": "rmq-internal",
         "arguments": {},
         "internal": false,
@@ -129,16 +119,16 @@ RMQRESTParserTestApiExchanges >> setUp [
 RMQRESTParserTestApiExchanges >> testExistingPopulate [
 
 	| t1 t2 vh user logP |
-	self assert: model size = 16.
-	self assert: model allRMQExchanges size = 9.
+	self assert: model size = 15.
+	self assert: model allRMQExchanges size = 8.
 	self assert: (model allRMQExchanges anySatisfy: [:e | e name = 'pubsub.default.consoleSaasUserAccess.publish']).
 	self assert: (model allRMQExchanges anySatisfy: [:e | e name = 'amq.rabbitmq.event']).
 	
 	t1 := model allRMQExchanges detect: [:e | e name = 'pubsub.default.consoleSaasUserAccess.publish'].
 	t2 := model allRMQExchanges detect: [:e | e name = 'amq.rabbitmq.event'].
 
-	self assert: t1 durability = 'durable'.
-	self assert: t2 durability = 'durable'.
+	self assert: t1 durability = true.
+	self assert: t2 durability = true.
 	
 	self assert: t1 internal = false.
 	self assert: t2 internal = true.
@@ -148,10 +138,10 @@ RMQRESTParserTestApiExchanges >> testExistingPopulate [
 	self assert: (t2 vhost = vh).
 	self assert: (vh exchanges anySatisfy: [ :e | e =t1 ]).
 	self assert: (vh exchanges anySatisfy: [ :e | e =t2 ]).
-	self assert: (vh exchanges size = 9).	
+	self assert: (vh exchanges size = 8).	
 	
 	self assert: (vh exchanges anySatisfy: [ :e | e =t2 ]).
-	self assert: (vh exchanges size = 9).	
+	self assert: (vh exchanges size = 8).	
 		
 	
 	self assert: model allRMQUsers size = 2.
@@ -163,23 +153,23 @@ RMQRESTParserTestApiExchanges >> testExistingPopulate [
 	user := (model allRMQUsers detect: [:e | e name = 'rmq-internal']).
 	self assert: (t2 user_who_performed_action  = user).
 	self assert: (user initializedExchanges  anySatisfy: [ :e | e =t2 ]).
-	self assert: (user initializedExchanges size = 8).	
-	self assert: model size = 16.
+	self assert: (user initializedExchanges size = 7).	
+	self assert: model size = 15.
 	
 	logP := RMQRESTParserApiExchanges new.
 	logP sourceName: 'test2'.
 	logP populate: model withJson: self data.
 	
-	self assert: model size = 16.
-	self assert: model allRMQExchanges size = 9.
+	self assert: model size = 15.
+	self assert: model allRMQExchanges size = 8.
 	self assert: (model allRMQExchanges anySatisfy: [:e | e name = 'pubsub.default.consoleSaasUserAccess.publish']).
 	self assert: (model allRMQExchanges anySatisfy: [:e | e name = 'amq.rabbitmq.event']).
 	
 	t1 := model allRMQExchanges detect: [:e | e name = 'pubsub.default.consoleSaasUserAccess.publish'].
 	t2 := model allRMQExchanges detect: [:e | e name = 'amq.rabbitmq.event'].
 
-	self assert: t1 durability = 'durable'.
-	self assert: t2 durability = 'durable'.
+	self assert: t1 durability = true.
+	self assert: t2 durability = true.
 	
 	self assert: t1 internal = false.
 	self assert: t2 internal = true.
@@ -189,10 +179,10 @@ RMQRESTParserTestApiExchanges >> testExistingPopulate [
 	self assert: (t2 vhost = vh).
 	self assert: (vh exchanges anySatisfy: [ :e | e =t1 ]).
 	self assert: (vh exchanges anySatisfy: [ :e | e =t2 ]).
-	self assert: (vh exchanges size = 9).	
+	self assert: (vh exchanges size = 8).	
 	
 	self assert: (vh exchanges anySatisfy: [ :e | e =t2 ]).
-	self assert: (vh exchanges size = 9).	
+	self assert: (vh exchanges size = 8).	
 		
 	
 	self assert: model allRMQUsers size = 2.
@@ -204,8 +194,8 @@ RMQRESTParserTestApiExchanges >> testExistingPopulate [
 	user := (model allRMQUsers detect: [:e | e name = 'rmq-internal']).
 	self assert: (t2 user_who_performed_action  = user).
 	self assert: (user initializedExchanges  anySatisfy: [ :e | e =t2 ]).
-	self assert: (user initializedExchanges size = 8).	
-	self assert: model size = 16.
+	self assert: (user initializedExchanges size = 7).	
+	self assert: model size = 15.
 
 ]
 
@@ -213,15 +203,15 @@ RMQRESTParserTestApiExchanges >> testExistingPopulate [
 RMQRESTParserTestApiExchanges >> testPopulate [
 
 	| t1 t2 vh user |
-	self assert: model allRMQExchanges size = 9.
+	self assert: model allRMQExchanges size = 8.
 	self assert: (model allRMQExchanges anySatisfy: [:e | e name = 'pubsub.default.consoleSaasUserAccess.publish']).
 	self assert: (model allRMQExchanges anySatisfy: [:e | e name = 'amq.rabbitmq.event']).
 	
 	t1 := model allRMQExchanges detect: [:e | e name = 'pubsub.default.consoleSaasUserAccess.publish'].
 	t2 := model allRMQExchanges detect: [:e | e name = 'amq.rabbitmq.event'].
 
-	self assert: t1 durability = 'durable'.
-	self assert: t2 durability = 'durable'.
+	self assert: t1 durability = true.
+	self assert: t2 durability = true.
 	
 	self assert: t1 internal = false.
 	self assert: t2 internal = true.
@@ -231,10 +221,10 @@ RMQRESTParserTestApiExchanges >> testPopulate [
 	self assert: (t2 vhost = vh).
 	self assert: (vh exchanges anySatisfy: [ :e | e =t1 ]).
 	self assert: (vh exchanges anySatisfy: [ :e | e =t2 ]).
-	self assert: (vh exchanges size = 9).	
+	self assert: (vh exchanges size = 8).	
 	
 	self assert: (vh exchanges anySatisfy: [ :e | e =t2 ]).
-	self assert: (vh exchanges size = 9).	
+	self assert: (vh exchanges size = 8).	
 		
 	
 	self assert: model allRMQUsers size = 2.
@@ -246,7 +236,7 @@ RMQRESTParserTestApiExchanges >> testPopulate [
 	user := (model allRMQUsers detect: [:e | e name = 'rmq-internal']).
 	self assert: (t2 user_who_performed_action  = user).
 	self assert: (user initializedExchanges  anySatisfy: [ :e | e =t2 ]).
-	self assert: (user initializedExchanges size = 8).	
+	self assert: (user initializedExchanges size = 7).	
 	
 
 ]
