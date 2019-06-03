@@ -1888,7 +1888,7 @@ RMQRESTParserApiQueues >> populate: aModel withJson: aString [
 			queueName := anObject at: 'name'.
 			queue := aModel
 				selectOrAddEntityNamed: queueName
-				withType: RMQQueue
+				withType: PulseQueue
 				sourceName: self sourceName.
 			queue autoDelete: (anObject at: 'auto_delete').
 			queue idleSince: (anObject at: 'idle_since').
@@ -1896,27 +1896,27 @@ RMQRESTParserApiQueues >> populate: aModel withJson: aString [
 			queue exclusive: (anObject at: 'exclusive').
 			vhost := aModel
 				selectOrAddEntityNamed: (anObject at: 'vhost')
-				withType: RMQVHost
+				withType: PulseVHost
 				sourceName: self sourceName.
 			queue vhost: vhost.
 			vhost queues add: queue.
 			node := aModel
 				entityNamed: (anObject at: 'node')
-				withType: RMQNode
+				withType: PulseNode
 				ifAbsent: [ | newNode |
-					newNode := RMQNode new
+					newNode := PulseNode new
 						pulseName: (anObject at: 'node');
 						mooseModel: aModel.
 					vhost node: newNode.
 					newNode vhosts add: vhost.
 					newNode ].
 			(anObject at: 'state') = 'running'
-				ifTrue: [ queue rmqState: State running.
+				ifTrue: [ queue rmqState: PulseState running.
 					queue rmqState queues add: queue ].
 			(anObject at: 'state') = 'idle'
-				ifTrue: [ queue rmqState: State idle.
+				ifTrue: [ queue rmqState: PulseState idle.
 					queue rmqState queues add: queue ].
 			(anObject at: 'state') = 'other'
-				ifTrue: [ queue rmqState: State other.
+				ifTrue: [ queue rmqState: PulseState other.
 					queue rmqState queues add: queue ] ]
 ]

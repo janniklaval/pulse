@@ -35,7 +35,7 @@ json first = $[
 RMQLogParser >> parse: aJSonFilePath [
 	|  json |
 	json := self initializeContents: aJSonFilePath.
-	model := PulseModel new.
+	model := OldPulseModel new.
 	model name: aJSonFilePath asFileReference basenameWithoutExtension.
 	self sourceName: aJSonFilePath.
 	self populate: model withJson: json
@@ -52,18 +52,18 @@ RMQLogParser >> populate: aModel withJson: aString [
 			| message connection queue user node exchange vhost channel routingKeys binding payload delivMode routedQueues messageType exchangeFormat publisherComponent consumerComponent tenantId queueName consumerComponentName |
 			node := aModel
 				selectOrAddEntityNamed: (aRMQObject at: 'node')
-				withType: RMQNode
+				withType: PulseNode
 				sourceName: self sourceName.
 			vhost := aModel
 				selectOrAddEntityNamed: (aRMQObject at: 'vhost')
-				withType: RMQVHost
+				withType: PulseVHost
 				sourceName: self sourceName.
 			vhost node
 				ifNil: [ node vhosts add: vhost.
 					vhost node: node ].
 			payload := aModel
 				selectOrAddEntityNamed: (aRMQObject at: 'payload')
-				withType: RMQPayload
+				withType: PulsePayload
 				sourceName: self sourceName.
 
 			" search the message by its ID "
@@ -71,21 +71,21 @@ RMQLogParser >> populate: aModel withJson: aString [
 			"message := self populateMessage: aRMQObject messageId:  ((aRMQObject at: 'properties') at: 'message_id')."
 			message := aModel
 				selectOrAddEntityNamed: ((aRMQObject at: 'properties') at: 'message_id')
-				withType: RMQMessage
+				withType: PulseMessage
 				sourceName: self sourceName.
 			message payload: payload.
 			payload messages add: message.
 			message timestamp: (aRMQObject at: 'timestamp').
 			connection := aModel
 				selectOrAddEntityNamed: (aRMQObject at: 'connection')
-				withType: RMQConnection
+				withType: PulseConnection
 				sourceName: self sourceName.
 			(vhost connections anySatisfy: [ :e | e = connection ])
 				ifFalse: [ vhost connections add: connection.
 					connection vhost: vhost ].
 			user := aModel
 				selectOrAddEntityNamed: (aRMQObject at: 'user')
-				withType: RMQUser
+				withType: PulseUser
 				sourceName: self sourceName.
 			user usedConnections
 				detect: [ :conn | conn = connection ]
@@ -98,7 +98,7 @@ RMQLogParser >> populate: aModel withJson: aString [
 			exchangeName := aRMQObject at: 'exchange'.
 			exchange := aModel
 				selectOrAddEntityNamed: exchangeName
-				withType: RMQExchange
+				withType: PulseExchange
 				sourceName: self sourceName.
 			exchange publishedMessages add: message.
 			message publishedToExchange: exchange.
@@ -112,7 +112,7 @@ RMQLogParser >> populate: aModel withJson: aString [
 				selectOrAddEntityNamed:
 					((aRMQObject at: 'connection') , ' ('
 						, (aRMQObject at: 'channel') asStringWithCommas , ')') asString
-				withType: RMQChannel
+				withType: PulseChannel
 				sourceName: self sourceName.
 			channel vhost
 				ifNil: [ vhost channels add: channel.
@@ -145,7 +145,7 @@ RMQLogParser >> populate: aModel withJson: aString [
 						at: 'app_id'
 						ifPresent: [ publisherComponent := aModel
 								selectOrAddEntityNamed: ((aRMQObject at: 'properties') at: 'app_id')
-								withType: RMQPublisherComponent
+								withType: PulsePublisherComponent
 								sourceName: self sourceName.
 							publisherComponent
 								appId: ((aRMQObject at: 'properties') at: 'app_id').
@@ -153,7 +153,7 @@ RMQLogParser >> populate: aModel withJson: aString [
 							message publisherComponent: publisherComponent.
 							tenantId := aModel
 								selectOrAddEntityNamed: (((aRMQObject at: 'properties') at: 'headers') at: 'X-TenantId')
-								withType: RMQTenant
+								withType: PulseTenant
 								sourceName: self sourceName.
 							publisherComponent tenantId: tenantId.
 							publisherComponent usedChannels
@@ -202,7 +202,7 @@ RMQLogParser >> populate: aModel withJson: aString [
 					queueName := aRMQObject at: 'queue'.
 					queue := aModel
 						selectOrAddEntityNamed: queueName
-						withType: RMQQueue
+						withType: PulseQueue
 						sourceName: self sourceName.
 					queue deliveredMessages add: message.
 					message deliveredFromQueues add: queue.
@@ -217,7 +217,7 @@ RMQLogParser >> populate: aModel withJson: aString [
 						ifTrue: [ consumerComponentName := (queueName substrings: '.') at: 4.
 							consumerComponent := aModel
 								selectOrAddEntityNamed: consumerComponentName
-								withType: RMQConsumerComponent
+								withType: PulseConsumerComponent
 								sourceName: self sourceName.
 							consumerComponent appId: ((queueName substrings: '.') at: 4).
 							consumerComponent subscribedChannels
@@ -241,7 +241,7 @@ RMQLogParser >> populate: aModel withJson: aString [
 					"add the bindings"
 					routingKeys
 						do: [ :aRoutingKey | 
-							binding := RMQBindingWithQueue new.
+							binding := PulseBindingWithQueue new.
 							binding destination: aQueue.
 							aQueue destinationBindings add: binding.
 							binding source: exchange.
@@ -262,7 +262,7 @@ RMQLogParser >> populate: aModel withJson: aString [
 				selectOrAddEntityNamed:
 					(((aRMQObject at: 'properties') at: 'headers')
 						at: 'X-ExchangeFormatSchema')
-				withType: RMQExchangeFormat
+				withType: PulseExchangeFormat
 				sourceName: self sourceName.
 			"aModel allRMQExchangeFormats
 		   detect: [ :el | el exchangeFormatSchema  = (((aDictionnary at: 'properties') at: 'headers') at: 'X-ExchangeFormatSchema') ]
@@ -296,7 +296,7 @@ RMQLogParser >> populate: aModel withJson: aString [
 { #category : #parsing }
 RMQLogParser >> populateDeliveryMode: aRMQObject [
 	| newType |
-	newType := DeliveryMode perform: (((aRMQObject at: 'properties') at: 'delivery_mode') = 2 ifTrue:[#persistent] ifFalse:[#nonPersistent]).
+	newType := PulseDeliveryMode perform: (((aRMQObject at: 'properties') at: 'delivery_mode') = 2 ifTrue:[#persistent] ifFalse:[#nonPersistent]).
 	model allDeliveryModes
 		detect: [ :el | el rmqState = newType rmqState ]
 		ifFound: [ :elementFound | 
@@ -314,7 +314,7 @@ RMQLogParser >> populateMessage: aRMQObject messageId: id [
 		ifFound: [ :elementFound | 
 			^elementFound. ]
 		ifNone: [ 
-			  message := RMQMessage new. 
+			  message := PulseMessage new. 
 			  message messageID: id.
 			  message mooseModel: model. 
 			  model add: message.
@@ -324,7 +324,7 @@ RMQLogParser >> populateMessage: aRMQObject messageId: id [
 { #category : #parsing }
 RMQLogParser >> populateMessage: aRMQObject payload: payload [
 	|message|
-	message := RMQMessage new 
+	message := PulseMessage new 
 				payload: payload.
 	
 	model allRMQMessages
@@ -344,7 +344,7 @@ RMQLogParser >> populateRoutedQueues: aRMQObject [
 	(aRMQObject at: 'routed_queues') = 'none'
 		ifTrue: [ 
 			|routed_queue|
-			routed_queue := RMQQueue new
+			routed_queue := PulseQueue new
 				pulseName: (aRMQObject at: 'routed_queues').
 			model allRMQQueues
 				detect: [ :el | el pulseName = routed_queue pulseName ]
@@ -353,7 +353,7 @@ RMQLogParser >> populateRoutedQueues: aRMQObject [
 					routedQueues add: routed_queue ] ]
 		ifFalse: [ (aRMQObject at: 'routed_queues')
 				do: [ :aRoutedQueue | 
-					newRoutedQueue := RMQQueue new
+					newRoutedQueue := PulseQueue new
 						pulseName: aRoutedQueue.
 					model allRMQQueues
 						detect: [ :el | el pulseName = newRoutedQueue pulseName ]
@@ -373,7 +373,7 @@ RMQLogParser >> populateRoutingKeys: aRMQObject [
 	routingKeys := OrderedCollection new.
 	(aRMQObject at: 'routing_keys')
 		do: [ :aRoutingKey | 
-			newRoutingKey := RMQRoutingKey new
+			newRoutingKey := PulseRoutingKey new
 				pulseName: aRoutingKey.
 			model allRMQRoutingKeys
 				detect: [ :el | el pulseName = newRoutingKey pulseName ]
@@ -388,7 +388,7 @@ RMQLogParser >> populateRoutingKeys: aRMQObject [
 { #category : #parsing }
 RMQLogParser >> populateType: aRMQObject [
 	| newType |
-	newType := MessageType perform: ((aRMQObject at: 'type') asSymbol).
+	newType := PulseMessageType perform: ((aRMQObject at: 'type') asSymbol).
 	model allMessageTypes
 		detect: [ :el | el rmqState = newType rmqState ]
 		ifFound: [ :elementFound | 

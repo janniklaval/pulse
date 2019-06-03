@@ -1882,7 +1882,7 @@ RMQRESTParserTestApiQueues >> data [
 { #category : #initialization }
 RMQRESTParserTestApiQueues >> setUp [
 	| logP |
-	model := PulseModel new.
+	model := OldPulseModel new.
 	model name: 'test'.
 	logP := RMQRESTParserApiQueues new.
 	logP sourceName: 'test'.

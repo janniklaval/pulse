@@ -17,7 +17,7 @@ RMQEventParserTestBindingDeleted >> setUp [
 	"todo : go further and create the events queue and bing it to the exchange queue ?"
 
 	| newBinding source destination routingKey |
-	model := PulseModel new.
+	model := OldPulseModel new.
 	model name: 'test'.
 	parser := RMQEventParser newOn: 'test'.
 	consumer := RMQConsumer new.

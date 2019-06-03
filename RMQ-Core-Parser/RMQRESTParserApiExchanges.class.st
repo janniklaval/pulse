@@ -122,7 +122,7 @@ RMQRESTParserApiExchanges >> populate: aModel withJson: aString [
 			exchangeName := anObject at: 'name'.
 			exchange := aModel
 				selectOrAddEntityNamed: exchangeName
-				withType: RMQExchange
+				withType: PulseExchange
 				sourceName: self sourceName.
 			"set topicId"
 			((exchangeName substrings: '.') at: 1 = 'pubsub')
@@ -131,26 +131,26 @@ RMQRESTParserApiExchanges >> populate: aModel withJson: aString [
 			"exchange type: (anObject at: 'type').
 		exchange type exchanges add: exchange."
 			(anObject at: 'type') = 'topic'
-				ifTrue: [ exchange type: ExchangeType topic.
+				ifTrue: [ exchange type: PulseExchangeType topic.
 					exchange type exchanges add: exchange ].
 			(anObject at: 'type') = 'direct'
-				ifTrue: [ exchange type: ExchangeType direct.
+				ifTrue: [ exchange type: PulseExchangeType direct.
 					exchange type exchanges add: exchange ].
 			(anObject at: 'type') = 'fanout'
-				ifTrue: [ exchange type: ExchangeType fanout.
+				ifTrue: [ exchange type: PulseExchangeType fanout.
 					exchange type exchanges add: exchange ].
 			(anObject at: 'type') = 'headers'
-				ifTrue: [ exchange type: ExchangeType headers.
+				ifTrue: [ exchange type: PulseExchangeType headers.
 					exchange type exchanges add: exchange ].
 			vhost := aModel
 				selectOrAddEntityNamed: (anObject at: 'vhost')
-				withType: RMQVHost
+				withType: PulseVHost
 				sourceName: self sourceName.
 			exchange vhost: vhost.
 			vhost exchanges add: exchange.
 			user_who_performed_action := aModel
 				selectOrAddEntityNamed: (anObject at: 'user_who_performed_action')
-				withType: RMQUser
+				withType: PulseUser
 				sourceName: self sourceName.
 			exchange user_who_performed_action: user_who_performed_action.
 			user_who_performed_action initializedExchanges add: exchange.
@@ -158,10 +158,10 @@ RMQRESTParserApiExchanges >> populate: aModel withJson: aString [
 
 			"exchange durability: (exchange at: 'durable')."
 			(anObject at: 'durable') = true
-				ifTrue: [ exchange durability: Durability durable.
+				ifTrue: [ exchange durability: true.
 					exchange durability exchanges add: exchange ].
 			(anObject at: 'durable') = false
-				ifTrue: [ exchange durability: Durability transient.
+				ifTrue: [ exchange durability: false.
 					exchange durability exchanges add: exchange ].
 			exchange internal: (anObject at: 'internal') ]
 ]

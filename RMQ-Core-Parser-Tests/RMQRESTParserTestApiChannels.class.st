@@ -212,7 +212,7 @@ RMQRESTParserTestApiChannels >> data [
 RMQRESTParserTestApiChannels >> setUp [
 
 	| logP |
-	model := PulseModel new.
+	model := OldPulseModel new.
 	model name: 'test'.
 	logP := RMQRESTParserApiChannels new.
 	logP sourceName: 'test'.

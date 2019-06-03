@@ -20,7 +20,7 @@ RMQRESTParserTestApiDefinitions >> setUp [
 	parser := PPParserResource current parserAt: PPJsonParser.
 	objects := parser parse: self data.
 	
-	model := PulseModel new.
+	model := OldPulseModel new.
 	model name: 'test'.
 ]
 

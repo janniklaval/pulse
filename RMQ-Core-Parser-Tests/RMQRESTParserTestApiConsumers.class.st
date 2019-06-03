@@ -76,7 +76,7 @@ RMQRESTParserTestApiConsumers >> data [
 { #category : #initialization }
 RMQRESTParserTestApiConsumers >> setUp [
 	| logP |
-	model := PulseModel new.
+	model := OldPulseModel new.
 	model name: 'test'.
 	logP := RMQRESTParserApiConsumers new.
 	logP sourceName: 'test'.

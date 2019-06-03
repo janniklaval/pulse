@@ -121,7 +121,7 @@ RMQLogParserTest >> data [
 RMQLogParserTest >> setUp [
 
 	| logP |
-	model := PulseModel new.
+	model := OldPulseModel new.
 	model name: 'test'.
 	logP := RMQLogParser newOn: 'test'.
 	logP populate: model withJson: self data.

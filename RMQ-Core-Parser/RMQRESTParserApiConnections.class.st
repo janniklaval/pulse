@@ -412,7 +412,7 @@ RMQRESTParserApiConnections >> populate: aModel withJson: aString [
 			connectionName := anObject at: 'name'.
 			connection := aModel
 				selectOrAddEntityNamed: connectionName
-				withType: RMQConnection
+				withType: PulseConnection
 				sourceName: self sourceName.
 			connection host: (anObject at: 'host').
 			connection port: (anObject at: 'port').
@@ -420,13 +420,13 @@ RMQRESTParserApiConnections >> populate: aModel withJson: aString [
 			connection peerPort: (anObject at: 'peer_port').
 			connection connectedAt: (anObject at: 'connected_at').
 			(anObject at: 'auth_mechanism') = 'PLAIN'
-				ifTrue: [ connection authMechanism: AuthMechanism plain.
+				ifTrue: [ connection authMechanism: PulseAuthMechanism plain.
 					connection authMechanism connections add: connection ].
 			(anObject at: 'auth_mechanism') = 'AMQPLAIN'
-				ifTrue: [ connection authMechanism: AuthMechanism amqPlain.
+				ifTrue: [ connection authMechanism: PulseAuthMechanism amqPlain.
 					connection authMechanism connections add: connection ].
 			(anObject at: 'auth_mechanism') = 'RABBIT_CR_DEMO'
-				ifTrue: [ connection authMechanism: AuthMechanism rabbit_cr_demo.
+				ifTrue: [ connection authMechanism: PulseAuthMechanism rabbit_cr_demo.
 					connection authMechanism connections add: connection ].
 			connection sslProtocol: (anObject at: 'ssl_protocol').
 			connection ssl: (anObject at: 'ssl').
@@ -434,15 +434,15 @@ RMQRESTParserApiConnections >> populate: aModel withJson: aString [
 			connection protocol: (anObject at: 'protocol').
 			vhost := aModel
 				selectOrAddEntityNamed: (anObject at: 'vhost')
-				withType: RMQVHost
+				withType: PulseVHost
 				sourceName: self sourceName.
 			connection vhost: vhost.
 			vhost connections add: connection.
 			node := aModel
 				entityNamed: (anObject at: 'node')
-				withType: RMQNode
+				withType: PulseNode
 				ifAbsent: [ | newNode |
-					newNode := RMQNode new
+					newNode := PulseNode new
 						pulseName: (anObject at: 'node');
 						mooseModel: aModel.
 					vhost node: newNode.
@@ -450,23 +450,23 @@ RMQRESTParserApiConnections >> populate: aModel withJson: aString [
 					newNode ].
 			user := aModel
 				selectOrAddEntityNamed: (anObject at: 'user')
-				withType: RMQUser
+				withType: PulseUser
 				sourceName: self sourceName.
 			connection user: user.
 			user usedConnections add: connection.
 			user_who_performed_action := aModel
 				selectOrAddEntityNamed: (anObject at: 'user_who_performed_action')
-				withType: RMQUser
+				withType: PulseUser
 				sourceName: self sourceName.
 			connection user_who_performed_connection: user_who_performed_action.
 			user_who_performed_action initializedConnections add: connection.
 			(anObject at: 'state') = 'running'
-				ifTrue: [ connection rmqState: State running.
+				ifTrue: [ connection rmqState: PulseState running.
 					connection rmqState connections add: connection ].
 			(anObject at: 'state') = 'idle'
-				ifTrue: [ connection rmqState: State idle.
+				ifTrue: [ connection rmqState: PulseState idle.
 					connection rmqState connections add: connection ].
 			(anObject at: 'state') = 'other'
-				ifTrue: [ connection rmqState: State other.
+				ifTrue: [ connection rmqState: PulseState other.
 					connection rmqState connections add: connection ] ]
 ]

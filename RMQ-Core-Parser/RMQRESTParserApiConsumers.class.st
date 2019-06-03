@@ -83,7 +83,7 @@ RMQRESTParserApiConsumers >> populate: aModel withJson: aString [
 			component := aModel allRMQConsumerProcesses
 				detect: [ :e | e consumerTag = consumerTag ]
 				ifNone: [ | newComponent |
-					newComponent := RMQConsumerProcess new consumerTag: consumerTag.
+					newComponent := PulseConsumerProcess new consumerTag: consumerTag.
 					aModel add: newComponent.
 					newComponent ].
 			component ackRequired: (anObject at: 'ack_required').
@@ -91,18 +91,18 @@ RMQRESTParserApiConsumers >> populate: aModel withJson: aString [
 			queueName := (anObject at: 'queue') at: 'name'.
 			queue := aModel
 				selectOrAddEntityNamed: queueName
-				withType: RMQQueue
+				withType: PulseQueue
 				sourceName: self sourceName.
 			vhost := aModel
 				selectOrAddEntityNamed: ((anObject at: 'queue') at: 'vhost')
-				withType: RMQVHost
+				withType: PulseVHost
 				sourceName: self sourceName.
 			queue vhost: vhost.
 			vhost queues add: queue.
 			channelName := (anObject at: 'channel_details') at: 'name'.
 			channel := aModel
 				selectOrAddEntityNamed: channelName
-				withType: RMQChannel
+				withType: PulseChannel
 				sourceName: self sourceName.
 			component subscribedChannels add: channel.
 			channel consumerProcess: component.
@@ -110,15 +110,15 @@ RMQRESTParserApiConsumers >> populate: aModel withJson: aString [
 			queue consumerChannels add: channel.
 			user := aModel
 				selectOrAddEntityNamed: ((anObject at: 'channel_details') at: 'user')
-				withType: RMQUser
+				withType: PulseUser
 				sourceName: self sourceName.
 			channel user: user.
 			user usedChannels add: channel.
 			node := aModel
 				entityNamed: ((anObject at: 'channel_details') at: 'node')
-				withType: RMQNode
+				withType: PulseNode
 				ifAbsent: [ | newNode |
-					newNode := RMQNode new
+					newNode := PulseNode new
 						pulseName: ((anObject at: 'channel_details') at: 'node');
 						mooseModel: aModel.
 					vhost node: newNode.
@@ -126,7 +126,7 @@ RMQRESTParserApiConsumers >> populate: aModel withJson: aString [
 					newNode ].
 			connection := aModel
 				selectOrAddEntityNamed: ((anObject at: 'channel_details') at: 'connection_name')
-				withType: RMQConnection
+				withType: PulseConnection
 				sourceName: self sourceName.
 			connection
 				peerHost: ((anObject at: 'channel_details') at: 'peer_host').

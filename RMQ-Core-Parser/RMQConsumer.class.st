@@ -155,7 +155,7 @@ RMQConsumer >> handleDeliveryForAll: delivery [
 	"otherwise have a handleDelivery to every queue"
 	| routingKey headersDictionnary timestamp |
 	
-	model := PulseModel new.
+	model := OldPulseModel new.
 	model name: 'test'.
 	parser := RMQEventParser new. 
 	

@@ -17,7 +17,7 @@ RMQEventParserTestQueueCreated >> setUp [
 
 "todo : go further and create the events queue and bing it to the exchange queue ?"
 
-	model := PulseModel new.
+	model := OldPulseModel new.
 	model name: 'test'.
 	
 	parser := RMQEventParser new. 

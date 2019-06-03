@@ -116,7 +116,7 @@ RMQRESTParserTestApiExchanges >> data [
 { #category : #initialization }
 RMQRESTParserTestApiExchanges >> setUp [
 	| logP |
-	model := PulseModel new.
+	model := OldPulseModel new.
 	model name: 'test'.
 	logP := RMQRESTParserApiExchanges new.
 	logP sourceName: 'test'.
