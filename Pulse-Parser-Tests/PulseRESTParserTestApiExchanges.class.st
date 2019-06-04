@@ -119,7 +119,7 @@ PulseRESTParserTestApiExchanges >> setUp [
 PulseRESTParserTestApiExchanges >> testExistingPopulate [
 
 	| t1 t2 vh user logP |
-	self assert: model size = 15.
+	self assert: model size = 12.
 	self assert: model allPulseExchanges size = 8.
 	self assert: (model allPulseExchanges anySatisfy: [:e | e name = 'pubsub.default.consoleSaasUserAccess.publish']).
 	self assert: (model allPulseExchanges anySatisfy: [:e | e name = 'amq.rabbitmq.event']).
@@ -154,12 +154,12 @@ PulseRESTParserTestApiExchanges >> testExistingPopulate [
 	self assert: (t2 user_who_performed_action  = user).
 	self assert: (user initializedExchanges  anySatisfy: [ :e | e =t2 ]).
 	self assert: (user initializedExchanges size = 7).	
-	self assert: model size = 15.
+	self assert: model size = 12.
 	
 	logP := PulseRESTParserApiExchanges newOn: 'test2'.
 	logP populate: model withJson: self data.
 	
-	self assert: model size = 15.
+	self assert: model size = 12.
 	self assert: model allPulseExchanges size = 8.
 	self assert: (model allPulseExchanges anySatisfy: [:e | e name = 'pubsub.default.consoleSaasUserAccess.publish']).
 	self assert: (model allPulseExchanges anySatisfy: [:e | e name = 'amq.rabbitmq.event']).
@@ -194,7 +194,7 @@ PulseRESTParserTestApiExchanges >> testExistingPopulate [
 	self assert: (t2 user_who_performed_action  = user).
 	self assert: (user initializedExchanges  anySatisfy: [ :e | e =t2 ]).
 	self assert: (user initializedExchanges size = 7).	
-	self assert: model size = 15.
+	self assert: model size = 12.
 
 ]
 

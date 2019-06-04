@@ -15,7 +15,8 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'frequency',
-		'process'
+		'process',
+		'source'
 	],
 	#classInstVars : [
 		'UniqueInstance'
@@ -69,6 +70,26 @@ PulseAbstractProcess >> initialize [
 
 	super initialize.
 	frequency := 1 second.
+]
+
+{ #category : #accessing }
+PulseAbstractProcess >> process [
+	^ process
+]
+
+{ #category : #accessing }
+PulseAbstractProcess >> process: anObject [
+	^ process := anObject
+]
+
+{ #category : #accessing }
+PulseAbstractProcess >> source [
+	^ source
+]
+
+{ #category : #accessing }
+PulseAbstractProcess >> source: anObject [
+	source := anObject
 ]
 
 { #category : #accessing }

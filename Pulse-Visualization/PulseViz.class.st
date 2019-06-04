@@ -225,3 +225,24 @@ v := RTView new.
 	v inspect
 	
 ]
+
+{ #category : #accessing }
+PulseViz class >> viewUMLMetaModel [
+"
+PulseViz viewUMLMetaModel
+"
+| b pharoClassesToBeVisualized |
+ "Zooming and position of the view can be controled using the keys: I O Space Arrows " 
+pharoClassesToBeVisualized := PulseEntity withAllSubclasses. 
+b := RTUMLClassBuilder new.
+	   b instanceVariables: #instVarNames.
+	   b methodselector: #selector.
+		b methodsNames: [ :cls | cls rtmethods sortedAs: #selector ].
+	   b attributeselector: #yourself.
+
+
+	b addObjects: (pharoClassesToBeVisualized).
+	b layout tree.
+	b build.
+	^ b view inspect.
+]

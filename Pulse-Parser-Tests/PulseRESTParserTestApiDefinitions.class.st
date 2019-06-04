@@ -124,11 +124,11 @@ PulseRESTParserTestApiDefinitions >> testPopulateExistingBindings [
 	self assert: b3 destination = (model allPulseQueues detect: [:e | e name = 'testQueue2']).
 	self assert: ((model allPulseQueues detect: [:e | e name = 'testQueue2']) destinationBindings anySatisfy: [ :e | e = b3 ]).
 	
-	self assert: b1 routingKey  = (model allPulseRoutingKeys detect: [:e | e name = 'rkExchange']).
+	self assert: b1 routingKey first  = (model allPulseRoutingKeys detect: [:e | e name = 'rkExchange']).
 	self assert: ((model allPulseRoutingKeys detect: [:e | e name = 'rkExchange']) binding = b1 ).
-	self assert: b2 routingKey  = (model allPulseRoutingKeys detect: [:e | e name = 'testRoutingKey']).
+	self assert: b2 routingKey first  = (model allPulseRoutingKeys detect: [:e | e name = 'testRoutingKey']).
 	self assert: ((model allPulseRoutingKeys detect: [:e | e name = 'testRoutingKey'])  binding = b2).
-	self assert: b3 routingKey  = (model allPulseRoutingKeys detect: [:e | e name = 'testRoutingKeyBinding']).
+	self assert: b3 routingKey first = (model allPulseRoutingKeys detect: [:e | e name = 'testRoutingKeyBinding']).
 	self assert: ((model allPulseRoutingKeys detect: [:e | e name = 'testRoutingKeyBinding'])  binding = b3 ).
 ]
 
@@ -268,9 +268,9 @@ PulseRESTParserTestApiDefinitions >> testPopulateExistingUser [
 	self assert: any name = 'administrator'.
 	
 	self assert: user roles size = 1.
-	self assert: any user = user.
+	self assert: (any users anySatisfy: [:e | e = user]).
 	self assert: (user roles anySatisfy: [:e | e = any]). 
-	self assert: (any user= user).
+	self assert: (any users anySatisfy: [:e | e = user]).
 
 ]
 
@@ -392,12 +392,11 @@ PulseRESTParserTestApiDefinitions >> testPopulateUser [
 	self assert: t2 roles size = 1.
 	self assert: t3 roles size = 1.
 	self assert: t4 roles size = 1.
-	
-	self assert: (t1 roles anyOne user = t1).
+	self assert: (t1 roles anyOne users anySatisfy: [:e | e = t1]).
 	self assert: t2 roles anyOne = t1 roles anyOne.
 	
-	self assert: (t3 roles anyOne user = t3).
-	self assert: (t4 roles anyOne user = t4).
+	self assert: (t3 roles anyOne users anySatisfy: [:e | e = t3]).
+	self assert: (t4 roles anyOne users anySatisfy: [:e | e = t4]).
 ]
 
 { #category : #'testing - simple' }

@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'#settingDate',
 		'#tag => FMOne type: #PulseTag opposite: #roles',
-		'#user => FMOne type: #PulseUser opposite: #roles'
+		'#users => FMMany type: #PulseUser opposite: #roles'
 	],
 	#category : #'Pulse-Entities'
 }
@@ -22,7 +22,7 @@ PulseRole class >> annotation [
 PulseRole class >> generatedSlotNames [
 	<generated>
 	'PulseRole class>>#generatedSlotNames'.
-	^ #(settingDate tag user)
+	^ #(settingDate tag users)
 ]
 
 { #category : #generator }
@@ -72,17 +72,17 @@ PulseRole >> tag: anObject [
 ]
 
 { #category : #accessing }
-PulseRole >> user [
+PulseRole >> users [
 
 	<generated>
 	<MSEComment: 'TODO'>
-	^ user
+	^ users
 ]
 
 { #category : #accessing }
-PulseRole >> user: anObject [
+PulseRole >> users: anObject [
 
 	<generated>
-	user := anObject
+	users value: anObject
 
 ]

@@ -100,13 +100,7 @@ PulseRESTParserApiDefinitions >> populate: aModel withExchanges: anArray [
 			element vhost: vhost.
 			vhost exchanges add: element.
 
-			"element durability:(anExchange at: 'durable')."
-			(anExchange at: 'durable') = 1
-				ifTrue: [ element durability: true.
-					element durability exchanges add: element ].
-			(anExchange at: 'durable') = 0
-				ifTrue: [ element durability: false.
-					element durability exchanges add: element ].
+			element durability: (anExchange at: 'durable').
 			arg := anExchange at: 'arguments'.
 			altExchName := arg at: 'alternate-exchange' ifAbsent: [ nil ].
 			altExchName
@@ -282,7 +276,7 @@ PulseRESTParserApiDefinitions >> populate: aModel withUsers: anArray [
 						sourceName: self sourceName.
 					(element roles anySatisfy: [ :e | e = role ])
 						ifFalse: [ element roles add: role.
-							role user: element ] ] ]
+							"role users add: element "] ] ]
 ]
 
 { #category : #'internal-parsing' }

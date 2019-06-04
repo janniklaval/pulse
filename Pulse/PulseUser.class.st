@@ -14,7 +14,7 @@ Class {
 		'#passwordClearingDate',
 		'#passwordHash',
 		'#permissions => FMMany type: #PulsePermission opposite: #user',
-		'#roles => FMMany type: #PulseRole opposite: #user',
+		'#roles => FMMany type: #PulseRole opposite: #users',
 		'#usedChannels => FMMany type: #PulseChannel opposite: #user',
 		'#usedConnections => FMMany type: #PulseConnection opposite: #user',
 		'#vhosts => FMMany type: #PulseVHost opposite: #users'

@@ -299,7 +299,7 @@ PulseMetamodelGenerator >> defineRelations [
 	((permission property: #vhost) comment: 'TODO') *- ((vhost property: #permissions) comment: 'TODO').
 	((queue property: #dead_letter_routing_key) comment: 'TODO') *- ((routingKey property: #queues_for_dead_letter) comment: 'TODO').
 	((queue property: #vhost) comment: 'TODO') *- ((vhost property: #queues) comment: 'TODO').
-	((role property: #user) comment: 'TODO') *- ((user property: #roles) comment: 'TODO').
+	((role property: #users) comment: 'TODO') *-* ((user property: #roles) comment: 'TODO').
 	((user property: #vhosts) comment: 'TODO') *-* ((vhost property: #users) comment: 'TODO').
 	
 ]

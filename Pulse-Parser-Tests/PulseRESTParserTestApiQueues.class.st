@@ -1935,8 +1935,7 @@ PulseRESTParserTestApiQueues >> testExistingPopulate [
 	
 	self assert: model size = 21.
 	
-	logP := PulseRESTParserApiQueues new.
-	logP sourceName: 'test2'.
+	logP := PulseRESTParserApiQueues newOn: 'test2'.
 	logP populate: model withJson: self data.
 	
 	self assert: model size = 21.
