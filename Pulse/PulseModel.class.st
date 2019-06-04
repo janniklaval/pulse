@@ -186,6 +186,7 @@ PulseModel >> selectOrAddEntityNamed: aName withType: aType sourceName: aSourceN
 				newEntity := aType new
 					pulseName: aName;
 					mooseModel: self.
+				self announcer announce: (PulseAnnouncement new entity: newEntity).
 				newEntity ].
 	
 	source := self entityNamed: aSourceName withType: PulseSource ifAbsent:[
