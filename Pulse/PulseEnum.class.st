@@ -36,6 +36,12 @@ PulseEnum class >> requirements [
 ]
 
 { #category : #accessing }
+PulseEnum >> pulseName [
+
+	^ pulseState
+]
+
+{ #category : #accessing }
 PulseEnum >> pulseState [
 
 	<MSEProperty: #pulseState type: #String>

@@ -226,7 +226,8 @@ OldPulseModel >> allTransportPolitic [
 OldPulseModel >> initialize [
 	
    super initialize.
-	self sourceLanguage: 'RabbitMQ'
+	self sourceLanguage: 'RabbitMQ'.
+	self metamodel: PulseMetamodelGenerator metamodel
 ]
 
 { #category : #'add-select' }

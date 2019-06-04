@@ -200,6 +200,12 @@ PulseChannel >> idleSince: anObject [
 ]
 
 { #category : #accessing }
+PulseChannel >> initialize [ 
+	super initialize.
+	self guaranteeMode: PulseGuaranteeMode none
+]
+
+{ #category : #accessing }
 PulseChannel >> pid [
 
 	<MSEProperty: #pid type: #String>

@@ -163,6 +163,11 @@ PulseConsumerProcess >> guid: anObject [
 ]
 
 { #category : #accessing }
+PulseConsumerProcess >> pulseName [
+	^ consumerTag
+]
+
+{ #category : #accessing }
 PulseConsumerProcess >> pulseState [
 
 	<generated>

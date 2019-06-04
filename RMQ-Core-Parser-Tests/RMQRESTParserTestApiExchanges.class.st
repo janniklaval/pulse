@@ -156,8 +156,7 @@ RMQRESTParserTestApiExchanges >> testExistingPopulate [
 	self assert: (user initializedExchanges size = 7).	
 	self assert: model size = 15.
 	
-	logP := RMQRESTParserApiExchanges new.
-	logP sourceName: 'test2'.
+	logP := RMQRESTParserApiExchanges newOn: 'test2'.
 	logP populate: model withJson: self data.
 	
 	self assert: model size = 15.

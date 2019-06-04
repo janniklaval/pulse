@@ -55,11 +55,11 @@ RMQRESTParserTestApiDefinitions >> testPopulateBindings [
 	self assert: b3 destination = (model allRMQQueues detect: [:e | e name = 'testQueue2']).
 	self assert: ((model allRMQQueues detect: [:e | e name = 'testQueue2']) destinationBindings anySatisfy: [ :e | e = b3 ]).
 	
-	self assert: b1 routingKey  = (model allRMQRoutingKeys detect: [:e | e pulseName = 'rkExchange']).
+	self assert: b1 routingKey first =  (model allRMQRoutingKeys detect: [:e | e pulseName = 'rkExchange']).
 	self assert: ((model allRMQRoutingKeys detect: [:e | e name = 'rkExchange']) binding = b1 ).
-	self assert: b2 routingKey  = (model allRMQRoutingKeys detect: [:e | e pulseName = 'testRoutingKey']).
+	self assert: b2 routingKey first  = (model allRMQRoutingKeys detect: [:e | e pulseName = 'testRoutingKey']).
 	self assert: ((model allRMQRoutingKeys detect: [:e | e name = 'testRoutingKey'])  binding = b2).
-	self assert: b3 routingKey  = (model allRMQRoutingKeys detect: [:e | e pulseName = 'testRoutingKeyBinding']).
+	self assert: b3 routingKey first = (model allRMQRoutingKeys detect: [:e | e pulseName = 'testRoutingKeyBinding']).
 	self assert: ((model allRMQRoutingKeys detect: [:e | e name = 'testRoutingKeyBinding'])  binding = b3 ).
 ]
 

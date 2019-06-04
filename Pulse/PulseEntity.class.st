@@ -47,7 +47,7 @@ PulseEntity class >> requirements [
 { #category : #accessing }
 PulseEntity >> name [ 
 
-	^self pulseName
+	^self pulseName ifNil:['']
 ]
 
 { #category : #accessing }

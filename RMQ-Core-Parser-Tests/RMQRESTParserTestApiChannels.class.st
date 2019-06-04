@@ -291,14 +291,13 @@ RMQRESTParserTestApiChannels >> testExistingPopulate [
 	self assert: (c2 user =u2 ).
 	self assert: (u1 usedConnections anySatisfy: [ :e | e =c1 ]).
 	self assert: (u2 usedConnections anySatisfy: [ :e | e =c2 ]).
-	self assert: model size = 12.
+	self assert: model size = 11.
 	
-	logP := RMQRESTParserApiChannels new.
-	logP sourceName: 'test2'.
+	logP := RMQRESTParserApiChannels newOn: 'test2'.
 	logP populate: model withJson: self data.
 	
 	
-	self assert: model size = 12.
+	self assert: model size = 11.
 	"channels"
 	self assert: model allRMQChannels size = 3.
 	ch1 := (model allRMQChannels detect: [:e | e name = '10.238.15.51:49677 -> 10.238.28.5:5672 (1)']).
@@ -438,7 +437,7 @@ RMQRESTParserTestApiChannels >> testPopulate [
 	self assert: (u1 usedConnections anySatisfy: [ :e | e =c1 ]).
 	self assert: (u2 usedConnections anySatisfy: [ :e | e =c2 ]).
 	
-	self assert: model size = 12.
+	self assert: model size = 11.
 	
 	
 ]

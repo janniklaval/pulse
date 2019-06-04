@@ -89,7 +89,7 @@ RMQRESTParserTestApiConsumers >> setUp [
 RMQRESTParserTestApiConsumers >> testExistingPopulate [
 
 	| t1 t2 vh ch1 ch2 q1 q2 u1 u2 c1 c2 node logP |
-	self assert: model size = 16.
+	self assert: model size = 17.
 	self assert: model allRMQConsumerProcesses size = 3.
 	
 	
@@ -165,7 +165,7 @@ RMQRESTParserTestApiConsumers >> testExistingPopulate [
 	logP := RMQRESTParserApiConsumers newOn: 'test2'.
 	logP populate: model withJson: self data.
 	
-	self assert: model size = 16.
+	self assert: model size = 17.
 	self assert: model allRMQConsumerProcesses size = 3.
 	
 	
