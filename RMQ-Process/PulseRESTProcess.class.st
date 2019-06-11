@@ -36,7 +36,7 @@ PulseRESTProcess >> blockToFinalize [
 { #category : #initalize }
 PulseRESTProcess >> initNewModelNamed: aMooseName onServer: serverName port: portAddr userName: username pwd: passw [
 
-	model := PulseModel new.
+	model := OldPulseModel new.
 	model name: aMooseName.
 	MooseModel root add: model.
 

@@ -46,7 +46,7 @@ PulseEventProcess >> initialiseModel: name [
 
 	"| repository |" 
 	
-   model := PulseModel new.
+   model := OldPulseModel new.
 	model name: name.
 	MooseModel root add: model.
 	
@@ -80,7 +80,7 @@ PulseEventProcess >> initialiseModel: name host: host port: port username: usern
 
    | credentials |
 
-   model := PulseModel new.
+   model := OldPulseModel new.
 	model name: name.
 	MooseModel root add: model.
 	

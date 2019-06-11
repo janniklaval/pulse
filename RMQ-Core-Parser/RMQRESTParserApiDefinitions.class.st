@@ -15,24 +15,24 @@ RMQRESTParserApiDefinitions >> populate: aModel withBindings: anArray [
 	| source destination vhostName vhost rkName rk |
 	anArray
 		do: [ :aBinding | 
-			| destType sourceName destinationName element newBinding |
+			| destType destinationName element newBinding |
 			destType := aBinding at: 'destination_type'.
 			sourceName := aBinding at: 'source'.
 			destinationName := aBinding at: 'destination'.
 			source := aModel
 				selectOrAddEntityNamed: sourceName
-				withType: RMQExchange
+				withType: PulseExchange
 				sourceName: self sourceName.
 			destType = 'exchange'
-				ifTrue: [ newBinding := RMQBindingWithExchange new.
+				ifTrue: [ newBinding := PulseBindingWithExchange new.
 					destination := aModel
 						selectOrAddEntityNamed: destinationName
-						withType: RMQExchange
+						withType: PulseExchange
 						sourceName: self sourceName ]
-				ifFalse: [ newBinding := RMQBindingWithQueue new.
+				ifFalse: [ newBinding := PulseBindingWithQueue new.
 					destination := aModel
 						selectOrAddEntityNamed: destinationName
-						withType: RMQQueue
+						withType: PulseQueue
 						sourceName: self sourceName ].
 			newBinding
 				source: source;
@@ -47,16 +47,16 @@ RMQRESTParserApiDefinitions >> populate: aModel withBindings: anArray [
 			vhostName := aBinding at: 'vhost'.
 			vhost := aModel
 				selectOrAddEntityNamed: vhostName
-				withType: RMQVHost
+				withType: PulseVHost
 				sourceName: self sourceName.
 			element vhost: vhost.
 			vhost bindings add: element.
 			rkName := aBinding at: 'routing_key'.
 			rk := aModel
 				selectOrAddEntityNamed: rkName
-				withType: RMQRoutingKey
+				withType: PulseRoutingKey
 				sourceName: self sourceName.
-			element routingKey: rk.
+			element routingKey add: rk.
 			rk binding: element ]
 ]
 
@@ -69,50 +69,50 @@ RMQRESTParserApiDefinitions >> populate: aModel withExchanges: anArray [
 			exchangeName := anExchange at: 'name'.
 			element := aModel
 				selectOrAddEntityNamed: exchangeName
-				withType: RMQExchange
+				withType: PulseExchange
 				sourceName: self sourceName.
 
 			"set topicId"
-			((exchangeName substrings: '.') at: 1 = 'pubsub')
+			(((exchangeName substrings: '.') at: 1) = 'pubsub')
 				ifTrue: [ element topicID: ((exchangeName substrings: '.') at: 3) ].
 
 
 			"element type: (anExchange at: 'type')."
 			(anExchange at: 'type') = 'topic'
-				ifTrue: [ element type: ExchangeType topic.
+				ifTrue: [ element type: PulseExchangeType topic.
 					element type exchanges add: element ].
 			(anExchange at: 'type') = 'direct'
-				ifTrue: [ element type: ExchangeType direct.
+				ifTrue: [ element type: PulseExchangeType direct.
 					element type exchanges add: element ].
 			(anExchange at: 'type') = 'fanout'
-				ifTrue: [ element type: ExchangeType fanout.
+				ifTrue: [ element type: PulseExchangeType fanout.
 					element type exchanges add: element ].
 			(anExchange at: 'type') = 'headers'
-				ifTrue: [ element type: ExchangeType headers.
+				ifTrue: [ element type: PulseExchangeType headers.
 					element type exchanges add: element ].
 			element internal: (anExchange at: 'internal').
 			element autoDelete: (anExchange at: 'auto_delete').
 			vhostName := anExchange at: 'vhost'.
 			vhost := aModel
 				selectOrAddEntityNamed: vhostName
-				withType: RMQVHost
+				withType: PulseVHost
 				sourceName: self sourceName.
 			element vhost: vhost.
 			vhost exchanges add: element.
 
 			"element durability:(anExchange at: 'durable')."
 			(anExchange at: 'durable') = 1
-				ifTrue: [ element durability: Durability durable.
+				ifTrue: [ element durability: true.
 					element durability exchanges add: element ].
 			(anExchange at: 'durable') = 0
-				ifTrue: [ element durability: Durability transient.
+				ifTrue: [ element durability: false.
 					element durability exchanges add: element ].
 			arg := anExchange at: 'arguments'.
 			altExchName := arg at: 'alternate-exchange' ifAbsent: [ nil ].
 			altExchName
 				ifNotNil: [ altExch := aModel
 						selectOrAddEntityNamed: altExchName
-						withType: RMQExchange
+						withType: PulseExchange
 						sourceName: self sourceName.
 					element my_alternate_exchange: altExch.
 					altExch alternate_exchange_for add: element ] ]
@@ -127,7 +127,7 @@ RMQRESTParserApiDefinitions >> populate: aModel withGlobalParameters: anArray [
 					clusterName := el at: 'value'.
 					aModel
 						selectOrAddEntityNamed: clusterName
-						withType: RMQCluster
+						withType: PulseCluster
 						sourceName: self sourceName ] ]
 ]
 
@@ -179,7 +179,7 @@ RMQRESTParserApiDefinitions >> populate: aModel withPermissions: anArray [
 										and: [ el writeValue = writeValue and: [ el readValue = readValue ] ] ] ] ]
 				ifFound: [ :elementFound | element := elementFound ]
 				ifNone: [ | newPermission |
-					newPermission := RMQPermission new
+					newPermission := PulsePermission new
 						configureValue: configureValue;
 						writeValue: writeValue;
 						readValue: readValue.
@@ -187,7 +187,7 @@ RMQRESTParserApiDefinitions >> populate: aModel withPermissions: anArray [
 					"add the user to the model if it doest not exist"
 					user := aModel
 						selectOrAddEntityNamed: permissionUserName
-						withType: RMQUser
+						withType: PulseUser
 						sourceName: self sourceName.
 					newPermission user: user.
 					user permissions add: newPermission.
@@ -195,7 +195,7 @@ RMQRESTParserApiDefinitions >> populate: aModel withPermissions: anArray [
 					"add the vhost to the model if it doest not exist"
 					vhost := aModel
 						selectOrAddEntityNamed: permissionVhostName
-						withType: RMQVHost
+						withType: PulseVHost
 						sourceName: self sourceName.
 					newPermission vhost: vhost.
 					vhost permissions add: newPermission.
@@ -219,14 +219,14 @@ RMQRESTParserApiDefinitions >> populate: aModel withQueues: anArray [
 			queueName := aQueue at: 'name'.
 			element := aModel
 				selectOrAddEntityNamed: queueName
-				withType: RMQQueue
+				withType: PulseQueue
 				sourceName: self sourceName.
 			element autoDelete: (aQueue at: 'auto_delete').
 			element durability: (aQueue at: 'durable').
 			vhostName := aQueue at: 'vhost'.
 			vhost := aModel
 				selectOrAddEntityNamed: vhostName
-				withType: RMQVHost
+				withType: PulseVHost
 				sourceName: self sourceName.
 			element vhost: vhost.
 			vhost queues add: element.
@@ -241,7 +241,7 @@ RMQRESTParserApiDefinitions >> populate: aModel withQueues: anArray [
 			deadRKName
 				ifNotNil: [ deadRK := aModel
 						selectOrAddEntityNamed: deadRKName
-						withType: RMQRoutingKey
+						withType: PulseRoutingKey
 						sourceName: self sourceName.
 					element dead_letter_routing_key: deadRK.
 					deadRK queues_for_dead_letter add: element ].
@@ -249,7 +249,7 @@ RMQRESTParserApiDefinitions >> populate: aModel withQueues: anArray [
 			deadExchName
 				ifNotNil: [ deadExch := aModel
 						selectOrAddEntityNamed: deadExchName
-						withType: RMQExchange
+						withType: PulseExchange
 						sourceName: self sourceName.
 					element dead_letter_exchange: deadExch.
 					deadExch queues_for_dead_letter add: element ] ]
@@ -269,7 +269,7 @@ RMQRESTParserApiDefinitions >> populate: aModel withUsers: anArray [
 			userName := aUser at: 'name'.
 			element := aModel
 				selectOrAddEntityNamed: userName
-				withType: RMQUser
+				withType: PulseUser
 				sourceName: self sourceName.
 			element passwordHash: (aUser at: 'password_hash').
 			element hashingAlgorithm: (aUser at: 'hashing_algorithm').
@@ -278,7 +278,7 @@ RMQRESTParserApiDefinitions >> populate: aModel withUsers: anArray [
 					| role |
 					role := aModel
 						selectOrAddEntityNamed: aRoleString
-						withType: RMQRole
+						withType: PulseRole
 						sourceName: self sourceName.
 					(element roles anySatisfy: [ :e | e = role ])
 						ifFalse: [ element roles add: role.
@@ -293,6 +293,6 @@ RMQRESTParserApiDefinitions >> populate: aModel withVhosts: anArray [
 			vhostName := aVhost at: 'name'.
 			element := aModel
 				selectOrAddEntityNamed: vhostName
-				withType: RMQVHost
+				withType: PulseVHost
 				sourceName: self sourceName ]
 ]

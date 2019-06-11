@@ -19,7 +19,7 @@ RMQEventParserTestConsumerDeleted >> setUp [
 "todo : go further and create the events queue and bing it to the exchange queue ?"
 
 	| consumer2 |
-	model := PulseModel new.
+	model := OldPulseModel new.
 	model name: 'test'.
 	
 	parser := RMQEventParser new. 

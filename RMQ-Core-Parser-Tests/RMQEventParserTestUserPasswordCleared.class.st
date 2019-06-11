@@ -20,7 +20,7 @@ RMQEventParserTestUserPasswordCleared >> setUp [
 "todo : go further and create the events queue and bing it to the exchange queue ?"
 
 	| user |
-	model := PulseModel new.
+	model := OldPulseModel new.
 	model name: 'test'.
 	
 	parser := RMQEventParser new. 

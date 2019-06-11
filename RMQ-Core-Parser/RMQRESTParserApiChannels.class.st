@@ -218,47 +218,47 @@ RMQRESTParserApiChannels >> populate: aModel withJson: aString [
 			channelName := anObject at: 'name'.
 			channel := aModel
 				selectOrAddEntityNamed: channelName
-				withType: RMQChannel
+				withType: PulseChannel
 				sourceName: self sourceName.
 			(anObject at: 'confirm')
-				ifTrue: [ channel guaranteeMode: GuaranteeMode confirm.
+				ifTrue: [ channel guaranteeMode: PulseGuaranteeMode confirm.
 					channel guaranteeMode channels add: channel ].
 			(anObject at: 'transactional')
-				ifTrue: [ channel guaranteeMode: GuaranteeMode transactional.
+				ifTrue: [ channel guaranteeMode: PulseGuaranteeMode transactional.
 					channel guaranteeMode channels add: channel ].
 			(anObject at: 'state') = 'running'
-				ifTrue: [ channel rmqState: State running.
-					channel rmqState channels add: channel ].
+				ifTrue: [ channel pulseState: PulseState running.
+					channel pulseState channels add: channel ].
 			(anObject at: 'state') = 'idle'
-				ifTrue: [ channel rmqState: State idle.
-					channel rmqState channels add: channel ].
+				ifTrue: [ channel pulseState: PulseState idle.
+					channel pulseState channels add: channel ].
 			(anObject at: 'state') = 'other'
-				ifTrue: [ channel rmqState: State other.
-					channel rmqState channels add: channel ].
+				ifTrue: [ channel pulseState: PulseState other.
+					channel pulseState channels add: channel ].
 			channel idleSince: (anObject at: 'idle_since').
 			user_who_performed_action := aModel
 				selectOrAddEntityNamed: (anObject at: 'user_who_performed_action')
-				withType: RMQUser
+				withType: PulseUser
 				sourceName: self sourceName.
 			channel user_who_performed_connection: user_who_performed_action.
 			user_who_performed_action initializedChannels add: channel.
 			user := aModel
 				selectOrAddEntityNamed: (anObject at: 'user')
-				withType: RMQUser
+				withType: PulseUser
 				sourceName: self sourceName.
 			channel user: user.
 			user usedChannels add: channel.
 			vhost := aModel
 				selectOrAddEntityNamed: (anObject at: 'vhost')
-				withType: RMQVHost
+				withType: PulseVHost
 				sourceName: self sourceName.
 			channel vhost: vhost.
 			vhost channels add: channel.
 			node := aModel
 				entityNamed: (anObject at: 'node')
-				withType: RMQNode
+				withType: PulseNode
 				ifAbsent: [ | newNode |
-					newNode := RMQNode new
+					newNode := PulseNode new
 						pulseName: (anObject at: 'node');
 						mooseModel: aModel.
 					vhost node: newNode.
@@ -266,7 +266,7 @@ RMQRESTParserApiChannels >> populate: aModel withJson: aString [
 					newNode ].
 			connection := aModel
 				selectOrAddEntityNamed: ((anObject at: 'connection_details') at: 'name')
-				withType: RMQConnection
+				withType: PulseConnection
 				sourceName: self sourceName.
 			connection
 				peerHost: ((anObject at: 'connection_details') at: 'peer_host').

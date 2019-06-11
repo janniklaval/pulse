@@ -18,7 +18,7 @@ Class {
 RMQEventParserTestVhostDeleted >> setUp [
 	"todo : go further and create the events queue and bind it to the exchange queue ?"
 
-	model := PulseModel new.
+	model := OldPulseModel new.
 	model name: 'test'.
 	parser := RMQEventParser newOn: 'test'.
 	consumer := RMQConsumer new.
@@ -28,7 +28,7 @@ RMQEventParserTestVhostDeleted >> setUp [
 	"set up the model for the test"
 	model
 		selectOrAddEntityNamed: 'testtest'
-		withType: RMQVHost
+		withType: PulseVHost
 		sourceName: self sourceName.
 	2 second wait.
 

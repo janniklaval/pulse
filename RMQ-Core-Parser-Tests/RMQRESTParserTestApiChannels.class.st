@@ -212,10 +212,9 @@ RMQRESTParserTestApiChannels >> data [
 RMQRESTParserTestApiChannels >> setUp [
 
 	| logP |
-	model := PulseModel new.
+	model := OldPulseModel new.
 	model name: 'test'.
-	logP := RMQRESTParserApiChannels new.
-	logP sourceName: 'test'.
+	logP := RMQRESTParserApiChannels newOn: 'test'.
 	logP populate: model withJson: self data.
 	
 	
@@ -237,12 +236,12 @@ RMQRESTParserTestApiChannels >> testExistingPopulate [
 	self assert: ch2 guaranteeMode name = 'none'. 
 	self assert: (ch2 guaranteeMode channels anySatisfy: [ :e | e =ch2 ]).
 	
-	self assert: ch1 rmqState name = 'running'.
-	self assert: (ch1 rmqState channels anySatisfy: [:e | e = ch1 ]).
+	self assert: ch1 pulseState name = 'running'.
+	self assert: (ch1 pulseState channels anySatisfy: [:e | e = ch1 ]).
 	self assert: ch1 idleSince = '2018-11-08 9:47:09'.	
 	
-	self assert: ch2 rmqState name = 'running'.
-	self assert: (ch2 rmqState channels anySatisfy: [:e | e = ch2 ]).
+	self assert: ch2 pulseState name = 'running'.
+	self assert: (ch2 pulseState channels anySatisfy: [:e | e = ch2 ]).
 	self assert: ch2 idleSince = '2018-11-08 9:47:09'.	
 		
 	"users"
@@ -292,14 +291,13 @@ RMQRESTParserTestApiChannels >> testExistingPopulate [
 	self assert: (c2 user =u2 ).
 	self assert: (u1 usedConnections anySatisfy: [ :e | e =c1 ]).
 	self assert: (u2 usedConnections anySatisfy: [ :e | e =c2 ]).
-	self assert: model size = 12.
+	self assert: model size = 11.
 	
-	logP := RMQRESTParserApiChannels new.
-	logP sourceName: 'test2'.
+	logP := RMQRESTParserApiChannels newOn: 'test2'.
 	logP populate: model withJson: self data.
 	
 	
-	self assert: model size = 12.
+	self assert: model size = 11.
 	"channels"
 	self assert: model allRMQChannels size = 3.
 	ch1 := (model allRMQChannels detect: [:e | e name = '10.238.15.51:49677 -> 10.238.28.5:5672 (1)']).
@@ -310,12 +308,12 @@ RMQRESTParserTestApiChannels >> testExistingPopulate [
 	self assert: ch2 guaranteeMode name = 'none'. 
 	self assert: (ch2 guaranteeMode channels anySatisfy: [ :e | e =ch2 ]).
 	
-	self assert: ch1 rmqState name = 'running'.
-	self assert: (ch1 rmqState channels anySatisfy: [:e | e = ch1 ]).
+	self assert: ch1 pulseState name = 'running'.
+	self assert: (ch1 pulseState channels anySatisfy: [:e | e = ch1 ]).
 	self assert: ch1 idleSince = '2018-11-08 9:47:09'.	
 	
-	self assert: ch2 rmqState name = 'running'.
-	self assert: (ch2 rmqState channels anySatisfy: [:e | e = ch2 ]).
+	self assert: ch2 pulseState name = 'running'.
+	self assert: (ch2 pulseState channels anySatisfy: [:e | e = ch2 ]).
 	self assert: ch2 idleSince = '2018-11-08 9:47:09'.	
 		
 	"users"
@@ -383,12 +381,12 @@ RMQRESTParserTestApiChannels >> testPopulate [
 	self assert: ch2 guaranteeMode name = 'none'. 
 	self assert: (ch2 guaranteeMode channels anySatisfy: [ :e | e =ch2 ]).
 	
-	self assert: ch1 rmqState name = 'running'.
-	self assert: (ch1 rmqState channels anySatisfy: [:e | e = ch1 ]).
+	self assert: ch1 pulseState name = 'running'.
+	self assert: (ch1 pulseState channels anySatisfy: [:e | e = ch1 ]).
 	self assert: ch1 idleSince = '2018-11-08 9:47:09'.	
 	
-	self assert: ch2 rmqState name = 'running'.
-	self assert: (ch2 rmqState channels anySatisfy: [:e | e = ch2 ]).
+	self assert: ch2 pulseState name = 'running'.
+	self assert: (ch2 pulseState channels anySatisfy: [:e | e = ch2 ]).
 	self assert: ch2 idleSince = '2018-11-08 9:47:09'.	
 		
 	"users"
@@ -439,7 +437,7 @@ RMQRESTParserTestApiChannels >> testPopulate [
 	self assert: (u1 usedConnections anySatisfy: [ :e | e =c1 ]).
 	self assert: (u2 usedConnections anySatisfy: [ :e | e =c2 ]).
 	
-	self assert: model size = 12.
+	self assert: model size = 11.
 	
 	
 ]

@@ -53,7 +53,187 @@ Redelivered	●
 Properties	
 headers:
 
-" the Message, 
+the dictionnary represents the properties headers :
+ exchange_name:	pubsub.default.consoleSaasUserAccess.publish *
+ routing_keys:	message
+ properties:	
+  app_id:	bl-console-saas *
+  timestamp:	1550658626  *
+  message_id:	0c38ddd9-2a84-493a-bd5d-1c8d2906350e  *
+  delivery_mode:	2 *
+  headers:	
+   X-ExchangeFormatId:	AVRO *
+   X-TenantId:	default *
+   X-ClientId:	bl-console-saas
+   X-TopicId:	consoleSaasUserAccess
+   X-ExchangeFormatSchema:	*
+ node:	rabbit@fceed0d94b94  *
+ vhost:	/ *
+ connection:	172.17.0.1:43458 -> 172.17.0.2:5672  *
+ channel:	1  *
+ user:	guest  *
+ routed_queues:	pubsub.default.consoleSaasUserAccess.module-profile-updated.subscribe"
+
+	| messageObject messageId connection queue user node exchange vhost channel publisherComponent consumerComponent exchangeFormat component tenant tenantId |
+	
+	node := aModel
+		selectOrAddEntityNamed: (aDictionnary at: 'node')
+		withType: PulseNode
+		sourceName: self sourceName.
+
+	"set the vhost"
+	vhost := aModel
+		selectOrAddEntityNamed: (aDictionnary at: 'vhost')
+		withType: PulseVHost
+		sourceName: self sourceName.
+	vhost node
+		ifNil: [ node vhosts add: vhost.
+			vhost node: node ].
+	messageId := (aDictionnary at: 'properties') at: 'message_id'.
+	aModel allRMQMessages
+		detect: [ :el | el messageID = messageId ]
+		ifFound: [ :elementFound | messageObject := elementFound ]
+		ifNone: [ messageObject := PulseMessage new.
+			messageObject messageID: messageId.
+			messageObject mooseModel: aModel.
+			aModel add: messageObject ].
+	messageObject
+		timestamp: ((aDictionnary at: 'properties') at: 'timestamp').
+
+	"set the connection"
+	"to do : update regarding to new naming of connection "
+	connection := aModel
+		selectOrAddEntityNamed: (aDictionnary at: 'connection')
+		withType: PulseConnection
+		sourceName: self sourceName.
+	(vhost connections anySatisfy: [ :e | e = connection ])
+		ifFalse: [ vhost connections add: connection.
+			connection vhost: vhost ].
+
+	"set the user"
+	"to do : update to initialized connections ?"
+	user := aModel
+		selectOrAddEntityNamed: (aDictionnary at: 'user')
+		withType: PulseUser
+		sourceName: self sourceName.
+	user usedConnections
+		detect: [ :conn | conn = connection ]
+		ifNone: [ connection user: user.
+			user usedConnections add: connection ].
+	user vhosts
+		detect: [ :vh | vh = vhost ]
+		ifNone: [ vhost users add: user.
+			user vhosts add: vhost ].
+
+	"channels name is connection + (+ channel+)"
+	channel := aModel
+		selectOrAddEntityNamed:
+			(aDictionnary at: 'connection') , ' ('
+				, (aDictionnary at: 'channel') asStringWithCommas , ')'
+		withType: PulseChannel
+		sourceName: self sourceName.
+	channel vhost
+		ifNil: [ vhost channels add: channel.
+			channel vhost: vhost ].
+	channel connection
+		ifNil: [ connection channels add: connection.
+			channel connection: connection ].
+	user usedChannels
+		detect: [ :ch | ch = channel ]
+		ifNone: [ channel user: user.
+			user usedChannels add: channel ].
+
+	"set the exchange"
+	exchange := aModel
+		selectOrAddEntityNamed: (aDictionnary at: 'exchange_name')
+		withType: PulseExchange
+		sourceName: self sourceName.
+	exchange publishedMessages add: messageObject.
+	messageObject publishedToExchange: exchange.
+	exchange vhost
+		ifNil: [ vhost exchanges add: exchange.
+			exchange vhost: vhost ].
+
+	"message delivery mode"
+	((aDictionnary at: 'properties') at: 'delivery_mode') = 1
+		ifTrue: [ messageObject deliveryMode: PulseDeliveryMode nonPersistent ]
+		ifFalse: [ messageObject deliveryMode: PulseDeliveryMode persistent ].
+	messageObject deliveryMode messages add: messageObject.
+
+	"to do : separate consumer and publisher !"
+
+	"set the publisher"
+	(aDictionnary at: 'properties')
+		at: 'app_id'
+		ifPresent: [ publisherComponent := aModel
+				selectOrAddEntityNamed: ((aDictionnary at: 'properties') at: 'app_id')
+				withType: PulsePublisherComponent
+				sourceName: self sourceName.
+			publisherComponent messagesFromPublisher add: messageObject.
+			messageObject publisherComponent: publisherComponent.
+			tenantId := aModel
+				selectOrAddEntityNamed: (((aDictionnary at: 'properties') at: 'headers') at: 'X-TenantId')
+				withType: PulseTenant
+				sourceName: self sourceName.
+			publisherComponent tenantId: tenantId.
+			publisherComponent usedChannels
+				detect: [ :ch | ch = channel ]
+				ifNone: [ publisherComponent usedChannels add: channel.
+					channel publisherComponent: publisherComponent ].
+			publisherComponent exchanges
+				detect: [ :exch | exch = exchange ]
+				ifNone: [ publisherComponent exchanges add: exchange.
+					exchange publisherComponents add: publisherComponent ] ].
+
+
+	"set the exchange format"
+	aModel allRMQExchangeFormats
+		detect: [ :el | 
+			el exchangeFormatSchema
+				=
+					(((aDictionnary at: 'properties') at: 'headers')
+						at: 'X-ExchangeFormatSchema') ]
+		ifFound: [ :elementFound | exchangeFormat := elementFound ]
+		ifNone: [ exchangeFormat := PulseExchangeFormat new.
+			exchangeFormat
+				exchangeFormatSchema:
+					(((aDictionnary at: 'properties') at: 'headers')
+						at: 'X-ExchangeFormatSchema').
+			exchangeFormat
+				exchangeFormatType:
+					(((aDictionnary at: 'properties') at: 'headers')
+						at: 'X-ExchangeFormatId').
+			exchangeFormat mooseModel: aModel.
+			aModel add: exchangeFormat ].
+	messageObject exchangeFormat: exchangeFormat.
+	exchangeFormat messages add: messageObject.
+
+	"message type according to existance of routed_queues "
+	aDictionnary
+		at: 'routed_queues'
+		ifPresent: [ messageObject messageType: PulseMessageType published.
+			messageObject messageType messages add: messageObject ].
+	aDictionnary
+		at: 'routed_queues'
+		ifAbsent: [ messageObject messageType: PulseMessageType received.
+			messageObject messageType messages add: messageObject.	" to do : a revoir !"
+			queue := aModel
+				selectOrAddEntityNamed: resource
+				withType: PulseQueue
+				sourceName: self sourceName.
+			messageObject queue: queue.
+			queue messagesFromPublisher add: messageObject.	"to do : a revoir plus de queue dans message et pa de messagesFromPublisher dans queue "
+			queue vhost
+				ifNil: [ vhost queues add: queue.
+					queue vhost: vhost ] ]
+
+
+	" set routingKeys if the MM is updated "
+]
+
+{ #category : #parsing }
+RMQTraceParser >> populate: aModel withTraceMessage: aDictionnary withTraceType: traceType onResource: resource [
+	" the Message, 
 Exchange	amq.rabbitmq.trace
 Routing Key	deliver.events.user.authentication.success
 Redelivered	●
@@ -80,110 +260,85 @@ the dictionnary represents the properties headers :
  channel:	1  *
  user:	guest  *
  routed_queues:	pubsub.default.consoleSaasUserAccess.module-profile-updated.subscribe"
- 
-			| messageObject messageId connection queue user node exchange vhost channel publisherComponent consumerComponent exchangeFormat component tenant tenantId |
-			
-			
-			node := aModel selectOrAddEntityNamed: (aDictionnary at: 'node') withType: RMQNode.
-			
-			"set the vhost"
-			vhost := aModel selectOrAddEntityNamed: (aDictionnary at: 'vhost') withType: RMQVHost.
-		  	vhost node ifNil:[ node vhosts add: vhost.	vhost node: node. ].
-			
-			messageId := ((aDictionnary at: 'properties') at: 'message_id'). 
-			
-			aModel allRMQMessages
-		   detect: [ :el | el messageID  = messageId ]
-		   ifFound: [ :elementFound | 
-			messageObject := elementFound. ]
-		   ifNone: [ 
-			  messageObject := RMQMessage new. 
-			  messageObject messageID: messageId.
-			  messageObject mooseModel: aModel. 
-			  aModel add: messageObject  ].
-		   
-			messageObject timestamp: ((aDictionnary at: 'properties') at: 'timestamp').
-			
-			"set the connection"
-			"to do : update regarding to new naming of connection "
-			connection := aModel selectOrAddEntityNamed: (aDictionnary at: 'connection') withType: RMQConnection.
-         (vhost connections anySatisfy: [ :e | e = connection ])
-		   ifFalse: [ vhost connections add: connection. connection vhost: vhost ].
-         
-         "set the user"
-         "to do : update to initialized connections ?"
-			user := aModel selectOrAddEntityNamed: (aDictionnary at: 'user') withType: RMQUser.
-			user usedConnections 
-				detect: [:conn| conn = connection ]
-				ifNone: [
-					connection user: user.
-					user usedConnections add: connection.
-				].
-			user vhosts 
-				detect: [:vh| vh = vhost ]
-				ifNone: [
-					vhost users add: user.
-					user vhosts add: vhost.
-				].
-			
-			"channels name is connection + (+ channel+)"
-			channel := aModel selectOrAddEntityNamed: ((aDictionnary at: 'connection'), ' (', ((aDictionnary at: 'channel') asStringWithCommas), ')' ) withType: RMQChannel.
-			
-			channel vhost ifNil:[
-				vhost channels add: channel.
-				channel vhost: vhost.
-			].
-			channel connection ifNil:[
-				connection channels add: connection.
-				channel connection: connection.
-			].
-			user usedChannels 
-				detect: [:ch| ch = channel ]
-				ifNone: [
-					channel user: user.
-					user usedChannels add: channel.
-			].
-			
-			"set the exchange"
-			exchange := aModel selectOrAddEntityNamed: ( aDictionnary at: 'exchange_name') withType: RMQExchange.
-			exchange publishedMessages add: messageObject.
-			messageObject publishedToExchange: exchange.
-			exchange vhost ifNil:[ vhost exchanges add: exchange. exchange vhost: vhost. ].
-		
-			"message delivery mode"
-			(((aDictionnary at: 'properties') at: 'delivery_mode') = 1) ifTrue: [ messageObject deliveryMode: (DeliveryMode nonPersistent) ]
-			                                           ifFalse: [ messageObject deliveryMode: (DeliveryMode persistent) ].    
-			 messageObject deliveryMode messages add: messageObject.          
-			 
-			"to do : separate consumer and publisher !"	
-				
-          "set the publisher"        
-			(aDictionnary at: 'properties') at: 'app_id' ifPresent:[
-				publisherComponent := aModel selectOrAddEntityNamed: ((aDictionnary at: 'properties') at: 'app_id') withType: RMQPublisherComponent.
-				publisherComponent messagesFromPublisher add: messageObject.
-				messageObject publisherComponent: publisherComponent.
-				
-				tenantId := aModel selectOrAddEntityNamed: (((aDictionnary at: 'properties') at: 'headers') at: 'X-TenantId') withType: RMQTenant. 
-				publisherComponent tenantId: tenantId. 
-			
-				publisherComponent usedChannels 
-					detect: [:ch| ch = channel ]
-					ifNone: [
-						publisherComponent usedChannels add: channel.
-						channel publisherComponent: publisherComponent.
-					].
-			
-				publisherComponent exchanges 
-					detect: [:exch| exch = exchange ]
-					ifNone: [
-						publisherComponent exchanges add: exchange.
-						exchange publisherComponents add: publisherComponent.
-					].
-			].
-		
-		
-		   "set the exchange format"
-		   aModel allRMQExchangeFormats
+
+	| messageObject messageId connection queue user node exchange vhost channel publisherComponent consumerComponent exchangeFormat tenantId routedQueue routedQueues routingKey exchangeName consumerComponenetName consumerComponentName |
+	node := aModel
+		selectOrAddEntityNamed: (aDictionnary at: 'node')
+		withType: PulseNode
+		sourceName: self sourceName.
+
+	"set the vhost"
+	vhost := aModel
+		selectOrAddEntityNamed: (aDictionnary at: 'vhost')
+		withType: PulseVHost
+		sourceName: self sourceName.
+	vhost node
+		ifNil: [ node vhosts add: vhost.
+			vhost node: node ].
+	messageObject := aModel
+		selectOrAddEntityNamed: ((aDictionnary at: 'properties') at: 'message_id')
+		withType: PulseMessage
+		sourceName: self sourceName.
+	messageObject
+		timestamp: ((aDictionnary at: 'properties') at: 'timestamp').
+
+	"set the connection"
+	"to do : update regarding to new naming of connection "
+	connection := aModel
+		selectOrAddEntityNamed: (aDictionnary at: 'connection')
+		withType: PulseConnection
+		sourceName: self sourceName.
+	(vhost connections anySatisfy: [ :e | e = connection ])
+		ifFalse: [ vhost connections add: connection.
+			connection vhost: vhost ].
+
+	"set the user"
+	"to do : update to initialized connections ?"
+	user := aModel
+		selectOrAddEntityNamed: (aDictionnary at: 'user')
+		withType: PulseUser
+		sourceName: self sourceName.
+	user usedConnections
+		detect: [ :conn | conn = connection ]
+		ifNone: [ connection user: user.
+			user usedConnections add: connection ].
+	user vhosts
+		detect: [ :vh | vh = vhost ]
+		ifNone: [ vhost users add: user.
+			user vhosts add: vhost ].
+
+	"channels name is connection + (+ channel+)"
+	channel := aModel
+		selectOrAddEntityNamed:
+			(aDictionnary at: 'connection') , ' ('
+				, (aDictionnary at: 'channel') asStringWithCommas , ')'
+		withType: PulseChannel
+		sourceName: self sourceName.
+	channel vhost
+		ifNil: [ vhost channels add: channel.
+			channel vhost: vhost ].
+	channel connection
+		ifNil: [ connection channels add: connection.
+			channel connection: connection ].
+	user usedChannels
+		detect: [ :ch | ch = channel ]
+		ifNone: [ channel user: user.
+			user usedChannels add: channel ].
+
+	"message delivery mode"
+	((aDictionnary at: 'properties') at: 'delivery_mode') = 1
+		ifTrue: [ messageObject deliveryMode: PulseDeliveryMode nonPersistent ]
+		ifFalse: [ messageObject deliveryMode: PulseDeliveryMode persistent ].
+	messageObject deliveryMode messages add: messageObject.
+
+	"set the exchange format"
+	exchangeFormat := aModel
+		selectOrAddEntityNamed:
+			(((aDictionnary at: 'properties') at: 'headers')
+				at: 'X-ExchangeFormatSchema')
+		withType: PulseExchangeFormat
+		sourceName: self sourceName.
+	"aModel allRMQExchangeFormats
 		   detect: [ :el | el exchangeFormatSchema  = (((aDictionnary at: 'properties') at: 'headers') at: 'X-ExchangeFormatSchema') ]
 		   ifFound: [ :elementFound | 
 			exchangeFormat := elementFound. ]
@@ -214,7 +369,7 @@ the dictionnary represents the properties headers :
 	exchangeName := aDictionnary at: 'exchange_name'.
 	exchange := aModel
 		selectOrAddEntityNamed: exchangeName
-		withType: RMQExchange
+		withType: PulseExchange
 		sourceName: self sourceName.
 	exchange publishedMessages add: messageObject.
 	messageObject publishedToExchange: exchange.
@@ -233,7 +388,7 @@ the dictionnary represents the properties headers :
 				at: 'app_id'
 				ifPresent: [ publisherComponent := aModel
 						selectOrAddEntityNamed: ((aDictionnary at: 'properties') at: 'app_id')
-						withType: RMQPublisherComponent
+						withType: PulsePublisherComponent
 						sourceName: self sourceName.
 					publisherComponent
 						appId: ((aDictionnary at: 'properties') at: 'app_id').
@@ -241,7 +396,7 @@ the dictionnary represents the properties headers :
 					messageObject publisherComponent: publisherComponent.
 					tenantId := aModel
 						selectOrAddEntityNamed: (((aDictionnary at: 'properties') at: 'headers') at: 'X-TenantId')
-						withType: RMQTenant
+						withType: PulseTenant
 						sourceName: self sourceName.
 					publisherComponent tenantId: tenantId.
 					publisherComponent usedChannels
@@ -289,7 +444,7 @@ the dictionnary represents the properties headers :
 			"set the queue from which the message was delivered "
 			queue := aModel
 				selectOrAddEntityNamed: resource
-				withType: RMQQueue
+				withType: PulseQueue
 				sourceName: self sourceName.
 			"link with messages"
 			queue deliveredMessages add: messageObject.
@@ -305,7 +460,7 @@ the dictionnary represents the properties headers :
 				ifTrue: [ consumerComponentName := (resource substrings: '.') at: 4.
 					consumerComponent := aModel
 						selectOrAddEntityNamed: consumerComponentName
-						withType: RMQConsumerComponent
+						withType: PulseConsumerComponent
 						sourceName: self sourceName.
 					consumerComponent appId: ((resource substrings: '.') at: 4).
 					consumerComponent subscribedChannels

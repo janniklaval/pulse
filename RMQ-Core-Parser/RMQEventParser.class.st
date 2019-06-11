@@ -16,7 +16,7 @@ RMQEventParser >> populate: aModel withBindingCreated: aDictionnary at: timestam
 
 	"todo : set the arguments"
 
-	| bindingObject source destination routingKey destType sourceName destinationName newBinding |
+	| bindingObject source destination routingKey destType destinationName newBinding |
 	destType := (aDictionnary at: 'destination_kind')
 		trimLeft: [ :e | e = '"' ]
 		right: [ :e | e = '"' ].
@@ -30,18 +30,18 @@ RMQEventParser >> populate: aModel withBindingCreated: aDictionnary at: timestam
 	"Transcript cr; nextPutAll: 'destType: ', destType, ' sourceName: ' ,sourceName, ' destinationName: ', destinationName ; flush."
 	source := aModel
 		selectOrAddEntityNamed: sourceName
-		withType: RMQExchange
+		withType: PulseExchange
 		sourceName: self sourceName.
 	destType = 'exchange'
-		ifTrue: [ newBinding := RMQBindingWithExchange new.
+		ifTrue: [ newBinding := PulseBindingWithExchange new.
 			destination := aModel
 				selectOrAddEntityNamed: destinationName
-				withType: RMQExchange
+				withType: PulseExchange
 				sourceName: self sourceName ]
-		ifFalse: [ newBinding := RMQBindingWithQueue new.
+		ifFalse: [ newBinding := PulseBindingWithQueue new.
 			destination := aModel
 				selectOrAddEntityNamed: destinationName
-				withType: RMQQueue
+				withType: PulseQueue
 				sourceName: self sourceName ].
 	newBinding
 		source: source;
@@ -60,7 +60,7 @@ RMQEventParser >> populate: aModel withBindingCreated: aDictionnary at: timestam
 	bindingObject creationDate: timestamp.
 	routingKey := aModel
 		selectOrAddEntityNamed: (aDictionnary at: 'routing_key')
-		withType: RMQRoutingKey
+		withType: PulseRoutingKey
 		sourceName: self sourceName.
 	bindingObject routingKey: routingKey.
 	routingKey binding: bindingObject
@@ -72,7 +72,7 @@ RMQEventParser >> populate: aModel withBindingDeleted: aDictionnary at: timestam
 "todo : add test if the criteria are not nil
         set the arguments"
 	
-	| bindingObject destType source sourceName destination destinationName routingKeyName routingKey |
+	| bindingObject destType source destination destinationName routingKeyName routingKey |
 		
 	destType := (aDictionnary at: 'destination_kind').
 	sourceName := (aDictionnary at: 'source_name').
@@ -81,15 +81,15 @@ RMQEventParser >> populate: aModel withBindingDeleted: aDictionnary at: timestam
 	
 	"if the binding does not exist, create it"
 	
-	source := aModel entityNamed: sourceName withType: RMQExchange.
+	source := aModel entityNamed: sourceName withType: PulseExchange.
 		
 	destType = 'exchange' ifTrue: [ 
-		destination:= aModel entityNamed: destinationName withType: RMQExchange.
+		destination:= aModel entityNamed: destinationName withType: PulseExchange.
 	] ifFalse: [ 
-		destination:= aModel entityNamed: destinationName withType: RMQQueue.
+		destination:= aModel entityNamed: destinationName withType: PulseQueue.
 	].
    
-   routingKey := aModel entityNamed: routingKeyName withType: RMQRoutingKey.
+   routingKey := aModel entityNamed: routingKeyName withType: PulseRoutingKey.
 	
 	 aModel allRMQBindings
 		detect: [ :element | element source = source and: [ element destination = destination  and: [ element routingKey = routingKey ] ]  ]
@@ -131,19 +131,19 @@ RMQEventParser >> populate: aModel withChannelCreated: aDictionnary at: timestam
 	| channelObject vhost user connection |
 	channelObject := aModel
 		selectOrAddEntityNamed: (aDictionnary at: 'name')
-		withType: RMQChannel
+		withType: PulseChannel
 		sourceName: self sourceName.
 	channelObject creationDate: timestamp.
 	channelObject pid: (aDictionnary at: 'pid').
 	vhost := aModel
 		selectOrAddEntityNamed: (aDictionnary at: 'vhost')
-		withType: RMQVHost
+		withType: PulseVHost
 		sourceName: self sourceName.
 	channelObject vhost: vhost.
 	vhost channels add: channelObject.
 	user := aModel
 		selectOrAddEntityNamed: (aDictionnary at: 'user')
-		withType: RMQUser
+		withType: PulseUser
 		sourceName: self sourceName.
 	channelObject user: user.
 	user usedChannels add: channelObject.
@@ -196,9 +196,9 @@ aDictionnary (timestamp_in_ms:	1544196873787, pid:	<rabbit@fceed0d94b94.3.12113.
 	connectionType := aDictionnary at: 'type'.
 	connectionObject := aModel
 		entityNamed: connectionName
-		withType: RMQConnection
+		withType: PulseConnection
 		ifAbsent: [ | newConnection |
-			newConnection := RMQConnection new
+			newConnection := PulseConnection new
 				pulseName: connectionName;
 				mooseModel: aModel.
 			newConnection pid: (aDictionnary at: 'pid').
@@ -229,14 +229,14 @@ aDictionnary (timestamp_in_ms:	1544196873787, pid:	<rabbit@fceed0d94b94.3.12113.
 	connectionObject creationDate: timestamp.
 	vhost := aModel
 		selectOrAddEntityNamed: (aDictionnary at: 'vhost')
-		withType: RMQVHost
+		withType: PulseVHost
 		sourceName: self sourceName.
 	(vhost connections anySatisfy: [ :e | e = connectionObject ])
 		ifFalse: [ vhost connections add: connectionObject.
 			connectionObject vhost: vhost ].
 	user := aModel
 		selectOrAddEntityNamed: (aDictionnary at: 'user')
-		withType: RMQUser
+		withType: PulseUser
 		sourceName: self sourceName.
 	(user usedConnections anySatisfy: [ :e | e = connectionObject ])
 		ifFalse: [ user usedConnections add: connectionObject.
@@ -253,7 +253,7 @@ RMQEventParser >> populate: aModel withConsumerCreated: aDictionnary at: timesta
 	| componentObject vhost channel relatedQueue |
 	vhost := aModel
 		selectOrAddEntityNamed: (aDictionnary at: 'vhost')
-		withType: RMQVHost
+		withType: PulseVHost
 		sourceName: self sourceName.
 	"to do: change to ConsumerProcess"
 	"// find the consumer with the right channel and vhost"
@@ -264,7 +264,7 @@ RMQEventParser >> populate: aModel withConsumerCreated: aDictionnary at: timesta
 						anySatisfy:
 							[ :el | el pid = (aDictionnary at: 'channel') and: [ el vhost = vhost ] ] ] ]
 		ifFound: [ :elementFound | componentObject := elementFound ]
-		ifNone: [ componentObject := RMQConsumerProcess new.
+		ifNone: [ componentObject := PulseConsumerProcess new.
 			componentObject consumerTag: (aDictionnary at: 'consumer_tag').
 			componentObject mooseModel: aModel.
 			aModel add: componentObject ].
@@ -273,13 +273,13 @@ RMQEventParser >> populate: aModel withConsumerCreated: aDictionnary at: timesta
 	componentObject ackRequired: (aDictionnary at: 'ack_required').
 	relatedQueue := aModel
 		selectOrAddEntityNamed: (aDictionnary at: 'queue')
-		withType: RMQQueue
+		withType: PulseQueue
 		sourceName: self sourceName.
 	aModel allRMQChannels
 		detect:
 			[ :el | el pid = (aDictionnary at: 'channel') and: [ el vhost = vhost ] ]
 		ifFound: [ :elementFound | channel := elementFound ]
-		ifNone: [ channel := RMQChannel new.
+		ifNone: [ channel := PulseChannel new.
 			channel consumerProcess: componentObject.
 			channel pid: (aDictionnary at: 'channel').
 			channel consumedQueues add: relatedQueue.
@@ -334,7 +334,7 @@ RMQEventParser >> populate: aModel withConsumerDeleted: aDictionnary at: timesta
 	
 		| componentObject  vhost |
 
-		vhost := aModel entityNamed: (aDictionnary at: 'vhost') withType: RMQVHost.
+		vhost := aModel entityNamed: (aDictionnary at: 'vhost') withType: PulseVHost.
 		
 	   aModel allRMQConsumerProcesses
 		detect: [ :element | element consumerTag = (aDictionnary at: 'consumer_tag') 
@@ -378,8 +378,6 @@ RMQEventParser >> populate: aModel withExchangeCreated: aDictionnary at: timesta
 		
 		exchangeObject internal: (aDictionnary at: 'internal').
 		exchangeObject autoDelete: (aDictionnary at: 'auto_delete').
-		((aDictionnary at: 'durable') = 1) ifTrue: [ exchangeObject durability: (Durability durable).  exchangeObject durability exchanges add: exchangeObject].
-		((aDictionnary at: 'durable') = 0) ifTrue: [ exchangeObject durability: (Durability transient).  exchangeObject durability exchanges add: exchangeObject].
 		
 		
 		vhost := aModel selectOrAddEntityNamed: (aDictionnary at: 'vhost') withType: RMQVHost.
@@ -395,6 +393,8 @@ RMQEventParser >> populate: aModel withExchangeCreated: aDictionnary at: timesta
 			exchangeObject my_alternate_exchange: altExch.
 			altExch alternate_exchange_for add: exchangeObject.
 		].]
+		((aDictionnary at: 'durable') = 0) ifTrue: [ exchangeObject durability: (Durability transient).  exchangeObject durability exchanges add: exchangeObject].
+		((aDictionnary at: 'durable') = 1) ifTrue: [ exchangeObject durability: (Durability durable).  exchangeObject durability exchanges add: exchangeObject].
 ]
 
 { #category : #parsing }
@@ -445,7 +445,7 @@ RMQEventParser >> populate: aModel withPermissionCreated: aDictionnary at: times
 						and: [ el configureValue = configureValue
 								and: [ el writeValue = writeValue and: [ el readValue = readValue ] ] ] ] ]
 		ifFound: [ :elementFound | permissionObject := elementFound ]
-		ifNone: [ permissionObject := RMQPermission new.
+		ifNone: [ permissionObject := PulsePermission new.
 			permissionObject configureValue: configureValue.
 			permissionObject writeValue: writeValue.
 			permissionObject readValue: readValue.
@@ -454,7 +454,7 @@ RMQEventParser >> populate: aModel withPermissionCreated: aDictionnary at: times
 			"add the vhost to the model if it doest not exist"
 			vhost := aModel
 				selectOrAddEntityNamed: vhostName
-				withType: RMQVHost
+				withType: PulseVHost
 				sourceName: self sourceName.
 			permissionObject vhost: vhost.
 			vhost permissions add: permissionObject.
@@ -462,7 +462,7 @@ RMQEventParser >> populate: aModel withPermissionCreated: aDictionnary at: times
 			"add the user to the model if it doest not exist"
 			user := aModel
 				selectOrAddEntityNamed: userName
-				withType: RMQUser
+				withType: PulseUser
 				sourceName: self sourceName.
 			permissionObject user: user.
 			user permissions add: permissionObject.
@@ -500,7 +500,7 @@ RMQEventParser >> populate: aModel withQueueCreated: aDictionnary at: timestamp 
 	"if the queue does not exist, create it"
 	queueObject := aModel
 		selectOrAddEntityNamed: queueName
-		withType: RMQQueue
+		withType: PulseQueue
 		sourceName: self sourceName.	"ici on peut avoir une liste !"
 	queueObject creationDate: timestamp.
 	queueObject autoDelete: (aDictionnary at: 'auto_delete').
@@ -510,7 +510,7 @@ RMQEventParser >> populate: aModel withQueueCreated: aDictionnary at: timestamp 
 	"create the Vhost if it does not exist and link it to the queue"
 	vhost := aModel
 		selectOrAddEntityNamed: (aDictionnary at: 'vhost')
-		withType: RMQVHost
+		withType: PulseVHost
 		sourceName: self sourceName.
 	queueObject vhost: vhost.
 	vhost queues add: queueObject.
@@ -564,10 +564,10 @@ error:	117...   // the error is in ascii"
 
 	| authentificationObject user connection connectionName |
 	"// create a new authentification object , link the user, the latter is created if it does not exist"
-	authentificationObject := RMQAuthentification new.
+	authentificationObject := PulseAuthentification new.
 	user := aModel
 		selectOrAddEntityNamed: (aDictionnary at: 'name')
-		withType: RMQUser
+		withType: PulseUser
 		sourceName: self sourceName.
 	authentificationObject user: user.
 	user authentifications add: authentificationObject.
@@ -584,9 +584,9 @@ error:	117...   // the error is in ascii"
 		ifTrue: [ connectionName := aDictionnary at: 'connection_name'.
 			connection := aModel
 				entityNamed: connectionName
-				withType: RMQConnection
+				withType: PulseConnection
 				ifAbsent: [ | newConnection |
-					newConnection := RMQConnection new
+					newConnection := PulseConnection new
 						pulseName: connectionName;
 						mooseModel: aModel.
 					newConnection
@@ -615,10 +615,10 @@ aDictionnary (connection_type:	direct, name:	admin, timestamp_in_ms:	15284543543
 
 	| authentificationObject user connection connectionName |
 	"// create a new authentification object , link the user, the latter is created if it does not exist"
-	authentificationObject := RMQAuthentification new.
+	authentificationObject := PulseAuthentification new.
 	user := aModel
 		selectOrAddEntityNamed: (aDictionnary at: 'name')
-		withType: RMQUser
+		withType: PulseUser
 		sourceName: self sourceName.
 	authentificationObject user: user.
 	user authentifications add: authentificationObject.
@@ -634,9 +634,9 @@ aDictionnary (connection_type:	direct, name:	admin, timestamp_in_ms:	15284543543
 		ifTrue: [ connectionName := aDictionnary at: 'connection_name'.
 			connection := aModel
 				entityNamed: connectionName
-				withType: RMQConnection
+				withType: PulseConnection
 				ifAbsent: [ | newConnection |
-					newConnection := RMQConnection new
+					newConnection := PulseConnection new
 						pulseName: connectionName;
 						mooseModel: aModel.
 					newConnection
@@ -662,7 +662,7 @@ RMQEventParser >> populate: aModel withUserCreated: aDictionnary at: timestamp [
 	| userObject |
 	userObject := aModel
 		selectOrAddEntityNamed: (aDictionnary at: 'name')
-		withType: RMQUser
+		withType: PulseUser
 		sourceName: self sourceName.
 	userObject creationDate: timestamp
 ]
@@ -673,7 +673,7 @@ RMQEventParser >> populate: aModel withUserDeleted: aDictionnary at: timestamp [
 
 		| userObject |
 		
-		userObject := aModel entityNamed: (aDictionnary at: 'name') withType: RMQUser.
+		userObject := aModel entityNamed: (aDictionnary at: 'name') withType: PulseUser.
 		userObject ifNotNil: [ userObject deletionDate: timestamp. ]
 	
 		
@@ -684,7 +684,7 @@ RMQEventParser >> populate: aModel withUserPasswordChanged: aDictionnary at: tim
 "aDictionnary (name)"
   | userObject |
 		
-		userObject := aModel entityNamed: (aDictionnary at: 'name') withType: RMQUser.
+		userObject := aModel entityNamed: (aDictionnary at: 'name') withType: PulseUser.
 		userObject ifNotNil: [ userObject passwordChangingDate:  timestamp. ]
 ]
 
@@ -693,7 +693,7 @@ RMQEventParser >> populate: aModel withUserPasswordCleared: aDictionnary at: tim
  "aDictionnay (timestamp_in_ms:	1544440878584, name:	testtest"
   | UserObject |
 		
-		UserObject := aModel entityNamed: (aDictionnary at: 'name') withType: RMQUser.
+		UserObject := aModel entityNamed: (aDictionnary at: 'name') withType: PulseUser.
 		UserObject ifNotNil: [ UserObject passwordClearingDate:  timestamp. ] 
 ]
 
@@ -748,7 +748,7 @@ RMQEventParser >> populate: aModel withVhostCreated: aDictionnary at: timestamp 
 	| vhostObject |
 	vhostObject := aModel
 		selectOrAddEntityNamed: (aDictionnary at: 'name')
-		withType: RMQVHost
+		withType: PulseVHost
 		sourceName: self sourceName.
 	vhostObject ifNotNil: [ vhostObject creationDate: timestamp ]
 ]

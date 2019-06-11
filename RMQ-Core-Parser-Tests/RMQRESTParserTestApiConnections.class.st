@@ -406,10 +406,9 @@ RMQRESTParserTestApiConnections >> data [
 { #category : #initialization }
 RMQRESTParserTestApiConnections >> setUp [
 	| logP |
-	model := PulseModel new.
+	model := OldPulseModel new.
 	model name: 'test'.
-	logP := RMQRESTParserApiConnections new.
-	logP sourceName: 'test'.
+	logP := RMQRESTParserApiConnections newOn: 'test'.
 	logP populate: model withJson: self data.
 ]
 
@@ -418,7 +417,7 @@ RMQRESTParserTestApiConnections >> testExistingPopulate [
 
 	| vh u1 u2 c1 c2 node logP |
 	
-	self assert: model size = 12.
+	self assert: model size = 11.
 	"connection"
 	self assert: model allRMQConnections size = 6.
 	c1 := (model allRMQConnections detect: [:e | e name = '10.238.15.51:49677 -> 10.238.28.5:5672']).
@@ -435,9 +434,9 @@ RMQRESTParserTestApiConnections >> testExistingPopulate [
 	self assert: c1 protocol = 'AMQP 0-9-1'.
 	
 	
-	self assert: c1 authMechanism name = 'plain'. 
+	self assert: c1 authMechanism pulseState = 'plain'. 
 	self assert: (c1 authMechanism connections anySatisfy: [ :e | e =c1 ]).
-	self assert: c2 authMechanism name = 'plain'. 
+	self assert: c2 authMechanism pulseState = 'plain'. 
 	self assert: (c2 authMechanism connections anySatisfy: [ :e | e =c2 ]).
 	
 	"vhost"
@@ -465,18 +464,17 @@ RMQRESTParserTestApiConnections >> testExistingPopulate [
 	self assert: (u1 usedConnections anySatisfy: [ :e | e =c1 ]).
 	self assert: (u2 usedConnections anySatisfy: [ :e | e =c2 ]).
 	
-	self assert: c1 rmqState name = 'running'.
-	self assert: (c1 rmqState connections anySatisfy: [:e | e = c1 ]).
-	self assert: c2 rmqState name = 'running'.
-	self assert: (c2 rmqState connections anySatisfy: [:e | e = c2 ]).	
+	self assert: c1 pulseState pulseState = 'running'.
+	self assert: (c1 pulseState connections anySatisfy: [:e | e = c1 ]).
+	self assert: c2 pulseState pulseState = 'running'.
+	self assert: (c2 pulseState connections anySatisfy: [:e | e = c2 ]).	
 	
-	self assert: model size = 12.
+	self assert: model size = 11.
 	
-	logP := RMQRESTParserApiConnections new.
-	logP sourceName: 'test2'.
+	logP := RMQRESTParserApiConnections newOn: 'test2'.
 	logP populate: model withJson: self data.
 
-	self assert: model size = 12.
+	self assert: model size = 11.
 	
 	"connection"
 	self assert: model allRMQConnections size = 6.
@@ -494,9 +492,9 @@ RMQRESTParserTestApiConnections >> testExistingPopulate [
 	self assert: c1 protocol = 'AMQP 0-9-1'.
 	
 	
-	self assert: c1 authMechanism name = 'plain'. 
+	self assert: c1 authMechanism pulseState = 'plain'. 
 	self assert: (c1 authMechanism connections anySatisfy: [ :e | e =c1 ]).
-	self assert: c2 authMechanism name = 'plain'. 
+	self assert: c2 authMechanism pulseState = 'plain'. 
 	self assert: (c2 authMechanism connections anySatisfy: [ :e | e =c2 ]).
 	
 	"vhost"
@@ -519,16 +517,17 @@ RMQRESTParserTestApiConnections >> testExistingPopulate [
 	u2 := (model allRMQUsers detect: [:e | e name = 'bus-consolesaas']).
 	
 	"connection users"
-	self assert: (c1 user =u1).
-	self assert: (c2 user =u2 ).
+	self assert: (c1 user =u1 ).
+	self assert: (c2 user =u2).
 	self assert: (u1 usedConnections anySatisfy: [ :e | e =c1 ]).
 	self assert: (u2 usedConnections anySatisfy: [ :e | e =c2 ]).
 	
-	self assert: c1 rmqState name = 'running'.
-	self assert: (c1 rmqState connections anySatisfy: [:e | e = c1 ]).
-	self assert: c2 rmqState name = 'running'.
-	self assert: (c2 rmqState connections anySatisfy: [:e | e = c2 ]).	
-	self assert: model size = 12.
+	self assert: c1 pulseState pulseState = 'running'.
+	self assert: (c1 pulseState connections anySatisfy: [:e | e = c1 ]).
+	self assert: c2 pulseState pulseState = 'running'.
+	self assert: (c2 pulseState connections anySatisfy: [:e | e = c2 ]).	
+	
+	self assert: model size = 11.
 ]
 
 { #category : #'testing - simple' }
@@ -552,9 +551,9 @@ RMQRESTParserTestApiConnections >> testPopulate [
 	self assert: c1 protocol = 'AMQP 0-9-1'.
 	
 	
-	self assert: c1 authMechanism name = 'plain'. 
+	self assert: c1 authMechanism pulseState = 'plain'. 
 	self assert: (c1 authMechanism connections anySatisfy: [ :e | e =c1 ]).
-	self assert: c2 authMechanism name = 'plain'. 
+	self assert: c2 authMechanism pulseState = 'plain'. 
 	self assert: (c2 authMechanism connections anySatisfy: [ :e | e =c2 ]).
 	
 	"vhost"
@@ -582,10 +581,11 @@ RMQRESTParserTestApiConnections >> testPopulate [
 	self assert: (u1 usedConnections anySatisfy: [ :e | e =c1 ]).
 	self assert: (u2 usedConnections anySatisfy: [ :e | e =c2 ]).
 	
-	self assert: c1 rmqState name = 'running'.
-	self assert: (c1 rmqState connections anySatisfy: [:e | e = c1 ]).
-	self assert: c2 rmqState name = 'running'.
-	self assert: (c2 rmqState connections anySatisfy: [:e | e = c2 ]).	
+	self assert: c1 pulseState pulseState = 'running'.
+	self assert: (c1 pulseState connections anySatisfy: [:e | e = c1 ]).
+	self assert: c2 pulseState pulseState = 'running'.
+	self assert: (c2 pulseState connections anySatisfy: [:e | e = c2 ]).	
 	
+	self assert: model size = 11.
 	
 ]
