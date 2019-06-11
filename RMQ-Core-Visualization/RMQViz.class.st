@@ -4,12 +4,47 @@ Class {
 	#category : #'RMQ-Core-Visualization'
 }
 
+{ #category : #modules }
+RMQViz class >> exchange: model [
+	| exchanges |
+	
+	exchanges := (RTShapeBuilder new circle width: 500; height: 50; color: Color blue trans;
+	withText: [:e | (e name substrings:'.') at: 3 ] height: 20 color: Color black)
+	elementsOn: (model allRMQExchanges).
+	
+	exchanges @ RTDraggable.
+	(RTHorizontalLineLayout withGap: 50) on: exchanges.
+	
+	^ exchanges
+]
+
+{ #category : #accessing }
+RMQViz class >> exchanges: model [
+
+	| v exchanges queues qShape |
+	
+	v := RTView new.
+	
+	exchanges := (RTShapeBuilder new circle width: [:e | ((e name substrings:'.') at: 3) byteSize * 20]; height: 50; color: Color blue trans;
+	withText: [:e | (e name substrings:'.') at: 3 ] height: 20 color: Color black)
+	elementsOn: (model allRMQExchanges).
+	
+	exchanges @ RTDraggable.
+	exchanges := exchanges sort: [ :e :f | e model name < f model name ].
+	RTVerticalLineLayout on: exchanges.
+	exchanges collect: [ :e| e when: TRMouseClick do: [
+			RMQViz typesFor: model
+			]
+		].
+	
+	v addAll: exchanges.
+	
+	v inspect
+]
+
 { #category : #accessing }
 RMQViz class >> generalViewOf: model [
-
-"to do: change RMQComponent"
-
-| v es lineShape producers exchanges queues consumers edges1 edges2 edges3|
+| var v es lineShape producers exchanges queues consumers edges1 edges2 edges3|
 v := RTView new.
 
 es := (RTShapeBuilder new box; withText: #asString height: 40)
@@ -21,7 +56,7 @@ es := (RTShapeBuilder new box; withText: #asString height: 40)
 RTNest new for: es add: [ :group :localModel |
 			
 		(localModel = 'Producers') ifTrue: [
-			producers := (RTShapeBuilder new box width: 300; height: 110; color: Color orange trans; borderColor: [ :e | ((model allRMQQueues reject:[:i | i name = 'none'] )contains:[:q | ((q name substrings:'.') at: 4) = e pulseName ]) ifTrue:[ Color black ] ] ;borderWidth: [ :e | ((model allRMQQueues reject:[:i | i name = 'none'] )contains:[:q | ((q name substrings:'.') at: 4) = e pulseName ]) ifTrue:[ 4 ] ]; withText: [:e | e pulseName, String cr, 'last at: ', String cr, (e publishedMessages sort:[:l :m | l timestamp < m timestamp ]) last timestamp] height: 20 color: Color black) elementsOn: (model allRMQComponents).
+			producers := (RTShapeBuilder new box width: 300; height: 110; color: Color orange trans; borderColor: [ :e | ((model allRMQQueues reject:[:i | i name = 'none'] )contains:[:q | (( q name substrings:'.') at: 4) asString = e pulseName ]) ifTrue:[ Color black ] ] ;borderWidth: [ :e | ((model allRMQQueues reject:[:i | i name = 'none'] )contains:[:q | (( var := ( q name substrings:'.') at: 4)) = e pulseName ]) ifTrue:[ 4 ] ifFalse:[1] ]; withText: [:e | ((e name substrings:'.') at: 4) asString , String cr, 'last at: ', String cr, (e senderMessages sort:[:l :m | l timestamp < m timestamp ]) last timestamp] height: 20 color: Color black) elementsOn: (model allRMQComponents).
 			producers := producers sort: [ :e :f | e model name < f model name ].
 			
 			group addAll: producers.
@@ -48,7 +83,7 @@ RTNest new for: es add: [ :group :localModel |
 	
 		(localModel = 'Consumers') ifTrue: [
 			|list temp|
-			consumers := (RTShapeBuilder new box width: 300; height: 110; color: Color red trans; borderColor: [ :e | ((model allRMQComponents) contains:[:q | ((e name substrings:'.') at: 4) asString = q pulseName ]) ifTrue:[ Color black ] ] ;borderWidth: [ :e | ((model allRMQComponents) contains:[:q | ((e name substrings:'.') at: 4) asString = q pulseName ]) ifTrue:[ 4 ] ifFalse:[1] ]; withText: [:e | ((e name substrings:'.') at: 4) asString , String cr, 'last at: ', String cr, (e messages ifEmpty:['--'] ifNotEmpty:[:r | r last timestamp asString]) ] height: 20 color: Color black) elementsOn: (model allRMQQueues reject:[:e | e name = 'none']) asSet.
+			consumers := (RTShapeBuilder new box width: 300; height: 110; color: Color red trans; borderColor: [ :e | ((model allRMQComponents) contains:[:q | ((e name substrings:'.') at: 4) asString = q pulseName ]) ifTrue:[ Color black ] ] ;borderWidth: [ :e | ((model allRMQComponents) contains:[:q | ((e name substrings:'.') at: 4) asString = q pulseName ]) ifTrue:[ 4 ] ifFalse:[1] ]; withText: [:e | (((var := e) name substrings:'.') at: 4) asString , String cr, 'last at: ', String cr, (e messages ifEmpty:['--'] ifNotEmpty:[:r | (r asOrderedCollection) last timestamp asString]) ] height: 20 color: Color black) elementsOn: (model allRMQQueues reject:[:e | e name = 'none']) asSet.
 			list := Set new.
 			temp := consumers class new.
 			consumers do: [ :c |
@@ -176,6 +211,91 @@ v := RTView new.
 	
 ]
 
+{ #category : #visualization }
+RMQViz class >> messages: aQueue [
+	| v shape msgs |
+	
+	v := RTView new.
+	
+	msgs := aQueue messages asOrderedCollection.
+	
+		shape := (RTShapeBuilder new box width: 500; height: 300;
+		withText: [ :e| 'Timestamp:  ', e timestamp, String cr, String cr, 'Type: ', 
+		e messageType pulseName, String cr, String cr, 'DeliveryMode: ', e deliveryMode pulseName,
+		String cr, String cr, 'ExchangeFormat: ', e exchangeFormat exchangeFormatType ] 
+		height: 20 color: Color black)
+	 	elementsOn: msgs.
+		
+	shape @ RTDraggable.
+	(RTGridLayout withGap: 50) on: shape.
+	
+	v addAll: shape.
+	v canvas camera scale: 0.3.
+	v inspect
+	
+]
+
+{ #category : #visualization }
+RMQViz class >> overView: aModel [
+	| exchanges queues v edge lineShape es qs |
+	
+	v := RTView new.
+	
+	es := (RTShapeBuilder new box; color: Color white trans; withTextOnTheLeft: #asString height: 40)
+		elementsOn: { 'Exchanges' }.
+		
+	qs := (RTShapeBuilder new box; color: Color white trans; withText: #asString height: 40)
+		elementsOn: { 'Queues' }.
+	
+	v addAll: es.
+	v addAll: qs.
+	es @ RTDraggable.
+	qs @ RTDraggable.
+	
+	exchanges := RMQViz exchange: aModel.
+	queues := RMQViz queues: aModel.
+	
+	queues collect: [ :each| each when: TRMouseClick do: [ RMQViz messages: (each model) ] ].
+	
+	RTNest new for: es add: [:group :localModel| group addAll: exchanges].
+	RTNest new for: qs add: [:group :localModel| group addAll: queues].	
+	
+	RTConstraint new movable: es; fix: qs; verticalPadding: 50; above; move.
+	
+	lineShape := (RTLine new
+				attachPoint: RTBorderAttachPoint new;
+				color: Color veryDarkGray;
+				width: [:e | (aModel allRMQMessages collect: [:mes | (mes exchange = e key) 
+				and: [mes queue = e value ]]) size log] )
+				+
+				(RTSimpleArrowHead new
+					attachPoint: RTBorderAttachPoint new; color: Color veryDarkGray).
+					
+	edge := RTEdgeBuilder new
+					view: v;
+					fromElements: exchanges;
+					toElements: queues;
+					shape: lineShape;
+					connectFrom: #yourself toAll: [:obj | (aModel allRMQBindings 
+					select:[:e | e source = obj]) collect:[:e | e destination ]  ].
+	
+	v inspect
+]
+
+{ #category : #modules }
+RMQViz class >> queues: model [
+	| queues |
+	
+	queues := (RTShapeBuilder new box width: 600; height: 70; color: Color orange trans;
+	withText: [:e | ((e name substrings:'.') at: 3), '.', ((e name substrings:'.') at: 4) ]
+	height: 20 color: Color black) elementsOn: (model allRMQQueues reject:[:e | e name = 'none']).
+	
+	queues @ RTDraggable.
+	(RTHorizontalLineLayout withGap: 50) on: queues.
+	
+	^ queues
+]
+
 { #category : #accessing }
 RMQViz class >> types2For: aModel [
 "
@@ -213,7 +333,7 @@ RMQViz typesFor: MooseModel root third
 
 v := RTView new.
 	shape := RTBox new color: Color green trans; size: [ :s | s messages size log *20].
-	elements := shape elementsOn: aModel allMessageTypes.
+	elements := shape elementsOn: (aModel allWithType: MessageType).
 	v addAll: elements.
 	elements @ (RTLabeled new text: [ :s | s pulseState asString ]).
 	elements @ (RTPopup new text: [ :s | s messages size ]).
@@ -221,7 +341,7 @@ v := RTView new.
 	l := RTHorizontalLineLayout new.
 	l on: elements.
 	
-	v add: ((RTLabel new elementOn: aModel allRMQMessages first timestamp asDate asString , ' : ' , aModel allRMQMessages size asString, ' messages') translateTo: 160 @ 100).
+	v add: ((RTLabel new elementOn: (aModel allWithType: RMQMessage) first timestamp asDate asString , ' : ' , (aModel allWithType: RMQMessage) size asString, ' messages') translateTo: 160 @ 100).
 	v inspect
 	
 ]
