@@ -1,6 +1,12 @@
 Extension { #name : #PulseModel }
 
 { #category : #'*RMQ-Core-Visualization' }
+PulseModel >> exchanges [
+	<menuItem: 'Types' category: 'RMQViz'>
+	RMQViz exchanges: self
+]
+
+{ #category : #'*RMQ-Core-Visualization' }
 PulseModel >> generalView [
 	<menuItem: 'Global view' category: 'RMQViz'>
 	RMQViz generalViewOf: self

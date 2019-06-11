@@ -223,7 +223,7 @@ ORActionAddPulseRMQConnection >> run [
 		ifNotNil: [ | theNewEntity |
 			theNewEntity := self orionModel retrieveEntity: self authMechanism.
 			newEntity privateAuthMechanism: theNewEntity orionCopy.
-			theNewEntity privateConnections: (theNewEntity privateConnections orionCopy unsafeAdd: newEntity)].
+			theNewEntity privateConnections: (theNewEntity privateConnections orionCopy add: newEntity)].
 		
 	self channels
 		ifNotNil: [ | theNewEntities |
@@ -235,25 +235,25 @@ ORActionAddPulseRMQConnection >> run [
 		ifNotNil: [ | theNewEntity |
 			theNewEntity := self orionModel retrieveEntity: self rmqState.
 			newEntity privateRmqState: theNewEntity orionCopy.
-			theNewEntity privateConnections: (theNewEntity privateConnections orionCopy unsafeAdd: newEntity)].
+			theNewEntity privateConnections: (theNewEntity privateConnections orionCopy add: newEntity)].
 		
 	self user
 		ifNotNil: [ | theNewEntity |
 			theNewEntity := self orionModel retrieveEntity: self user.
 			newEntity privateUser: theNewEntity orionCopy.
-			theNewEntity privateUsedConnections: (theNewEntity privateUsedConnections orionCopy unsafeAdd: newEntity)].
+			theNewEntity privateUsedConnections: (theNewEntity privateUsedConnections orionCopy add: newEntity)].
 		
 	self user_who_performed_connection
 		ifNotNil: [ | theNewEntity |
 			theNewEntity := self orionModel retrieveEntity: self user_who_performed_connection.
 			newEntity private_user_who_performed_connection: theNewEntity orionCopy.
-			theNewEntity privateInitializedConnections: (theNewEntity privateInitializedConnections orionCopy unsafeAdd: newEntity)].
+			theNewEntity privateInitializedConnections: (theNewEntity privateInitializedConnections orionCopy add: newEntity)].
 		
 	self vhost
 		ifNotNil: [ | theNewEntity |
 			theNewEntity := self orionModel retrieveEntity: self vhost.
 			newEntity privateVhost: theNewEntity orionCopy.
-			theNewEntity privateConnections: (theNewEntity privateConnections orionCopy unsafeAdd: newEntity)].
+			theNewEntity privateConnections: (theNewEntity privateConnections orionCopy add: newEntity)].
 		
 	self runExtendedPropertiesForEntity: newEntity.
 	entity := newEntity.

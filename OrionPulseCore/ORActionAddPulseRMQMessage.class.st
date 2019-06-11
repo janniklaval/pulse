@@ -143,7 +143,7 @@ ORActionAddPulseRMQMessage >> routedQueues: anObject [
 { #category : #'method execution' }
 ORActionAddPulseRMQMessage >> run [
 
-	| newEntity |
+	| newEntity var |
 	super run.
 	newEntity := ORPulseRMQMessage new.
 	self orionModel add: newEntity.
@@ -173,49 +173,50 @@ ORActionAddPulseRMQMessage >> run [
 		ifNotNil: [ | theNewEntity |
 			theNewEntity := self orionModel retrieveEntity: self deliveryMode.
 			newEntity privateDeliveryMode: theNewEntity orionCopy.
-			theNewEntity privateMessages: (theNewEntity privateMessages orionCopy unsafeAdd: newEntity)].
+			theNewEntity privateMessages: (theNewEntity privateMessages orionCopy add: newEntity)].
 		
 	self exchange
 		ifNotNil: [ | theNewEntity |
 			theNewEntity := self orionModel retrieveEntity: self exchange.
 			newEntity privateExchange: theNewEntity orionCopy.
-			theNewEntity privateMessages: (theNewEntity privateMessages orionCopy unsafeAdd: newEntity)].
+			theNewEntity privateMessages: (theNewEntity privateMessages orionCopy add: newEntity)].
 		
 	self exchangeFormat
 		ifNotNil: [ | theNewEntity |
 			theNewEntity := self orionModel retrieveEntity: self exchangeFormat.
 			newEntity privateExchangeFormat: theNewEntity orionCopy.
-			theNewEntity privateMessages: (theNewEntity privateMessages orionCopy unsafeAdd: newEntity)].
+			theNewEntity privateMessages: (theNewEntity privateMessages orionCopy add: newEntity)].
 		
 	self messageType
 		ifNotNil: [ | theNewEntity |
 			theNewEntity := self orionModel retrieveEntity: self messageType.
 			newEntity privateMessageType: theNewEntity orionCopy.
-			theNewEntity privateMessages: (theNewEntity privateMessages orionCopy unsafeAdd: newEntity)].
+			theNewEntity privateMessages: (theNewEntity privateMessages orionCopy add: newEntity) ].
 		
 	self payload
 		ifNotNil: [ | theNewEntity |
 			theNewEntity := self orionModel retrieveEntity: self payload.
 			newEntity privatePayload: theNewEntity orionCopy.
-			theNewEntity privateMessages: (theNewEntity privateMessages orionCopy unsafeAdd: newEntity)].
+			theNewEntity privateMessages: (theNewEntity privateMessages orionCopy add: newEntity)].
 		
 	self queue
 		ifNotNil: [ | theNewEntity |
 			theNewEntity := self orionModel retrieveEntity: self queue.
 			newEntity privateQueue: theNewEntity orionCopy.
-			theNewEntity privateMessages: (theNewEntity privateMessages orionCopy unsafeAdd: newEntity)].
+			theNewEntity privateMessages: (theNewEntity privateMessages orionCopy add: newEntity)].
 		
 	self routedQueues
 		ifNotNil: [ | theNewEntities |
 			theNewEntities := OrderedCollection withAll: (self routedQueues collect: [ :e | self orionModel retrieveEntity: e ]).
 			newEntity privateRoutedQueues: theNewEntities orionCopy.
-			theNewEntities do: [ :e | e privateMessages: (e privateMessages orionCopy unsafeAdd: newEntity) ] ].
+			"theNewEntities do: [ :e | e privateMessages: ( e privateMessages orionCopy add: newEntity) ]".
+			(var := theNewEntities at: 1) privateMessages: (var privateMessages asOrderedCollection orionCopy add: newEntity) ].
 		
 	self senderComponent
 		ifNotNil: [ | theNewEntity |
 			theNewEntity := self orionModel retrieveEntity: self senderComponent.
 			newEntity privateSenderComponent: theNewEntity orionCopy.
-			theNewEntity privateSenderMessages: (theNewEntity privateSenderMessages orionCopy unsafeAdd: newEntity)].
+			theNewEntity privateSenderMessages: (theNewEntity privateSenderMessages orionCopy add: newEntity)].
 		
 	self runExtendedPropertiesForEntity: newEntity.
 	entity := newEntity.

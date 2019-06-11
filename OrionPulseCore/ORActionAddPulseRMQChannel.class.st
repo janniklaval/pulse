@@ -144,71 +144,71 @@ ORActionAddPulseRMQChannel >> run [
 		newEntity privatePulseName: e orionCopy ].
 	
 	self closingDate ifNotNil: [ :e | 
-		newEntity privateCreationDate: e orionCopy ].
+		newEntity privateClosingDate: e orionCopy ].
 	
 	self creationDate ifNotNil: [ :e | 
-		newEntity privateDeletionDate: e orionCopy ].
+		newEntity privateCreationDate: e orionCopy ].
 	
 	self globalPrefetchCount ifNotNil: [ :e | 
-		newEntity privatePulseName: e orionCopy ].
+		newEntity privateGlobalPrefetchCount: e orionCopy ].
 	
 	self idleSince ifNotNil: [ :e | 
-		newEntity privatePulseName: e orionCopy ].
+		newEntity privateIdleSince: e orionCopy ].
 	
 	self pid ifNotNil: [ :e | 
-		newEntity privatePulseName: e orionCopy ].
+		newEntity privatePid: e orionCopy ].
 	
 	self prefetchCount ifNotNil: [ :e | 
-		newEntity privatePulseName: e orionCopy ].
+		newEntity privatePrefetchCount: e orionCopy ].
 	
 	"Set complex not derived properties of the entity"
 	self connection
 		ifNotNil: [ | theNewEntity |
 			theNewEntity := self orionModel retrieveEntity: self connection.
 			newEntity privateConnection: theNewEntity orionCopy.
-			theNewEntity privateChannels: (theNewEntity privateChannels orionCopy unsafeAdd: newEntity)].
+			theNewEntity privateChannels: (theNewEntity privateChannels orionCopy add: newEntity)].
 	
 	self consumedQueues
 		ifNotNil: [ | theNewEntities |
 			theNewEntities := OrderedCollection withAll: (self consumedQueues collect: [:e | self orionModel retrieveEntity: e ]).
 			newEntity privateConsumedQueues: theNewEntities orionCopy.
-			theNewEntities do: [:e | e privateConsumerChannels: (e privateConsumerChannels orionCopy unsafeAdd: newEntity) ] ].
+			theNewEntities do: [:e | e privateConsumerChannels: (e privateConsumerChannels orionCopy add: newEntity) ] ].
 	
 	self guaranteeMode
 		ifNotNil: [ | theNewEntity |
 			theNewEntity := self orionModel retrieveEntity: self guaranteeMode.
 			newEntity privateGuaranteeMode: theNewEntity orionCopy.
-			theNewEntity privateChannels: (theNewEntity privateChannels orionCopy unsafeAdd: newEntity)].
+			theNewEntity privateChannels: (theNewEntity privateChannels orionCopy add: newEntity)].
 		
 	self rmqState
 		ifNotNil: [ | theNewEntity |
 			theNewEntity := self orionModel retrieveEntity: self rmqState.
 			newEntity privateRmqState: theNewEntity orionCopy.
-			theNewEntity privateChannels: (theNewEntity privateChannels orionCopy unsafeAdd: newEntity)].
+			theNewEntity privateChannels: (theNewEntity privateChannels orionCopy add: newEntity)].
 		
 	self subscribedComponent
 		ifNotNil: [ | theNewEntity |
 			theNewEntity := self orionModel retrieveEntity: self subscribedComponent.
 			newEntity privateSubscribedComponent: theNewEntity orionCopy.
-			theNewEntity privateSubscribedChannels: (theNewEntity privateSubscribedChannels orionCopy unsafeAdd: newEntity)].
+			theNewEntity privateSubscribedChannels: (theNewEntity privateSubscribedChannels orionCopy add: newEntity)].
 		
 	self user
 		ifNotNil: [ | theNewEntity |
 			theNewEntity := self orionModel retrieveEntity: self user.
 			newEntity privateUser: theNewEntity orionCopy.
-			theNewEntity privateUsedChannels: (theNewEntity privateUsedChannels orionCopy unsafeAdd: newEntity)].
+			theNewEntity privateUsedChannels: (theNewEntity privateUsedChannels orionCopy add: newEntity)].
 		
 	self user_who_performed_connection
 		ifNotNil: [ | theNewEntity |
 			theNewEntity := self orionModel retrieveEntity: self user_who_performed_connection.
 			newEntity private_user_who_performed_connection: theNewEntity orionCopy.
-			theNewEntity privateInitializedChannels: (theNewEntity privateInitializedChannels orionCopy unsafeAdd: newEntity)].
+			theNewEntity privateInitializedChannels: (theNewEntity privateInitializedChannels orionCopy add: newEntity)].
 		
 		self vhost
 		ifNotNil: [ | theNewEntity |
 			theNewEntity := self orionModel retrieveEntity: self vhost.
 			newEntity privateVhost: theNewEntity orionCopy.
-			theNewEntity privateChannels: (theNewEntity privateChannels orionCopy unsafeAdd: newEntity)].
+			theNewEntity privateChannels: (theNewEntity privateChannels orionCopy add: newEntity)].
 		
 	self runExtendedPropertiesForEntity: newEntity.
 	entity := newEntity.

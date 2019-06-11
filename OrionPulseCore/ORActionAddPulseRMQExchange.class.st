@@ -178,7 +178,7 @@ ORActionAddPulseRMQExchange >> run [
 		ifNotNil: [ | theNewEntities |
 			theNewEntities := OrderedCollection withAll: (self components collect: [ :e | self orionModel retrieveEntity: e ]).
 			newEntity privateComponents: theNewEntities orionCopy.
-			theNewEntities do: [ :e | e privateExchanges: (e privateExchanges orionCopy unsafeAdd: newEntity) ] ].
+			theNewEntities do: [ :e | e privateExchanges: (e privateExchanges orionCopy add: newEntity) ] ].
 		
 	self destinationBindings
 		ifNotNil: [ | theNewEntities |
@@ -190,7 +190,7 @@ ORActionAddPulseRMQExchange >> run [
 		ifNotNil: [ | theNewEntity |
 			theNewEntity := self orionModel retrieveEntity: self durability.
 			newEntity privateDurability: theNewEntity orionCopy.
-			theNewEntity privateExchanges: (theNewEntity privateExchanges orionCopy unsafeAdd: newEntity)].
+			theNewEntity privateExchanges: (theNewEntity privateExchanges orionCopy add: newEntity)].
 		
 	self messages
 		ifNotNil: [ | theNewEntities |
@@ -220,19 +220,19 @@ ORActionAddPulseRMQExchange >> run [
 		ifNotNil: [ | theNewEntity |
 			theNewEntity := self orionModel retrieveEntity: self type.
 			newEntity privateType: theNewEntity orionCopy.
-			theNewEntity privateExchanges: (theNewEntity privateExchanges orionCopy unsafeAdd: newEntity)].
+			theNewEntity privateExchanges: (theNewEntity privateExchanges orionCopy add: newEntity)].
 		
 	self user_who_performed_action
 		ifNotNil: [ | theNewEntity |
 			theNewEntity := self orionModel retrieveEntity: self user_who_performed_action.
 			newEntity private_user_who_performed_action: theNewEntity orionCopy.
-			theNewEntity privateInitializedExchanges: (theNewEntity privateInitializedExchanges orionCopy unsafeAdd: newEntity)].
+			theNewEntity privateInitializedExchanges: (theNewEntity privateInitializedExchanges orionCopy add: newEntity)].
 		
 	self vhost
 		ifNotNil: [ | theNewEntity |
 			theNewEntity := self orionModel retrieveEntity: self vhost.
 			newEntity privateVhost: theNewEntity orionCopy.
-			theNewEntity privateExchanges: (theNewEntity privateExchanges orionCopy unsafeAdd: newEntity)].
+			theNewEntity privateExchanges: (theNewEntity privateExchanges orionCopy add: newEntity)].
 		
 	self runExtendedPropertiesForEntity: newEntity.
 	entity := newEntity.

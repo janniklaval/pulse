@@ -13,11 +13,11 @@ ORPulseConverter class >> buildFromMooseModel: aMooseModel [
 
 
 	| model system |
-	model := ORConverter convertFromMooseModel: aMooseModel.
+	model := ORPulseConverter convertFromMooseModel: aMooseModel.
 	system := ORSystem new.
 	system sourceModel: model.
 	model system: system.
-	system name: 'Orion ' , model name.
+	system name: 'OrionPulse ' , model name.
 	ORSystem add: system.
 	(MooseModel root includes: aMooseModel)
 		ifTrue: [ MooseModel root remove: aMooseModel ].

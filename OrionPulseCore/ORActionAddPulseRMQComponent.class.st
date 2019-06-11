@@ -229,20 +229,20 @@ ORActionAddPulseRMQComponent >> run [
 		ifNotNil: [ | theNewEntity |
 			theNewEntity := self orionModel retrieveEntity: self componentType.
 			newEntity privateComponentType: theNewEntity orionCopy.
-			theNewEntity privateComponents: (theNewEntity privateComponents orionCopy unsafeAdd: newEntity)].
+			theNewEntity privateComponents: (theNewEntity privateComponents orionCopy add: newEntity)].
 		
 	self deploymentMode
 		ifNotNil: [ | theNewEntity |
 			theNewEntity := self orionModel retrieveEntity: self deploymentMode.
 			newEntity privateDeploymentMode: theNewEntity orionCopy.
-			theNewEntity privateComponents: (theNewEntity privateComponents orionCopy unsafeAdd: newEntity)].
+			theNewEntity privateComponents: (theNewEntity privateComponents orionCopy add: newEntity)].
 		
 	
 	self exchanges
 		ifNotNil: [ | theNewEntities |
 			theNewEntities := OrderedCollection withAll: (self exchanges collect: [ :e | self orionModel retrieveEntity: e ]).
 			newEntity privateExchanges: theNewEntities orionCopy.
-			theNewEntities do: [ :e | e privateComponents: (e privateComponents orionCopy unsafeAdd: newEntity) ] ].
+			theNewEntities do: [ :e | e privateComponents: (e privateComponents orionCopy add: newEntity) ] ].
 		
 	self senderMessages
 		ifNotNil: [ | theNewEntities |

@@ -82,7 +82,7 @@ TRMQConnection >> hostOR: aVersion [
 
 { #category : #accessing }
 TRMQConnection >> peerHost [
-	^ self peerhostOR: self currentContext
+	^ self peerHostOR: self currentContext
 ]
 
 { #category : #accessing }

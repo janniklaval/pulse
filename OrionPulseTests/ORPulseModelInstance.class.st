@@ -25,15 +25,13 @@ ORPulseModelInstance class >> createFromMooseModel: aModelNumber name: aName [
 
 	| model orMod system |
 	
-	model := MooseModel root at: 7.
+	model := MooseModel root at: aModelNumber.
 	orMod := ORPulseConverter convertFromMooseModel: model.
-	orMod name: 'parent_ORPulseModel'.
+	orMod name: aName.
 	
 	system := ORSystem new.
 	system sourceModel: orMod.
 	orMod system: system.
 	
 	^ orMod
-	
-	
 ]

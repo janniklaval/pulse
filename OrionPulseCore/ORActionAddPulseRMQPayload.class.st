@@ -62,13 +62,13 @@ ORActionAddPulseRMQPayload >> run [
 		ifNotNil: [ | theNewEntity |
 			theNewEntity := self orionModel retrieveEntity: self encoding.
 			newEntity privateEncoding: theNewEntity orionCopy.
-			theNewEntity privatePayloads: (theNewEntity privatePayloads orionCopy unsafeAdd: newEntity)].
+			theNewEntity privatePayloads: (theNewEntity privatePayloads orionCopy add: newEntity)].
 		
 	self messages
 		ifNotNil: [ | theNewEntities |
 			theNewEntities := OrderedCollection withAll: (self messages collect: [ :e | self orionModel retrieveEntity: e ]).
 			newEntity privateMessages: theNewEntities orionCopy.
-			theNewEntities do: [ :e | e privatePayload: (e privatePayloads orionCopy unsafeAdd: newEntity) ] ].
+			theNewEntities do: [ :e | e privatePayload: (e privatePayload orionCopy add: newEntity) ] ].
 		
 	self runExtendedPropertiesForEntity: newEntity.
 	entity := newEntity.

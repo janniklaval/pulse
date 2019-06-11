@@ -50,6 +50,9 @@ ORActionAddPulseAuthMechanism >> run [
 	self pulseName ifNotNil: [ :e | 
 		newEntity privatePulseName: e orionCopy ].
 	
+	self rmqState ifNotNil: [ :e |
+		newEntity privateRmqState: e orionCopy ].
+	
 	"Set complex not derived properties of the entity"
 	self connections
 		ifNotNil: [ | theNewEntities |

@@ -108,13 +108,13 @@ ORActionAddPulseRMQNode >> run [
 		ifNotNil: [ | theNewEntity |
 			theNewEntity := self orionModel retrieveEntity: self type.
 			newEntity privateType: theNewEntity orionCopy.
-			theNewEntity privateNodes: (theNewEntity privateNodes orionCopy unsafeAdd: newEntity)].
+			theNewEntity privateNodes: (theNewEntity privateNodes orionCopy add: newEntity)].
 		
 	self vhosts
 		ifNotNil: [ | theNewEntities |
 			theNewEntities := OrderedCollection withAll: (self vhosts collect: [ :e | self orionModel retrieveEntity: e ]).
 			newEntity privateVhosts: theNewEntities orionCopy.
-			theNewEntities do: [ :e | e privateNode: (e privateNodes orionCopy unsafeAdd: newEntity) ] ].
+			theNewEntities do: [ :e | e privateNode: newEntity ] ].
 		
 	self runExtendedPropertiesForEntity: newEntity.
 	entity := newEntity.

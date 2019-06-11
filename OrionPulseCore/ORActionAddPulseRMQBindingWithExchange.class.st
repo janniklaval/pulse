@@ -87,7 +87,7 @@ ORActionAddPulseRMQBindingWithExchange >> run [
 		ifNotNil: [ | theNewEntity |
 			theNewEntity := self orionModel retrieveEntity: self destination.
 			newEntity privateDestination: theNewEntity orionCopy.
-			theNewEntity privateDestinationBindings: (theNewEntity privateDestinationBindings orionCopy unsafeAdd: newEntity)].
+			theNewEntity privateDestinationBindings: (theNewEntity privateDestinationBindings orionCopy add: newEntity)].
 		
 	self routingKey
 		ifNotNil: [ | theNewEntities |
@@ -99,13 +99,13 @@ ORActionAddPulseRMQBindingWithExchange >> run [
 		ifNotNil: [ | theNewEntity |
 			theNewEntity := self orionModel retrieveEntity: self source.
 			newEntity privateSource: theNewEntity orionCopy.
-			theNewEntity privateSourceBindings: (theNewEntity privateSourceBindings orionCopy unsafeAdd: newEntity)].
+			theNewEntity privateSourceBindings: (theNewEntity privateSourceBindings orionCopy add: newEntity)].
 		
 	self vhost
 		ifNotNil: [ | theNewEntity |
 			theNewEntity := self orionModel retrieveEntity: self vhost.
 			newEntity privateVhost: theNewEntity orionCopy.
-			theNewEntity privateBindings: (theNewEntity privateBindings orionCopy unsafeAdd: newEntity)].
+			theNewEntity privateBindings: (theNewEntity privateBindings orionCopy add: newEntity)].
 		
 	self runExtendedPropertiesForEntity: newEntity.
 	entity := newEntity.

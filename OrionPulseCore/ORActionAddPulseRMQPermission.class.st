@@ -85,14 +85,14 @@ ORActionAddPulseRMQPermission >> run [
 	self configureValue ifNotNil: [ :e |
 		newEntity privateConfigureValue: e orionCopy ].
 	
+	self name ifNotNil: [ 
+		:e | newEntity privateName: e orionCopy ].
+	
 	self creationDate ifNotNil: [ :e |
 		newEntity privateCreationDate: e orionCopy ].
 	
 	self deletionDate ifNotNil: [ :e |
 		newEntity privateDeletionDate: e orionCopy ].
-	
-	self name ifNotNil: [ :e |
-		newEntity privateName: e orionCopy ].
 	
 	self readValue ifNotNil: [ :e |
 		newEntity privateReadValue: e orionCopy ].
@@ -106,13 +106,13 @@ ORActionAddPulseRMQPermission >> run [
 		ifNotNil: [ | theNewEntity |
 			theNewEntity := self orionModel retrieveEntity: self user.
 			newEntity privateUser: theNewEntity orionCopy.
-			theNewEntity privatePermissions: (theNewEntity privatePermissions orionCopy unsafeAdd: newEntity)].
+			theNewEntity privatePermissions: (theNewEntity privatePermissions orionCopy add: newEntity)].
 		
 	self vhost
 		ifNotNil: [ | theNewEntity |
 			theNewEntity := self orionModel retrieveEntity: self vhost.
 			newEntity privateVhost: theNewEntity orionCopy.
-			theNewEntity privatePermissions: (theNewEntity privatePermissions orionCopy unsafeAdd: newEntity)].
+			theNewEntity privatePermissions: (theNewEntity privatePermissions orionCopy add: newEntity)].
 		
 	self runExtendedPropertiesForEntity: newEntity.
 	entity := newEntity.

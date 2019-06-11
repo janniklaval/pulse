@@ -56,7 +56,7 @@ ORActionAddPulseRMQAuthentification >> run [
 		ifNotNil: [ | theNewEntity |
 			theNewEntity := self orionModel retrieveEntity: self user.
 			newEntity privateUser: theNewEntity orionCopy.
-			theNewEntity privateAuthentifications: (theNewEntity privateAuthentifications orionCopy unsafeAdd: newEntity)].
+			theNewEntity privateAuthentifications: (theNewEntity privateAuthentifications orionCopy add: newEntity)].
 		
 	self runExtendedPropertiesForEntity: newEntity.
 	entity := newEntity.

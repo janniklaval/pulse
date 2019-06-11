@@ -11,6 +11,86 @@ TRMQComponent classSide >> isOrionClass [
 ]
 
 { #category : #accessing }
+TRMQComponent >> ackRequired [
+	^ self ackRequiredOR: self currentContext
+]
+
+{ #category : #accessing }
+TRMQComponent >> ackRequiredOR: aVersion [
+	^ self privateAckRequired versionIn: aVersion
+]
+
+{ #category : #accessing }
+TRMQComponent >> adress [
+	^ self adressOR: self currentContext
+]
+
+{ #category : #accessing }
+TRMQComponent >> adressOR: aVersion [
+	^ self privateAdress versionIn: aVersion
+]
+
+{ #category : #accessing }
+TRMQComponent >> author [
+	^ self authorOR: self currentContext
+]
+
+{ #category : #accessing }
+TRMQComponent >> authorOR: aVersion [
+	^ self privateAuthor versionIn: aVersion
+]
+
+{ #category : #accessing }
+TRMQComponent >> componentType [
+	^ self componentTypeOR: self currentContext
+]
+
+{ #category : #accessing }
+TRMQComponent >> componentTypeOR: aVersion [
+	^ self privateComponentType versionIn: aVersion
+]
+
+{ #category : #accessing }
+TRMQComponent >> consumerTag [
+	^ self consumerTagOR: self currentContext
+]
+
+{ #category : #accessing }
+TRMQComponent >> consumerTagOR: aVersion [
+	^ self privateConsumerTag versionIn: aVersion
+]
+
+{ #category : #accessing }
+TRMQComponent >> creationDate [
+	^ self creationDateOR: self currentContext
+]
+
+{ #category : #accessing }
+TRMQComponent >> creationDateOR: aVersion [
+	^ self privateCreationDate versionIn: aVersion
+]
+
+{ #category : #accessing }
+TRMQComponent >> deletionDate [
+	^ self deletionDateOR: self currentContext
+]
+
+{ #category : #accessing }
+TRMQComponent >> deletionDateOR: aVersion [
+	^ self privateDeletionDate versionIn: aVersion
+]
+
+{ #category : #accessing }
+TRMQComponent >> deploymentMode [
+	^ self deploymentModeOR: self currentContext
+]
+
+{ #category : #accessing }
+TRMQComponent >> deploymentModeOR: aVersion [
+	^ self privateDeploymentMode versionIn: aVersion
+]
+
+{ #category : #accessing }
 TRMQComponent >> exchanges [
 	^ self exchangesOR: self currentContext
 ]
@@ -61,16 +141,6 @@ TRMQComponent >> platformOR: aVersion [
 ]
 
 { #category : #accessing }
-TRMQComponent >> pulseName [
-	^ self pulseNameOR: self currentContext
-]
-
-{ #category : #accessing }
-TRMQComponent >> pulseNameOR: aVersion [
-	^ self privatePulseName versionIn: aVersion
-]
-
-{ #category : #accessing }
 TRMQComponent >> rmqState [
 	^ self rmqStateOR: self currentContext
 ]
@@ -92,7 +162,7 @@ TRMQComponent >> senderMessagesOR: aVersion [
 
 { #category : #accessing }
 TRMQComponent >> subscribedChannels [
-	^ self subscribedMessagesOR: self currentContext
+	^ self subscribedChannelsOR: self currentContext
 ]
 
 { #category : #accessing }
