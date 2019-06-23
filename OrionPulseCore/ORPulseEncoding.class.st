@@ -1,6 +1,6 @@
 Class {
 	#name : #ORPulseEncoding,
-	#superclass : #Encoding,
+	#superclass : #PulseEncoding,
 	#traits : 'TEncoding',
 	#classTraits : 'TEncoding classTrait',
 	#category : #'OrionPulseCore-Class'

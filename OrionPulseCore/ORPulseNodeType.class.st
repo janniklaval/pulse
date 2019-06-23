@@ -1,6 +1,6 @@
 Class {
 	#name : #ORPulseNodeType,
-	#superclass : #NodeType,
+	#superclass : #PulseNodeType,
 	#traits : 'TNodeType',
 	#classTraits : 'TNodeType classTrait',
 	#category : #'OrionPulseCore-Class'

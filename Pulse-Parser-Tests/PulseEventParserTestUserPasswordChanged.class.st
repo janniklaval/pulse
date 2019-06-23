@@ -30,7 +30,7 @@ PulseEventParserTestUserPasswordChanged >> setUp [
 	consumer parser: parser.
 	
 	"populate the model with the resource "
-	user := RMQUser new.
+	user := PulseUser new.
 	user pulseName: 'testuser';
 			mooseModel: model.
 	

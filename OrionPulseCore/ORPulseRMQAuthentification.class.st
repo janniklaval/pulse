@@ -1,6 +1,6 @@
 Class {
 	#name : #ORPulseRMQAuthentification,
-	#superclass : #RMQAuthentification,
+	#superclass : #PulseAuthentification,
 	#traits : 'TRMQAuthentification',
 	#classTraits : 'TRMQAuthentification classTrait',
 	#category : #'OrionPulseCore-Class'

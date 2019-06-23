@@ -25,11 +25,11 @@ PulseEventParserTestPermissionDeleted >> setUp [
 	consumer parser: parser.
 
 	"create the elements in the model"
-	newPermission := RMQPermission new.
+	newPermission := PulsePermission new.
 	"add the user to the model if it doest not exist"
 	user := model
 		selectOrAddEntityNamed: 'testuser'
-		withType: RMQUser
+		withType: PulseUser
 		sourceName: self sourceName.
 	newPermission user: user.
 	user permissions add: newPermission.
@@ -37,7 +37,7 @@ PulseEventParserTestPermissionDeleted >> setUp [
 	"add the vhost to the model if it doest not exist"
 	vhost := model
 		selectOrAddEntityNamed: '/'
-		withType: RMQVHost
+		withType: PulseVHost
 		sourceName: self sourceName.
 	newPermission vhost: vhost.
 	vhost permissions add: newPermission.

@@ -1,6 +1,6 @@
 Class {
 	#name : #ORPulseRMQPermission,
-	#superclass : #RMQPermission,
+	#superclass : #PulsePermission,
 	#traits : 'TRMQPermission',
 	#classTraits : 'TRMQPermission classTrait',
 	#category : #'OrionPulseCore-Class'

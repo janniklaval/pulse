@@ -14,7 +14,7 @@ ORPulseTest >> model [
 			"mod := PulseModel new."
 			MooseModel root reset.
 			MooseModel resetMeta.
-			RMQLogParser parse: 'trace/traces4.log'.
+			PulseLogParser parse: 'trace/traces4.log'.
 			mod := MooseModel root at: 1.
 			model := ORPulseConverter convertFromMooseModel: mod.
 			model name: 'ORPulseModelTest Parent'.

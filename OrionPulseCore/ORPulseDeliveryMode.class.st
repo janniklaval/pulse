@@ -1,6 +1,6 @@
 Class {
 	#name : #ORPulseDeliveryMode,
-	#superclass : #DeliveryMode,
+	#superclass : #PulseDeliveryMode,
 	#traits : 'TDeliveryMode',
 	#classTraits : 'TDeliveryMode classTrait',
 	#category : #'OrionPulseCore-Class'

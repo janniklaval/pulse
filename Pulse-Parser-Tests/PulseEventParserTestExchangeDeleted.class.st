@@ -31,10 +31,10 @@ PulseEventParserTestExchangeDeleted >> setUp [
 	consumer purgeQueue: 'events.exchange.deleted'.
 	
 	"populate the model with the resource, set vhost "
-	vhost := RMQVHost new.
+	vhost := PulseVHost new.
 	vhost pulseName: '/';
 			mooseModel: model.
-	exchange := RMQExchange new pulseName: 'test.delete.exchange';
+	exchange := PulseExchange new pulseName: 'test.delete.exchange';
 									mooseModel: model.
 	exchange vhost: vhost. 
 	vhost exchanges add: exchange. 

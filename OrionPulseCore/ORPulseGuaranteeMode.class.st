@@ -1,6 +1,6 @@
 Class {
 	#name : #ORPulseGuaranteeMode,
-	#superclass : #GuaranteeMode,
+	#superclass : #PulseGuaranteeMode,
 	#traits : 'TGuaranteeMode',
 	#classTraits : 'TGuaranteeMode classTrait',
 	#category : #'OrionPulseCore-Class'

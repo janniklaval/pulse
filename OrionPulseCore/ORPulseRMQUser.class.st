@@ -1,6 +1,6 @@
 Class {
 	#name : #ORPulseRMQUser,
-	#superclass : #RMQUser,
+	#superclass : #PulseUser,
 	#traits : 'TRMQUser',
 	#classTraits : 'TRMQUser classTrait',
 	#category : #'OrionPulseCore-Class'

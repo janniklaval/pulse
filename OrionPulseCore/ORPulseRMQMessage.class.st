@@ -1,6 +1,6 @@
 Class {
 	#name : #ORPulseRMQMessage,
-	#superclass : #RMQMessage,
+	#superclass : #PulseMessage,
 	#traits : 'TRMQMessage',
 	#classTraits : 'TRMQMessage classTrait',
 	#category : #'OrionPulseCore-Class'

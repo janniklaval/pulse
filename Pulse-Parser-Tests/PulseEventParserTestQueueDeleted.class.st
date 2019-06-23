@@ -30,11 +30,11 @@ PulseEventParserTestQueueDeleted >> setUp [
 	"populate the model with queue test.delete.queue, set vhost "
 	vhost := model
 		selectOrAddEntityNamed: '/'
-		withType: RMQVHost
+		withType: PulseVHost
 		sourceName: self sourceName.
 	queue := model
 		selectOrAddEntityNamed: 'test.delete.queue'
-		withType: RMQQueue
+		withType: PulseQueue
 		sourceName: self sourceName.
 	vhost queues add: queue.
 	queue vhost: vhost.

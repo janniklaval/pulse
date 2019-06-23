@@ -1,6 +1,6 @@
 Class {
 	#name : #ORPulseExchangeType,
-	#superclass : #ExchangeType,
+	#superclass : #PulseExchangeType,
 	#traits : 'TExchangeType',
 	#classTraits : 'TExchangeType classTrait',
 	#category : #'OrionPulseCore-Class'

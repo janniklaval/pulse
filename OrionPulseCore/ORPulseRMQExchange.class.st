@@ -1,6 +1,6 @@
 Class {
 	#name : #ORPulseRMQExchange,
-	#superclass : #RMQExchange,
+	#superclass : #PulseExchange,
 	#traits : 'TRMQExchange',
 	#classTraits : 'TRMQExchange classTrait',
 	#category : #'OrionPulseCore-Class'

@@ -1,6 +1,6 @@
 Class {
 	#name : #ORPulseRMQCluster,
-	#superclass : #RMQCluster,
+	#superclass : #PulseCluster,
 	#traits : 'TRMQCluster',
 	#classTraits : 'TRMQCluster classTrait',
 	#category : #'OrionPulseCore-Class'

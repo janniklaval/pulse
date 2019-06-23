@@ -1,6 +1,6 @@
 Class {
 	#name : #ORPulseRMQQueue,
-	#superclass : #RMQQueue,
+	#superclass : #PulseQueue,
 	#traits : 'TRMQQueue',
 	#classTraits : 'TRMQQueue classTrait',
 	#category : #'OrionPulseCore-Class'

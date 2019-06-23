@@ -1,6 +1,6 @@
 Class {
 	#name : #ORPulseTransportPolitic,
-	#superclass : #TransportPolitic,
+	#superclass : #PulseTransportPolitic,
 	#traits : 'TTransportPolitic',
 	#classTraits : 'TTransportPolitic classTrait',
 	#category : #'OrionPulseCore-Class'

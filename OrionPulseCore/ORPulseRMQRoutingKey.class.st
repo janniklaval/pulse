@@ -1,6 +1,6 @@
 Class {
 	#name : #ORPulseRMQRoutingKey,
-	#superclass : #RMQRoutingKey,
+	#superclass : #PulseRoutingKey,
 	#traits : 'TRMQRoutingKey',
 	#classTraits : 'TRMQRoutingKey classTrait',
 	#category : #'OrionPulseCore-Class'

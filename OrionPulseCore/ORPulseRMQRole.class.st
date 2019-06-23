@@ -1,6 +1,6 @@
 Class {
 	#name : #ORPulseRMQRole,
-	#superclass : #RMQRole,
+	#superclass : #PulseRole,
 	#traits : 'TRMQRole',
 	#classTraits : 'TRMQRole classTrait',
 	#category : #'OrionPulseCore-Class'

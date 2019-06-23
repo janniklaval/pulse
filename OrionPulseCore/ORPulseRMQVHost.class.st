@@ -1,6 +1,6 @@
 Class {
 	#name : #ORPulseRMQVHost,
-	#superclass : #RMQVHost,
+	#superclass : #PulseVHost,
 	#traits : 'TRMQVHost',
 	#classTraits : 'TRMQVHost classTrait',
 	#category : #'OrionPulseCore-Class'

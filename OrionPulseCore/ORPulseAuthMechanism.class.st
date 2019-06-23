@@ -1,6 +1,6 @@
 Class {
 	#name : #ORPulseAuthMechanism,
-	#superclass : #AuthMechanism,
+	#superclass : #PulseAuthMechanism,
 	#traits : 'TAuthMechanism',
 	#classTraits : 'TAuthMechanism classTrait',
 	#category : #'OrionPulseCore-Class'

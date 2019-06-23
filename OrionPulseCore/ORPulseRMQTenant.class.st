@@ -1,6 +1,6 @@
 Class {
 	#name : #ORPulseRMQTenant,
-	#superclass : #RMQTenant,
+	#superclass : #PulseTenant,
 	#traits : 'TRMQTenant',
 	#classTraits : 'TRMQTenant classTrait',
 	#category : #'OrionPulseCore-Class'

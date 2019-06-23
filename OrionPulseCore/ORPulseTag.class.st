@@ -1,6 +1,6 @@
 Class {
 	#name : #ORPulseTag,
-	#superclass : #Tag,
+	#superclass : #PulseTag,
 	#traits : 'TTag',
 	#classTraits : 'TTag classTrait',
 	#category : #'OrionPulseCore-Class'

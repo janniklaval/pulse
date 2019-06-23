@@ -28,14 +28,14 @@ PulseEventParserTestBindingDeleted >> setUp [
 	"consumer purgeQueue: 'events.binding.created'."
 
 	"set up the MM"
-	newBinding := RMQBindingWithQueue new.
+	newBinding := PulseBindingWithQueue new.
 	source := model
 		selectOrAddEntityNamed: 'test.create.exchangeforbinding'
-		withType: RMQExchange
+		withType: PulseExchange
 		sourceName: self sourceName.
 	destination := model
 		selectOrAddEntityNamed: 'test.create.queueforbinding'
-		withType: RMQQueue
+		withType: PulseQueue
 		sourceName: self sourceName.
 	destination destinationBindings add: newBinding.
 	source sourceBindings add: newBinding.
@@ -45,7 +45,7 @@ PulseEventParserTestBindingDeleted >> setUp [
 	model add: newBinding.
 	routingKey := model
 		selectOrAddEntityNamed: 'key'
-		withType: RMQRoutingKey
+		withType: PulseRoutingKey
 		sourceName: self sourceName.
 	newBinding routingKey: routingKey.
 	routingKey binding: newBinding.

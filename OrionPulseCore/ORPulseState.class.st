@@ -1,6 +1,6 @@
 Class {
 	#name : #ORPulseState,
-	#superclass : #State,
+	#superclass : #PulseState,
 	#traits : 'TState',
 	#classTraits : 'TState classTrait',
 	#category : #'OrionPulseCore-Class'

@@ -1,6 +1,6 @@
 Class {
 	#name : #ORPulseRMQChannel,
-	#superclass : #RMQChannel,
+	#superclass : #PulseChannel,
 	#traits : 'TRMQChannel',
 	#classTraits : 'TRMQChannel classTrait',
 	#category : #'OrionPulseCore-Class'
