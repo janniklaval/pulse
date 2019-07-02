@@ -16,6 +16,8 @@ BaselineOfPulse >> baseline: spec [
 		spec package: 'Pulse-Process'.
 		spec package: 'Pulse-Visualization'.
 		spec package: 'Pulse-Parser-Tests'.
+		spec package: 'Pulse-Indicators'.
+		spec package: 'OrionPulseCore'.
 		
 		spec package: 'Amqp'.
 		
@@ -34,7 +36,7 @@ BaselineOfPulse >> baseline: spec [
                                 loads: #('mongo tests') ];
                         import: 'Voyage'."
 		spec
- 			group: 'default' with: #(  'Amqp' 'Pulse' 'Pulse-Model-Core-Generator' 'Pulse-Parser' 'Pulse-Process' 'Pulse-Visualization' 'Pulse-Parser-Tests').
+ 			group: 'default' with: #(  'Amqp' 'Pulse' 'Pulse-Core-Model-Generator' 'Pulse-Parser' 'Pulse-Process' 'Pulse-Visualization' 'Pulse-Parser-Tests' 'Pulse-Indicators' 'OrionPulseCore').
 	].
 
 ]
