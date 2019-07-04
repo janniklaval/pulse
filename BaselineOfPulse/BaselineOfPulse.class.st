@@ -24,8 +24,8 @@ BaselineOfPulse >> baseline: spec [
 	spec baseline: 'Moose' 
                             with: [ spec
                                 className: 'BaselineOfMoose';
-                                repository: 'github://moosetechnology/Moose:development/src';
-                                load ].
+                                repository: 'github://moosetechnology/Moose:development/src'.
+                                ].
 		
 
 		spec baseline: 'PetitParser'
@@ -52,8 +52,8 @@ BaselineOfPulse >> baseline: spec [
 	spec baseline: 'Cruiser'
                             with: [ spec
                                 className: 'BaselineOfCruiser';
-                                repository: 'github://VincentBlondeau/Cruiser';
-                                load].
+                                repository: 'github://VincentBlondeau/Cruiser'.
+                                ].
 
 		spec
  			group: 'default' with: #(  'Amqp' 'Moose' 'PetitParser' 'Orion' 'Voyage' 'Cruiser' 'Pulse' 'Pulse-Core-Model-Generator' 'Pulse-Parser' 'Pulse-Process' 'Pulse-Visualization' 'Pulse-Parser-Tests' 'Pulse-Indicators' 'OrionPulseCore').
