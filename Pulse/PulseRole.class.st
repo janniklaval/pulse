@@ -2,7 +2,7 @@ Class {
 	#name : #PulseRole,
 	#superclass : #PulseEntity,
 	#instVars : [
-		'#settingDate',
+		'#settingDate => FMProperty',
 		'#tag => FMOne type: #PulseTag opposite: #roles',
 		'#users => FMMany type: #PulseUser opposite: #roles'
 	],
@@ -16,19 +16,6 @@ PulseRole class >> annotation [
 	<package: #Pulse>
 	<generated>
 	^self
-]
-
-{ #category : #generator }
-PulseRole class >> generatedSlotNames [
-	<generated>
-	'PulseRole class>>#generatedSlotNames'.
-	^ #(settingDate tag users)
-]
-
-{ #category : #generator }
-PulseRole class >> generatedTraitNames [
-	<generated>
-	^ #()
 ]
 
 { #category : #meta }

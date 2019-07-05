@@ -2,7 +2,7 @@ Class {
 	#name : #PulseRoutingKey,
 	#superclass : #PulseEntity,
 	#instVars : [
-		'#binding => FMOne type: #PulseBinding opposite: #routingKey',
+		'#bindings => FMMany type: #PulseBinding opposite: #routingKey',
 		'#messages => FMMany type: #PulseMessage opposite: #routingKeys',
 		'#queues_for_dead_letter => FMMany type: #PulseQueue opposite: #dead_letter_routing_key'
 	],
@@ -18,19 +18,6 @@ PulseRoutingKey class >> annotation [
 	^self
 ]
 
-{ #category : #generator }
-PulseRoutingKey class >> generatedSlotNames [
-	<generated>
-	'PulseRoutingKey class>>#generatedSlotNames'.
-	^ #(binding messages queues_for_dead_letter)
-]
-
-{ #category : #generator }
-PulseRoutingKey class >> generatedTraitNames [
-	<generated>
-	^ #()
-]
-
 { #category : #meta }
 PulseRoutingKey class >> requirements [
 
@@ -39,18 +26,18 @@ PulseRoutingKey class >> requirements [
 ]
 
 { #category : #accessing }
-PulseRoutingKey >> binding [
+PulseRoutingKey >> bindings [
 
 	<generated>
 	<MSEComment: 'TODO'>
-	^ binding
+	^ bindings
 ]
 
 { #category : #accessing }
-PulseRoutingKey >> binding: anObject [
+PulseRoutingKey >> bindings: anObject [
 
 	<generated>
-	binding := anObject
+	bindings value: anObject
 
 ]
 

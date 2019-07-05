@@ -2,13 +2,13 @@ Class {
 	#name : #PulsePermission,
 	#superclass : #PulseEntity,
 	#instVars : [
-		'#configureValue',
-		'#creationDate',
-		'#deletionDate',
-		'#readValue',
+		'#configureValue => FMProperty',
+		'#creationDate => FMProperty',
+		'#deletionDate => FMProperty',
+		'#readValue => FMProperty',
 		'#user => FMOne type: #PulseUser opposite: #permissions',
 		'#vhost => FMOne type: #PulseVHost opposite: #permissions',
-		'#writeValue'
+		'#writeValue => FMProperty'
 	],
 	#category : #'Pulse-Entities'
 }
@@ -20,19 +20,6 @@ PulsePermission class >> annotation [
 	<package: #Pulse>
 	<generated>
 	^self
-]
-
-{ #category : #generator }
-PulsePermission class >> generatedSlotNames [
-	<generated>
-	'PulsePermission class>>#generatedSlotNames'.
-	^ #(configureValue creationDate deletionDate readValue user vhost writeValue)
-]
-
-{ #category : #generator }
-PulsePermission class >> generatedTraitNames [
-	<generated>
-	^ #()
 ]
 
 { #category : #meta }

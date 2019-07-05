@@ -2,13 +2,13 @@ Class {
 	#name : #PulseConsumerProcess,
 	#superclass : #PulseEntity,
 	#instVars : [
-		'#ackRequired',
+		'#ackRequired => FMProperty',
 		'#consumerComponent => FMOne type: #PulseConsumerComponent opposite: #consumerProcesses',
-		'#consumerTag',
-		'#creationDate',
-		'#deletionDate',
-		'#exclusive',
-		'#guid',
+		'#consumerTag => FMProperty',
+		'#creationDate => FMProperty',
+		'#deletionDate => FMProperty',
+		'#exclusive => FMProperty',
+		'#guid => FMProperty',
 		'#pulseState => FMOne type: #PulseState opposite: #consumerProcesses',
 		'#subscribedChannels => FMMany type: #PulseChannel opposite: #consumerProcess'
 	],
@@ -22,19 +22,6 @@ PulseConsumerProcess class >> annotation [
 	<package: #Pulse>
 	<generated>
 	^self
-]
-
-{ #category : #generator }
-PulseConsumerProcess class >> generatedSlotNames [
-	<generated>
-	'PulseConsumerProcess class>>#generatedSlotNames'.
-	^ #(ackRequired consumerComponent consumerTag creationDate deletionDate exclusive guid pulseState subscribedChannels)
-]
-
-{ #category : #generator }
-PulseConsumerProcess class >> generatedTraitNames [
-	<generated>
-	^ #()
 ]
 
 { #category : #meta }

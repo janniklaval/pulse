@@ -2,17 +2,17 @@ Class {
 	#name : #PulseChannel,
 	#superclass : #PulseEntity,
 	#instVars : [
-		'#closingDate',
+		'#closingDate => FMProperty',
 		'#connection => FMOne type: #PulseConnection opposite: #channels',
 		'#consumedQueues => FMMany type: #PulseQueue opposite: #consumerChannels',
 		'#consumerComponent => FMOne type: #PulseConsumerComponent opposite: #subscribedChannels',
 		'#consumerProcess => FMOne type: #PulseConsumerProcess opposite: #subscribedChannels',
-		'#creationDate',
-		'#globalPrefetchCount',
+		'#creationDate => FMProperty',
+		'#globalPrefetchCount => FMProperty',
 		'#guaranteeMode => FMOne type: #PulseGuaranteeMode opposite: #channels',
-		'#idleSince',
-		'#pid',
-		'#prefetchCount',
+		'#idleSince => FMProperty',
+		'#pid => FMProperty',
+		'#prefetchCount => FMProperty',
 		'#publisherComponent => FMOne type: #PulsePublisherComponent opposite: #usedChannels',
 		'#pulseState => FMOne type: #PulseState opposite: #channels',
 		'#user => FMOne type: #PulseUser opposite: #usedChannels',
@@ -29,19 +29,6 @@ PulseChannel class >> annotation [
 	<package: #Pulse>
 	<generated>
 	^self
-]
-
-{ #category : #generator }
-PulseChannel class >> generatedSlotNames [
-	<generated>
-	'PulseChannel class>>#generatedSlotNames'.
-	^ #(closingDate connection consumedQueues consumerComponent consumerProcess creationDate globalPrefetchCount guaranteeMode idleSince pid prefetchCount publisherComponent pulseState user user_who_performed_connection vhost)
-]
-
-{ #category : #generator }
-PulseChannel class >> generatedTraitNames [
-	<generated>
-	^ #()
 ]
 
 { #category : #meta }

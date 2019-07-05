@@ -22,19 +22,6 @@ PulseTransportPolitic class >> callback [
 	^ self new pulseState: #callback
 ]
 
-{ #category : #generator }
-PulseTransportPolitic class >> generatedSlotNames [
-	<generated>
-	'PulseTransportPolitic class>>#generatedSlotNames'.
-	^ #()
-]
-
-{ #category : #generator }
-PulseTransportPolitic class >> generatedTraitNames [
-	<generated>
-	^ #()
-]
-
 { #category : #meta }
 PulseTransportPolitic class >> requirements [
 

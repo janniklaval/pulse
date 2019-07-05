@@ -20,19 +20,6 @@ PulseState class >> annotation [
 	^self
 ]
 
-{ #category : #generator }
-PulseState class >> generatedSlotNames [
-	<generated>
-	'PulseState class>>#generatedSlotNames'.
-	^ #(channels connections consumerComponents consumerProcesses publisherComponents queues)
-]
-
-{ #category : #generator }
-PulseState class >> generatedTraitNames [
-	<generated>
-	^ #()
-]
-
 { #category : #accessing }
 PulseState class >> idle [
 	^ self new pulseState: #idle

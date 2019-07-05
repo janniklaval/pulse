@@ -2,22 +2,22 @@ Class {
 	#name : #PulseQueue,
 	#superclass : #PulseEntity,
 	#instVars : [
-		'#autoDelete',
+		'#autoDelete => FMProperty',
 		'#consumerChannels => FMMany type: #PulseChannel opposite: #consumedQueues',
-		'#creationDate',
+		'#creationDate => FMProperty',
 		'#dead_letter_exchange => FMOne type: #PulseExchange opposite: #queues_for_dead_letter',
 		'#dead_letter_routing_key => FMOne type: #PulseRoutingKey opposite: #queues_for_dead_letter',
-		'#deletionDate',
+		'#deletionDate => FMProperty',
 		'#deliveredMessages => FMMany type: #PulseMessage opposite: #deliveredFromQueues',
 		'#destinationBindings => FMMany type: #PulseBindingWithQueue opposite: #destination',
-		'#durability',
-		'#exclusive',
-		'#expiresAfter',
-		'#idleSince',
-		'#maxLength',
-		'#maxLengthBytes',
-		'#maxPriority',
-		'#messageTTL',
+		'#durability => FMProperty',
+		'#exclusive => FMProperty',
+		'#expiresAfter => FMProperty',
+		'#idleSince => FMProperty',
+		'#maxLength => FMProperty',
+		'#maxLengthBytes => FMProperty',
+		'#maxPriority => FMProperty',
+		'#messageTTL => FMProperty',
 		'#pulseState => FMOne type: #PulseState opposite: #queues',
 		'#routedMessages => FMMany type: #PulseMessage opposite: #routedToQueues',
 		'#vhost => FMOne type: #PulseVHost opposite: #queues'
@@ -32,19 +32,6 @@ PulseQueue class >> annotation [
 	<package: #Pulse>
 	<generated>
 	^self
-]
-
-{ #category : #generator }
-PulseQueue class >> generatedSlotNames [
-	<generated>
-	'PulseQueue class>>#generatedSlotNames'.
-	^ #(autoDelete consumerChannels creationDate dead_letter_exchange dead_letter_routing_key deletionDate deliveredMessages destinationBindings durability exclusive expiresAfter idleSince maxLength maxLengthBytes maxPriority messageTTL pulseState routedMessages vhost)
-]
-
-{ #category : #generator }
-PulseQueue class >> generatedTraitNames [
-	<generated>
-	^ #()
 ]
 
 { #category : #meta }

@@ -3,12 +3,12 @@ Class {
 	#superclass : #PulseEntity,
 	#instVars : [
 		'#cluster => FMOne type: #PulseCluster opposite: #nodes',
-		'#creationDate',
-		'#deletionDate',
-		'#host',
-		'#port',
-		'#running',
-		'#size_byte',
+		'#creationDate => FMProperty',
+		'#deletionDate => FMProperty',
+		'#host => FMProperty',
+		'#port => FMProperty',
+		'#running => FMProperty',
+		'#size_byte => FMProperty',
 		'#type => FMOne type: #PulseNodeType opposite: #nodes',
 		'#vhosts => FMMany type: #PulseVHost opposite: #node'
 	],
@@ -22,19 +22,6 @@ PulseNode class >> annotation [
 	<package: #Pulse>
 	<generated>
 	^self
-]
-
-{ #category : #generator }
-PulseNode class >> generatedSlotNames [
-	<generated>
-	'PulseNode class>>#generatedSlotNames'.
-	^ #(cluster creationDate deletionDate host port running size_byte type vhosts)
-]
-
-{ #category : #generator }
-PulseNode class >> generatedTraitNames [
-	<generated>
-	^ #()
 ]
 
 { #category : #meta }

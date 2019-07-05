@@ -4,18 +4,18 @@ Class {
 	#instVars : [
 		'#deliveredFromQueues => FMMany type: #PulseQueue opposite: #deliveredMessages',
 		'#deliveryMode => FMOne type: #PulseDeliveryMode opposite: #messages',
-		'#encrypted',
+		'#encrypted => FMProperty',
 		'#exchangeFormat => FMOne type: #PulseExchangeFormat opposite: #messages',
-		'#messageId',
+		'#messageId => FMProperty',
 		'#messageType => FMOne type: #PulseMessageType opposite: #messages',
 		'#payload => FMOne type: #PulsePayload opposite: #messages',
-		'#priority',
+		'#priority => FMProperty',
 		'#publishedToExchange => FMOne type: #PulseExchange opposite: #publishedMessages',
 		'#publisherComponent => FMOne type: #PulsePublisherComponent opposite: #messagesFromPublisher',
-		'#redelivered',
+		'#redelivered => FMProperty',
 		'#routedToQueues => FMMany type: #PulseQueue opposite: #routedMessages',
 		'#routingKeys => FMMany type: #PulseRoutingKey opposite: #messages',
-		'#timestamp'
+		'#timestamp => FMProperty'
 	],
 	#category : #'Pulse-Entities'
 }
@@ -27,19 +27,6 @@ PulseMessage class >> annotation [
 	<package: #Pulse>
 	<generated>
 	^self
-]
-
-{ #category : #generator }
-PulseMessage class >> generatedSlotNames [
-	<generated>
-	'PulseMessage class>>#generatedSlotNames'.
-	^ #(deliveredFromQueues deliveryMode encrypted exchangeFormat messageId messageType payload priority publishedToExchange publisherComponent redelivered routedToQueues routingKeys timestamp)
-]
-
-{ #category : #generator }
-PulseMessage class >> generatedTraitNames [
-	<generated>
-	^ #()
 ]
 
 { #category : #meta }

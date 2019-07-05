@@ -20,19 +20,6 @@ PulseMessageType class >> annotation [
 	^self
 ]
 
-{ #category : #generator }
-PulseMessageType class >> generatedSlotNames [
-	<generated>
-	'PulseMessageType class>>#generatedSlotNames'.
-	^ #(messages)
-]
-
-{ #category : #generator }
-PulseMessageType class >> generatedTraitNames [
-	<generated>
-	^ #()
-]
-
 { #category : #'as yet unclassified' }
 PulseMessageType class >> published [
 	^ self new pulseState: #published

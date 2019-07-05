@@ -20,19 +20,6 @@ PulseGuaranteeMode class >> confirm [
 	^ self new pulseState: #confirm
 ]
 
-{ #category : #generator }
-PulseGuaranteeMode class >> generatedSlotNames [
-	<generated>
-	'PulseGuaranteeMode class>>#generatedSlotNames'.
-	^ #(channels)
-]
-
-{ #category : #generator }
-PulseGuaranteeMode class >> generatedTraitNames [
-	<generated>
-	^ #()
-]
-
 { #category : #'instance creation' }
 PulseGuaranteeMode class >> none [
 	^ self new pulseState: #none

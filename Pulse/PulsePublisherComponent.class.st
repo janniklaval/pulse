@@ -2,20 +2,20 @@ Class {
 	#name : #PulsePublisherComponent,
 	#superclass : #PulseEntity,
 	#instVars : [
-		'#address',
-		'#appId',
-		'#author',
+		'#address => FMProperty',
+		'#appId => FMProperty',
+		'#author => FMProperty',
 		'#componentType => FMOne type: #PulseComponentType opposite: #publisherComponents',
 		'#deploymentMode => FMOne type: #PulseDeploymentMode opposite: #publisherComponents',
 		'#exchanges => FMMany type: #PulseExchange opposite: #publisherComponents',
-		'#guid',
+		'#guid => FMProperty',
 		'#messagesFromPublisher => FMMany type: #PulseMessage opposite: #publisherComponent',
-		'#owner',
-		'#platform',
+		'#owner => FMProperty',
+		'#platform => FMProperty',
 		'#pulseState => FMOne type: #PulseState opposite: #publisherComponents',
-		'#tenantId',
+		'#tenantId => FMProperty',
 		'#usedChannels => FMMany type: #PulseChannel opposite: #publisherComponent',
-		'#version'
+		'#version => FMProperty'
 	],
 	#category : #'Pulse-Entities'
 }
@@ -27,19 +27,6 @@ PulsePublisherComponent class >> annotation [
 	<package: #Pulse>
 	<generated>
 	^self
-]
-
-{ #category : #generator }
-PulsePublisherComponent class >> generatedSlotNames [
-	<generated>
-	'PulsePublisherComponent class>>#generatedSlotNames'.
-	^ #(address appId author componentType deploymentMode exchanges guid messagesFromPublisher owner platform pulseState tenantId usedChannels version)
-]
-
-{ #category : #generator }
-PulsePublisherComponent class >> generatedTraitNames [
-	<generated>
-	^ #()
 ]
 
 { #category : #meta }

@@ -2,19 +2,19 @@ Class {
 	#name : #PulseConsumerComponent,
 	#superclass : #PulseEntity,
 	#instVars : [
-		'#address',
-		'#appId',
-		'#author',
+		'#address => FMProperty',
+		'#appId => FMProperty',
+		'#author => FMProperty',
 		'#componentType => FMOne type: #PulseComponentType opposite: #consumerComponents',
 		'#consumerProcesses => FMMany type: #PulseConsumerProcess opposite: #consumerComponent',
 		'#deploymentMode => FMOne type: #PulseDeploymentMode opposite: #consumerComponents',
-		'#guid',
-		'#owner',
-		'#platform',
+		'#guid => FMProperty',
+		'#owner => FMProperty',
+		'#platform => FMProperty',
 		'#pulseState => FMOne type: #PulseState opposite: #consumerComponents',
 		'#subscribedChannels => FMMany type: #PulseChannel opposite: #consumerComponent',
-		'#tenantId',
-		'#version'
+		'#tenantId => FMProperty',
+		'#version => FMProperty'
 	],
 	#category : #'Pulse-Entities'
 }
@@ -26,19 +26,6 @@ PulseConsumerComponent class >> annotation [
 	<package: #Pulse>
 	<generated>
 	^self
-]
-
-{ #category : #generator }
-PulseConsumerComponent class >> generatedSlotNames [
-	<generated>
-	'PulseConsumerComponent class>>#generatedSlotNames'.
-	^ #(address appId author componentType consumerProcesses deploymentMode guid owner platform pulseState subscribedChannels tenantId version)
-]
-
-{ #category : #generator }
-PulseConsumerComponent class >> generatedTraitNames [
-	<generated>
-	^ #()
 ]
 
 { #category : #meta }

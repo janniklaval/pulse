@@ -28,19 +28,6 @@ PulseComponentType class >> database [
 
 ]
 
-{ #category : #generator }
-PulseComponentType class >> generatedSlotNames [
-	<generated>
-	'PulseComponentType class>>#generatedSlotNames'.
-	^ #(consumerComponents publisherComponents)
-]
-
-{ #category : #generator }
-PulseComponentType class >> generatedTraitNames [
-	<generated>
-	^ #()
-]
-
 { #category : #'System-FileRegistry' }
 PulseComponentType class >> mediator [
 	^ self new pulseState: #mediator

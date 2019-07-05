@@ -20,19 +20,6 @@ PulseAuthMechanism class >> annotation [
 	^self
 ]
 
-{ #category : #generator }
-PulseAuthMechanism class >> generatedSlotNames [
-	<generated>
-	'PulseAuthMechanism class>>#generatedSlotNames'.
-	^ #(connections)
-]
-
-{ #category : #generator }
-PulseAuthMechanism class >> generatedTraitNames [
-	<generated>
-	^ #()
-]
-
 { #category : #meta }
 PulseAuthMechanism class >> plain [
 	^ self new pulseState: #plain

@@ -2,9 +2,9 @@ Class {
 	#name : #PulseBinding,
 	#superclass : #PulseEntity,
 	#instVars : [
-		'#creationDate',
-		'#deletionDate',
-		'#routingKey => FMMany type: #PulseRoutingKey opposite: #binding',
+		'#creationDate => FMProperty',
+		'#deletionDate => FMProperty',
+		'#routingKey => FMOne type: #PulseRoutingKey opposite: #bindings',
 		'#source => FMOne type: #PulseExchange opposite: #sourceBindings',
 		'#vhost => FMOne type: #PulseVHost opposite: #bindings'
 	],
@@ -18,19 +18,6 @@ PulseBinding class >> annotation [
 	<package: #Pulse>
 	<generated>
 	^self
-]
-
-{ #category : #generator }
-PulseBinding class >> generatedSlotNames [
-	<generated>
-	'PulseBinding class>>#generatedSlotNames'.
-	^ #(creationDate deletionDate routingKey source vhost)
-]
-
-{ #category : #generator }
-PulseBinding class >> generatedTraitNames [
-	<generated>
-	^ #()
 ]
 
 { #category : #meta }
@@ -86,7 +73,7 @@ PulseBinding >> routingKey [
 PulseBinding >> routingKey: anObject [
 
 	<generated>
-	routingKey value: anObject
+	routingKey := anObject
 
 ]
 

@@ -2,9 +2,9 @@ Class {
 	#name : #PulseAuthentification,
 	#superclass : #PulseEntity,
 	#instVars : [
-		'#failureError',
-		'#success',
-		'#timestamp',
+		'#failureError => FMProperty',
+		'#success => FMProperty',
+		'#timestamp => FMProperty',
 		'#user => FMOne type: #PulseUser opposite: #authentifications'
 	],
 	#category : #'Pulse-Entities'
@@ -17,19 +17,6 @@ PulseAuthentification class >> annotation [
 	<package: #Pulse>
 	<generated>
 	^self
-]
-
-{ #category : #generator }
-PulseAuthentification class >> generatedSlotNames [
-	<generated>
-	'PulseAuthentification class>>#generatedSlotNames'.
-	^ #(failureError success timestamp user)
-]
-
-{ #category : #generator }
-PulseAuthentification class >> generatedTraitNames [
-	<generated>
-	^ #()
 ]
 
 { #category : #meta }

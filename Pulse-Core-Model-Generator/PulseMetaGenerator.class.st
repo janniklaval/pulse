@@ -1,5 +1,5 @@
 Class {
-	#name : #PulseMetamodelGenerator,
+	#name : #PulseMetaGenerator,
 	#superclass : #FamixMetamodelGenerator,
 	#instVars : [
 		'enum',
@@ -40,23 +40,23 @@ Class {
 		'user',
 		'vhost'
 	],
-	#category : #'Pulse-Core-Model-Generator-Pulse-Core-Model-Generator'
+	#category : #'Pulse-Core-Model-Generator'
 }
 
 { #category : #accessing }
-PulseMetamodelGenerator class >> packageName [
+PulseMetaGenerator class >> packageName [
 
 	^ #'Pulse'
 ]
 
 { #category : #accessing }
-PulseMetamodelGenerator class >> prefix [
+PulseMetaGenerator class >> prefix [
 
 	^ #'Pulse'
 ]
 
 { #category : #definition }
-PulseMetamodelGenerator >> defineClasses [
+PulseMetaGenerator >> defineClasses [
 
 	entity := builder newClassNamed: #Entity.
 	enum := builder newClassNamed: #Enum.
@@ -98,7 +98,7 @@ PulseMetamodelGenerator >> defineClasses [
 ]
 
 { #category : #definition }
-PulseMetamodelGenerator >> defineHierarchy [
+PulseMetaGenerator >> defineHierarchy [
 	
 	enum --|> entity.
 	authMechanism --|> enum.
@@ -139,7 +139,7 @@ PulseMetamodelGenerator >> defineHierarchy [
 ]
 
 { #category : #definition }
-PulseMetamodelGenerator >> defineProperties [
+PulseMetaGenerator >> defineProperties [
 
 	((entity property: #pulseName type: #String) comment: 'TODO').
 	((enum property: #pulseState type: #String) comment: 'TODO').
@@ -241,7 +241,7 @@ PulseMetamodelGenerator >> defineProperties [
 ]
 
 { #category : #definition }
-PulseMetamodelGenerator >> defineRelations [
+PulseMetaGenerator >> defineRelations [
 
 	((entity property: #sources) comment: 'TODO') *-* ((source property: #entities) comment: 'TODO').
 	((authMechanism property: #connections) comment: 'TODO') -* ((connection property: #authMechanism) comment: 'TODO').
@@ -263,7 +263,7 @@ PulseMetamodelGenerator >> defineRelations [
 	((state property: #consumerProcesses) comment: 'TODO') -* ((consumerProcess property: #pulseState) comment: 'TODO').
 	((tag property: #roles) comment: 'TODO') -* ((role property: #tag) comment: 'TODO').
 	((authentification property: #user) comment: 'TODO') *- ((user property: #authentifications) comment: 'TODO').
-	((binding property: #routingKey) comment: 'TODO') -* ((routingKey property: #binding) comment: 'TODO').
+	((binding property: #routingKey) comment: 'TODO') *- ((routingKey property: #bindings) comment: 'TODO').
 	((binding property: #source) comment: 'TODO') *- ((exchange property: #sourceBindings) comment: 'TODO').
 	((binding property: #vhost) comment: 'TODO') *- ((vhost property: #bindings) comment: 'TODO').
 	((bindingWithExchange property: #destination) comment: 'TODO') *- ((exchange property: #destinationBindings) comment: 'TODO').

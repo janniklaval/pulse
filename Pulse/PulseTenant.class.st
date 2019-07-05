@@ -2,7 +2,7 @@ Class {
 	#name : #PulseTenant,
 	#superclass : #PulseEntity,
 	#instVars : [
-		'tenantId'
+		'#tenantId => FMProperty'
 	],
 	#category : #'Pulse-Entities'
 }
@@ -14,19 +14,6 @@ PulseTenant class >> annotation [
 	<package: #Pulse>
 	<generated>
 	^self
-]
-
-{ #category : #generator }
-PulseTenant class >> generatedSlotNames [
-	<generated>
-	'PulseTenant class>>#generatedSlotNames'.
-	^ #(tenantId)
-]
-
-{ #category : #generator }
-PulseTenant class >> generatedTraitNames [
-	<generated>
-	^ #()
 ]
 
 { #category : #meta }
