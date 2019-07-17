@@ -24,7 +24,7 @@ BaselineOfPulse >> baseline: spec [
 	spec baseline: 'Moose' 
                             with: [ spec
                                 className: 'BaselineOfMoose';
-                                repository: 'github://moosetechnology/Moose:development/src'.
+                                repository: 'github://moosetechnology/Moose:v7.0.0/src'.
                                 ].
 		
 
