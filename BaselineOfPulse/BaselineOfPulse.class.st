@@ -27,12 +27,9 @@ BaselineOfPulse >> baseline: spec [
                                 repository: 'github://moosetechnology/Moose:v7.0.0/src'.
                                 ].
 		
-
-		spec baseline: 'PetitParser'
-                            with: [ spec
-                                className: 'BaselineOfPetitParser';
-                                repository: 'github://moosetechnology/PetitParser/src';
-                                loads: #('PetitJson') ].
+		spec package: 'PetitParser' with: [
+			spec file:'PetitJson'.
+			spec repository: 'github://moosetechnology/PetitParser/src'. ].
 
 		
 		spec configuration: 'Orion'
