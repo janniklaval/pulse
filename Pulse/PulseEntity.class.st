@@ -2,7 +2,7 @@ Class {
 	#name : #PulseEntity,
 	#superclass : #MooseEntity,
 	#instVars : [
-		'#pulseName => FMProperty',
+		'#pulseName',
 		'#sources => FMMany type: #PulseSource opposite: #entities'
 	],
 	#category : #'Pulse-Entities'
@@ -15,6 +15,19 @@ PulseEntity class >> annotation [
 	<package: #Pulse>
 	<generated>
 	^self
+]
+
+{ #category : #generator }
+PulseEntity class >> generatedSlotNames [
+	<generated>
+	'PulseEntity class>>#generatedSlotNames'.
+	^ #(pulseName sources)
+]
+
+{ #category : #generator }
+PulseEntity class >> generatedTraitNames [
+	<generated>
+	^ #()
 ]
 
 { #category : #meta }

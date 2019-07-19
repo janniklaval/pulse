@@ -2,8 +2,8 @@ Class {
 	#name : #PulseExchangeFormat,
 	#superclass : #PulseEntity,
 	#instVars : [
-		'#exchangeFormatSchema => FMProperty',
-		'#exchangeFormatType => FMProperty',
+		'#exchangeFormatSchema',
+		'#exchangeFormatType',
 		'#messages => FMMany type: #PulseMessage opposite: #exchangeFormat'
 	],
 	#category : #'Pulse-Entities'
@@ -16,6 +16,19 @@ PulseExchangeFormat class >> annotation [
 	<package: #Pulse>
 	<generated>
 	^self
+]
+
+{ #category : #generator }
+PulseExchangeFormat class >> generatedSlotNames [
+	<generated>
+	'PulseExchangeFormat class>>#generatedSlotNames'.
+	^ #(exchangeFormatSchema exchangeFormatType messages)
+]
+
+{ #category : #generator }
+PulseExchangeFormat class >> generatedTraitNames [
+	<generated>
+	^ #()
 ]
 
 { #category : #meta }

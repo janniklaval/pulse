@@ -16,6 +16,19 @@ PulseBindingWithQueue class >> annotation [
 	^self
 ]
 
+{ #category : #generator }
+PulseBindingWithQueue class >> generatedSlotNames [
+	<generated>
+	'PulseBindingWithQueue class>>#generatedSlotNames'.
+	^ #(destination)
+]
+
+{ #category : #generator }
+PulseBindingWithQueue class >> generatedTraitNames [
+	<generated>
+	^ #()
+]
+
 { #category : #meta }
 PulseBindingWithQueue class >> requirements [
 

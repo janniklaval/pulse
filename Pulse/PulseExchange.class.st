@@ -2,20 +2,20 @@ Class {
 	#name : #PulseExchange,
 	#superclass : #PulseEntity,
 	#instVars : [
-		'#alternate_exchange_for => FMMany type: #PulseExchange opposite: #my_alternate_exchange',
-		'#autoDelete => FMProperty',
-		'#creationDate => FMProperty',
-		'#deletionDate => FMProperty',
+		'#autoDelete',
+		'#creationDate',
+		'#deletionDate',
+		'#internal',
+		'#topicID',
+		'#durability',
+		'#type => FMOne type: #PulseExchangeType opposite: #exchanges',
+		'#sourceBindings => FMMany type: #PulseBinding opposite: #source',
 		'#destinationBindings => FMMany type: #PulseBindingWithExchange opposite: #destination',
-		'#durability => FMProperty',
-		'#internal => FMProperty',
+		'#alternate_exchange_for => FMMany type: #PulseExchange opposite: #my_alternate_exchange',
 		'#my_alternate_exchange => FMOne type: #PulseExchange opposite: #alternate_exchange_for',
 		'#publishedMessages => FMMany type: #PulseMessage opposite: #publishedToExchange',
 		'#publisherComponents => FMMany type: #PulsePublisherComponent opposite: #exchanges',
 		'#queues_for_dead_letter => FMMany type: #PulseQueue opposite: #dead_letter_exchange',
-		'#sourceBindings => FMMany type: #PulseBinding opposite: #source',
-		'#topicID => FMProperty',
-		'#type => FMOne type: #PulseExchangeType opposite: #exchanges',
 		'#user_who_performed_action => FMOne type: #PulseUser opposite: #initializedExchanges',
 		'#vhost => FMOne type: #PulseVHost opposite: #exchanges'
 	],
@@ -29,6 +29,19 @@ PulseExchange class >> annotation [
 	<package: #Pulse>
 	<generated>
 	^self
+]
+
+{ #category : #generator }
+PulseExchange class >> generatedSlotNames [
+	<generated>
+	'PulseExchange class>>#generatedSlotNames'.
+	^ #(alternate_exchange_for autoDelete creationDate deletionDate destinationBindings durability internal my_alternate_exchange publishedMessages publisherComponents queues_for_dead_letter sourceBindings topicID type user_who_performed_action vhost)
+]
+
+{ #category : #generator }
+PulseExchange class >> generatedTraitNames [
+	<generated>
+	^ #()
 ]
 
 { #category : #meta }

@@ -16,6 +16,19 @@ PulseCluster class >> annotation [
 	^self
 ]
 
+{ #category : #generator }
+PulseCluster class >> generatedSlotNames [
+	<generated>
+	'PulseCluster class>>#generatedSlotNames'.
+	^ #(nodes)
+]
+
+{ #category : #generator }
+PulseCluster class >> generatedTraitNames [
+	<generated>
+	^ #()
+]
+
 { #category : #meta }
 PulseCluster class >> requirements [
 

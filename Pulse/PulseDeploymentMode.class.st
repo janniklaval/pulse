@@ -22,6 +22,19 @@ PulseDeploymentMode class >> cloud [
 	
 ]
 
+{ #category : #generator }
+PulseDeploymentMode class >> generatedSlotNames [
+	<generated>
+	'PulseDeploymentMode class>>#generatedSlotNames'.
+	^ #(consumerComponents publisherComponents)
+]
+
+{ #category : #generator }
+PulseDeploymentMode class >> generatedTraitNames [
+	<generated>
+	^ #()
+]
+
 { #category : #'as yet unclassified' }
 PulseDeploymentMode class >> onPremise [
 	^ self new pulseState: #onPremise

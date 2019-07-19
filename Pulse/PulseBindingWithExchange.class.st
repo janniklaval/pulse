@@ -16,6 +16,19 @@ PulseBindingWithExchange class >> annotation [
 	^self
 ]
 
+{ #category : #generator }
+PulseBindingWithExchange class >> generatedSlotNames [
+	<generated>
+	'PulseBindingWithExchange class>>#generatedSlotNames'.
+	^ #(destination)
+]
+
+{ #category : #generator }
+PulseBindingWithExchange class >> generatedTraitNames [
+	<generated>
+	^ #()
+]
+
 { #category : #meta }
 PulseBindingWithExchange class >> requirements [
 

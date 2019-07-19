@@ -20,6 +20,19 @@ PulseNodeType class >> disc [
 	^ self new pulseState: #disc
 ]
 
+{ #category : #generator }
+PulseNodeType class >> generatedSlotNames [
+	<generated>
+	'PulseNodeType class>>#generatedSlotNames'.
+	^ #(nodes)
+]
+
+{ #category : #generator }
+PulseNodeType class >> generatedTraitNames [
+	<generated>
+	^ #()
+]
+
 { #category : #'as yet unclassified' }
 PulseNodeType class >> ram [
 	^ self new pulseState: #ram

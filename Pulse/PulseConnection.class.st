@@ -2,22 +2,22 @@ Class {
 	#name : #PulseConnection,
 	#superclass : #PulseEntity,
 	#instVars : [
+		'#closingDate',
+		'#connectedAt',
+		'#connectionType',
+		'#creationDate',
+		'#host',
+		'#peerHost',
+		'#peerPort',
+		'#pid',
+		'#port',
+		'#protocol',
+		'#ssl',
+		'#sslHash',
+		'#sslProtocol',
 		'#authMechanism => FMOne type: #PulseAuthMechanism opposite: #connections',
-		'#channels => FMMany type: #PulseChannel opposite: #connection',
-		'#closingDate => FMProperty',
-		'#connectedAt => FMProperty',
-		'#connectionType => FMProperty',
-		'#creationDate => FMProperty',
-		'#host => FMProperty',
-		'#peerHost => FMProperty',
-		'#peerPort => FMProperty',
-		'#pid => FMProperty',
-		'#port => FMProperty',
-		'#protocol => FMProperty',
 		'#pulseState => FMOne type: #PulseState opposite: #connections',
-		'#ssl => FMProperty',
-		'#sslHash => FMProperty',
-		'#sslProtocol => FMProperty',
+		'#channels => FMMany type: #PulseChannel opposite: #connection',
 		'#user => FMOne type: #PulseUser opposite: #usedConnections',
 		'#user_who_performed_connection => FMOne type: #PulseUser opposite: #initializedConnections',
 		'#vhost => FMOne type: #PulseVHost opposite: #connections'
@@ -32,6 +32,19 @@ PulseConnection class >> annotation [
 	<package: #Pulse>
 	<generated>
 	^self
+]
+
+{ #category : #generator }
+PulseConnection class >> generatedSlotNames [
+	<generated>
+	'PulseConnection class>>#generatedSlotNames'.
+	^ #(authMechanism channels closingDate connectedAt connectionType creationDate host peerHost peerPort pid port protocol pulseState ssl sslHash sslProtocol user user_who_performed_connection vhost)
+]
+
+{ #category : #generator }
+PulseConnection class >> generatedTraitNames [
+	<generated>
+	^ #()
 ]
 
 { #category : #meta }

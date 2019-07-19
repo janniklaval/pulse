@@ -20,6 +20,19 @@ PulseTag class >> annotation [
 	^self
 ]
 
+{ #category : #generator }
+PulseTag class >> generatedSlotNames [
+	<generated>
+	'PulseTag class>>#generatedSlotNames'.
+	^ #(roles)
+]
+
+{ #category : #generator }
+PulseTag class >> generatedTraitNames [
+	<generated>
+	^ #()
+]
+
 { #category : #'as yet unclassified' }
 PulseTag class >> management [
 	^ self new pulseState: #management

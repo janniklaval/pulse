@@ -2,7 +2,7 @@ Class {
 	#name : #PulseEnum,
 	#superclass : #PulseEntity,
 	#instVars : [
-		'#pulseState => FMProperty'
+		'pulseState'
 	],
 	#category : #'Pulse-Entities'
 }
@@ -13,6 +13,19 @@ PulseEnum class >> annotation [
 	<MSEClass: #Enum super: #PulseEntity>
 	<package: #Pulse>
 	^self
+]
+
+{ #category : #generator }
+PulseEnum class >> generatedSlotNames [
+	<generated>
+	'PulseEnum class>>#generatedSlotNames'.
+	^ #(pulseState)
+]
+
+{ #category : #generator }
+PulseEnum class >> generatedTraitNames [
+	<generated>
+	^ #()
 ]
 
 { #category : #meta }

@@ -15,6 +15,19 @@ PulseDeliveryMode class >> annotation [
 	^self
 ]
 
+{ #category : #generator }
+PulseDeliveryMode class >> generatedSlotNames [
+	<generated>
+	'PulseDeliveryMode class>>#generatedSlotNames'.
+	^ #(messages)
+]
+
+{ #category : #generator }
+PulseDeliveryMode class >> generatedTraitNames [
+	<generated>
+	^ #()
+]
+
 { #category : #'as yet unclassified' }
 PulseDeliveryMode class >> nonPersistent [
 	^ self new pulseState: #nonPersistent

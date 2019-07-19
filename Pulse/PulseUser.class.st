@@ -2,21 +2,21 @@ Class {
 	#name : #PulseUser,
 	#superclass : #PulseEntity,
 	#instVars : [
+		'#creationDate',
+		'#deletionDate',
+		'#hashingAlgorithm',
+		'#password',
+		'#passwordChangingDate',
+		'#passwordClearingDate',
+		'#passwordHash',
 		'#authentifications => FMMany type: #PulseAuthentification opposite: #user',
-		'#creationDate => FMProperty',
-		'#deletionDate => FMProperty',
-		'#hashingAlgorithm => FMProperty',
+		'#usedChannels => FMMany type: #PulseChannel opposite: #user',
 		'#initializedChannels => FMMany type: #PulseChannel opposite: #user_who_performed_connection',
+		'#usedConnections => FMMany type: #PulseConnection opposite: #user',
 		'#initializedConnections => FMMany type: #PulseConnection opposite: #user_who_performed_connection',
 		'#initializedExchanges => FMMany type: #PulseExchange opposite: #user_who_performed_action',
-		'#password => FMProperty',
-		'#passwordChangingDate => FMProperty',
-		'#passwordClearingDate => FMProperty',
-		'#passwordHash => FMProperty',
 		'#permissions => FMMany type: #PulsePermission opposite: #user',
 		'#roles => FMMany type: #PulseRole opposite: #users',
-		'#usedChannels => FMMany type: #PulseChannel opposite: #user',
-		'#usedConnections => FMMany type: #PulseConnection opposite: #user',
 		'#vhosts => FMMany type: #PulseVHost opposite: #users'
 	],
 	#category : #'Pulse-Entities'
@@ -29,6 +29,19 @@ PulseUser class >> annotation [
 	<package: #Pulse>
 	<generated>
 	^self
+]
+
+{ #category : #generator }
+PulseUser class >> generatedSlotNames [
+	<generated>
+	'PulseUser class>>#generatedSlotNames'.
+	^ #(authentifications creationDate deletionDate hashingAlgorithm initializedChannels initializedConnections initializedExchanges password passwordChangingDate passwordClearingDate passwordHash permissions roles usedChannels usedConnections vhosts)
+]
+
+{ #category : #generator }
+PulseUser class >> generatedTraitNames [
+	<generated>
+	^ #()
 ]
 
 { #category : #meta }

@@ -2,16 +2,16 @@ Class {
 	#name : #PulseVHost,
 	#superclass : #PulseEntity,
 	#instVars : [
+		'#creationDate',
+		'#deletionDate',
+		'#tracing',
 		'#bindings => FMMany type: #PulseBinding opposite: #vhost',
 		'#channels => FMMany type: #PulseChannel opposite: #vhost',
 		'#connections => FMMany type: #PulseConnection opposite: #vhost',
-		'#creationDate => FMProperty',
-		'#deletionDate => FMProperty',
 		'#exchanges => FMMany type: #PulseExchange opposite: #vhost',
 		'#node => FMOne type: #PulseNode opposite: #vhosts',
 		'#permissions => FMMany type: #PulsePermission opposite: #vhost',
 		'#queues => FMMany type: #PulseQueue opposite: #vhost',
-		'#tracing => FMProperty',
 		'#users => FMMany type: #PulseUser opposite: #vhosts'
 	],
 	#category : #'Pulse-Entities'
@@ -24,6 +24,19 @@ PulseVHost class >> annotation [
 	<package: #Pulse>
 	<generated>
 	^self
+]
+
+{ #category : #generator }
+PulseVHost class >> generatedSlotNames [
+	<generated>
+	'PulseVHost class>>#generatedSlotNames'.
+	^ #(bindings channels connections creationDate deletionDate exchanges node permissions queues tracing users)
+]
+
+{ #category : #generator }
+PulseVHost class >> generatedTraitNames [
+	<generated>
+	^ #()
 ]
 
 { #category : #meta }

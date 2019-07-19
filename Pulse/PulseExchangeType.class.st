@@ -25,6 +25,19 @@ PulseExchangeType class >> fanout [
 	^  self new pulseState: #fanout
 ]
 
+{ #category : #generator }
+PulseExchangeType class >> generatedSlotNames [
+	<generated>
+	'PulseExchangeType class>>#generatedSlotNames'.
+	^ #(exchanges)
+]
+
+{ #category : #generator }
+PulseExchangeType class >> generatedTraitNames [
+	<generated>
+	^ #()
+]
+
 { #category : #accessing }
 PulseExchangeType class >> headers [
 	^ self new pulseState: #headers

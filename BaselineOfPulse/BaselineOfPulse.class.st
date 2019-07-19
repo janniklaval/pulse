@@ -18,6 +18,7 @@ BaselineOfPulse >> baseline: spec [
 		spec package: 'Pulse-Parser-Tests' with: [ spec requires: 'Pulse' ].
 		spec package: 'Pulse-Indicators' with: [ spec requires: 'Pulse' ].
 		spec package: 'OrionPulseCore' with: [ spec requires: #('Pulse' 'Orion') ].
+		spec package: 'OrionPulseTests' with: [ spec requires: #('OrionPulseCore') ].
 		
 		spec package: 'Amqp'.
 		
@@ -53,7 +54,7 @@ BaselineOfPulse >> baseline: spec [
                                 ].
 
 		spec
- 			group: 'default' with: #(  'Amqp' 'Moose' 'PetitParser' 'Orion' 'Voyage' 'Cruiser' 'Pulse' 'Pulse-Core-Model-Generator' 'Pulse-Parser' 'Pulse-Process' 'Pulse-Visualization' 'Pulse-Parser-Tests' 'Pulse-Indicators' 'OrionPulseCore').
+ 			group: 'default' with: #(  'Amqp' 'Moose' 'PetitParser' 'Orion' 'Voyage' 'Cruiser' 'Pulse' 'Pulse-Core-Model-Generator' 'Pulse-Parser' 'Pulse-Process' 'Pulse-Visualization' 'Pulse-Parser-Tests' 'Pulse-Indicators' 'OrionPulseCore' 'OrionPulseTests').
 	].
 
 ]

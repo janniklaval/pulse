@@ -2,19 +2,19 @@ Class {
 	#name : #PulseConsumerComponent,
 	#superclass : #PulseEntity,
 	#instVars : [
-		'#address => FMProperty',
-		'#appId => FMProperty',
-		'#author => FMProperty',
+		'#address',
+		'#appId',
+		'#author',
+		'#guid',
+		'#owner',
+		'#platform',
+		'#tenantId',
+		'#version',
 		'#componentType => FMOne type: #PulseComponentType opposite: #consumerComponents',
-		'#consumerProcesses => FMMany type: #PulseConsumerProcess opposite: #consumerComponent',
 		'#deploymentMode => FMOne type: #PulseDeploymentMode opposite: #consumerComponents',
-		'#guid => FMProperty',
-		'#owner => FMProperty',
-		'#platform => FMProperty',
 		'#pulseState => FMOne type: #PulseState opposite: #consumerComponents',
 		'#subscribedChannels => FMMany type: #PulseChannel opposite: #consumerComponent',
-		'#tenantId => FMProperty',
-		'#version => FMProperty'
+		'#consumerProcesses => FMMany type: #PulseConsumerProcess opposite: #consumerComponent'
 	],
 	#category : #'Pulse-Entities'
 }
@@ -26,6 +26,19 @@ PulseConsumerComponent class >> annotation [
 	<package: #Pulse>
 	<generated>
 	^self
+]
+
+{ #category : #generator }
+PulseConsumerComponent class >> generatedSlotNames [
+	<generated>
+	'PulseConsumerComponent class>>#generatedSlotNames'.
+	^ #(address appId author componentType consumerProcesses deploymentMode guid owner platform pulseState subscribedChannels tenantId version)
+]
+
+{ #category : #generator }
+PulseConsumerComponent class >> generatedTraitNames [
+	<generated>
+	^ #()
 ]
 
 { #category : #meta }

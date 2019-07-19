@@ -20,6 +20,19 @@ PulseEncoding class >> base64 [
 	^  self new pulseState: #base64
 ]
 
+{ #category : #generator }
+PulseEncoding class >> generatedSlotNames [
+	<generated>
+	'PulseEncoding class>>#generatedSlotNames'.
+	^ #(payloads)
+]
+
+{ #category : #generator }
+PulseEncoding class >> generatedTraitNames [
+	<generated>
+	^ #()
+]
+
 { #category : #meta }
 PulseEncoding class >> requirements [
 

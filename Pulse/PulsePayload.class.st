@@ -17,6 +17,19 @@ PulsePayload class >> annotation [
 	^self
 ]
 
+{ #category : #generator }
+PulsePayload class >> generatedSlotNames [
+	<generated>
+	'PulsePayload class>>#generatedSlotNames'.
+	^ #(encoding messages)
+]
+
+{ #category : #generator }
+PulsePayload class >> generatedTraitNames [
+	<generated>
+	^ #()
+]
+
 { #category : #meta }
 PulsePayload class >> requirements [
 

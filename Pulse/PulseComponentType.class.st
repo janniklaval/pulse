@@ -2,8 +2,8 @@ Class {
 	#name : #PulseComponentType,
 	#superclass : #PulseEnum,
 	#instVars : [
-		'#consumerComponents => FMMany type: #PulseConsumerComponent opposite: #componentType',
-		'#publisherComponents => FMMany type: #PulsePublisherComponent opposite: #componentType'
+		'#publisherComponents => FMMany type: #PulsePublisherComponent opposite: #componentType',
+		'#consumerComponents => FMMany type: #PulseConsumerComponent opposite: #componentType'
 	],
 	#category : #'Pulse-Entities'
 }
@@ -26,6 +26,19 @@ PulseComponentType class >> connector [
 PulseComponentType class >> database [
 	^ self new pulseState: #database
 
+]
+
+{ #category : #generator }
+PulseComponentType class >> generatedSlotNames [
+	<generated>
+	'PulseComponentType class>>#generatedSlotNames'.
+	^ #(consumerComponents publisherComponents)
+]
+
+{ #category : #generator }
+PulseComponentType class >> generatedTraitNames [
+	<generated>
+	^ #()
 ]
 
 { #category : #'System-FileRegistry' }

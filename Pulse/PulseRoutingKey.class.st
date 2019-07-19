@@ -18,6 +18,19 @@ PulseRoutingKey class >> annotation [
 	^self
 ]
 
+{ #category : #generator }
+PulseRoutingKey class >> generatedSlotNames [
+	<generated>
+	'PulseRoutingKey class>>#generatedSlotNames'.
+	^ #(bindings messages queues_for_dead_letter)
+]
+
+{ #category : #generator }
+PulseRoutingKey class >> generatedTraitNames [
+	<generated>
+	^ #()
+]
+
 { #category : #meta }
 PulseRoutingKey class >> requirements [
 

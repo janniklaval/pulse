@@ -2,12 +2,12 @@ Class {
 	#name : #PulseState,
 	#superclass : #PulseEnum,
 	#instVars : [
+		'#queues => FMMany type: #PulseQueue opposite: #pulseState',
 		'#channels => FMMany type: #PulseChannel opposite: #pulseState',
 		'#connections => FMMany type: #PulseConnection opposite: #pulseState',
 		'#consumerComponents => FMMany type: #PulseConsumerComponent opposite: #pulseState',
-		'#consumerProcesses => FMMany type: #PulseConsumerProcess opposite: #pulseState',
 		'#publisherComponents => FMMany type: #PulsePublisherComponent opposite: #pulseState',
-		'#queues => FMMany type: #PulseQueue opposite: #pulseState'
+		'#consumerProcesses => FMMany type: #PulseConsumerProcess opposite: #pulseState'
 	],
 	#category : #'Pulse-Entities'
 }
@@ -18,6 +18,19 @@ PulseState class >> annotation [
 	<MSEClass: #State super: #PulseEnum>
 	<package: #Pulse>
 	^self
+]
+
+{ #category : #generator }
+PulseState class >> generatedSlotNames [
+	<generated>
+	'PulseState class>>#generatedSlotNames'.
+	^ #(channels connections consumerComponents consumerProcesses publisherComponents queues)
+]
+
+{ #category : #generator }
+PulseState class >> generatedTraitNames [
+	<generated>
+	^ #()
 ]
 
 { #category : #accessing }
