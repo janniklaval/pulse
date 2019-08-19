@@ -25,12 +25,12 @@ BaselineOfPulse >> baseline: spec [
 	spec baseline: 'Moose' 
                             with: [ spec
                                 className: 'BaselineOfMoose';
-                                repository: 'github://moosetechnology/Moose:v7.0.0/src'.
+                                repository: 'github://moosetechnology/Moose:v7.0.2/src'.
                                 ].
 		
-		spec package: 'PetitParser' with: [
+		"spec package: 'PetitParser' with: [
 			spec file:'PetitJson'.
-			spec repository: 'github://moosetechnology/PetitParser/src'. ].
+			spec repository: 'github://moosetechnology/PetitParser/src'. ]."
 
 		
 		spec configuration: 'Orion'
@@ -54,7 +54,7 @@ BaselineOfPulse >> baseline: spec [
                                 ].
 
 		spec
- 			group: 'default' with: #(  'Amqp' 'Moose' 'PetitParser' 'Orion' 'Voyage' 'Cruiser' 'Pulse' 'Pulse-Core-Model-Generator' 'Pulse-Parser' 'Pulse-Process' 'Pulse-Visualization' 'Pulse-Parser-Tests' 'Pulse-Indicators' 'OrionPulseCore' 'OrionPulseTests').
+ 			group: 'default' with: #(  'Amqp' 'Moose' "'PetitParser'" 'Orion' 'Voyage' 'Cruiser' 'Pulse' 'Pulse-Core-Model-Generator' 'Pulse-Parser' 'Pulse-Process' 'Pulse-Visualization' 'Pulse-Parser-Tests' 'Pulse-Indicators' 'OrionPulseCore' 'OrionPulseTests').
 	].
 
 ]
