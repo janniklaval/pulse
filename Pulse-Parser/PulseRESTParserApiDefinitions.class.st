@@ -56,8 +56,8 @@ PulseRESTParserApiDefinitions >> populate: aModel withBindings: anArray [
 				selectOrAddEntityNamed: rkName
 				withType: PulseRoutingKey
 				sourceName: self sourceName.
-			element routingKey add: rk.
-			rk binding: element ]
+			element routingKey: rk.
+			rk bindings add: element ]
 ]
 
 { #category : #'internal-parsing' }

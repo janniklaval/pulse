@@ -55,12 +55,12 @@ PulseRESTParserTestApiDefinitions >> testPopulateBindings [
 	self assert: b3 destination = (model allPulseQueues detect: [:e | e name = 'testQueue2']).
 	self assert: ((model allPulseQueues detect: [:e | e name = 'testQueue2']) destinationBindings anySatisfy: [ :e | e = b3 ]).
 	
-	self assert: b1 routingKey first =  (model allPulseRoutingKeys detect: [:e | e pulseName = 'rkExchange']).
-	self assert: ((model allPulseRoutingKeys detect: [:e | e name = 'rkExchange']) binding = b1 ).
-	self assert: b2 routingKey first  = (model allPulseRoutingKeys detect: [:e | e pulseName = 'testRoutingKey']).
-	self assert: ((model allPulseRoutingKeys detect: [:e | e name = 'testRoutingKey'])  binding = b2).
-	self assert: b3 routingKey first = (model allPulseRoutingKeys detect: [:e | e pulseName = 'testRoutingKeyBinding']).
-	self assert: ((model allPulseRoutingKeys detect: [:e | e name = 'testRoutingKeyBinding'])  binding = b3 ).
+	self assert: b1 routingKey =  (model allPulseRoutingKeys detect: [:e | e pulseName = 'rkExchange']).
+	self assert: ((model allPulseRoutingKeys detect: [:e | e name = 'rkExchange']) bindings first = b1 ).
+	self assert: b2 routingKey  = (model allPulseRoutingKeys detect: [:e | e pulseName = 'testRoutingKey']).
+	self assert: ((model allPulseRoutingKeys detect: [:e | e name = 'testRoutingKey'])  bindings first = b2).
+	self assert: b3 routingKey = (model allPulseRoutingKeys detect: [:e | e pulseName = 'testRoutingKeyBinding']).
+	self assert: ((model allPulseRoutingKeys detect: [:e | e name = 'testRoutingKeyBinding'])  bindings first = b3 ).
 ]
 
 { #category : #'testing - simple' }
@@ -124,12 +124,12 @@ PulseRESTParserTestApiDefinitions >> testPopulateExistingBindings [
 	self assert: b3 destination = (model allPulseQueues detect: [:e | e name = 'testQueue2']).
 	self assert: ((model allPulseQueues detect: [:e | e name = 'testQueue2']) destinationBindings anySatisfy: [ :e | e = b3 ]).
 	
-	self assert: b1 routingKey first  = (model allPulseRoutingKeys detect: [:e | e name = 'rkExchange']).
-	self assert: ((model allPulseRoutingKeys detect: [:e | e name = 'rkExchange']) binding = b1 ).
-	self assert: b2 routingKey first  = (model allPulseRoutingKeys detect: [:e | e name = 'testRoutingKey']).
-	self assert: ((model allPulseRoutingKeys detect: [:e | e name = 'testRoutingKey'])  binding = b2).
-	self assert: b3 routingKey first = (model allPulseRoutingKeys detect: [:e | e name = 'testRoutingKeyBinding']).
-	self assert: ((model allPulseRoutingKeys detect: [:e | e name = 'testRoutingKeyBinding'])  binding = b3 ).
+	self assert: b1 routingKey  = (model allPulseRoutingKeys detect: [:e | e name = 'rkExchange']).
+	self assert: ((model allPulseRoutingKeys detect: [:e | e name = 'rkExchange']) bindings first = b1 ).
+	self assert: b2 routingKey  = (model allPulseRoutingKeys detect: [:e | e name = 'testRoutingKey']).
+	self assert: ((model allPulseRoutingKeys detect: [:e | e name = 'testRoutingKey'])  bindings first = b2).
+	self assert: b3 routingKey = (model allPulseRoutingKeys detect: [:e | e name = 'testRoutingKeyBinding']).
+	self assert: ((model allPulseRoutingKeys detect: [:e | e name = 'testRoutingKeyBinding'])  bindings first = b3 ).
 ]
 
 { #category : #'testing-double-insert' }
