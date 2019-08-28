@@ -103,7 +103,7 @@ ORConverter class >> initialize [
 { #category : #'initialize-release' }
 ORConverter class >> mapping [
 
-	^ association ifNil:[
+	^association ifNil:[
 		self initConverter
 	]
 ]

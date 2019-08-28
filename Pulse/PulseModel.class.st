@@ -174,7 +174,7 @@ PulseModel >> initialize [
 	
    super initialize.
 	self sourceLanguage: 'RabbitMQ'.
-	self metamodel: PulseMetamodelGenerator metamodel
+	self metamodel: PulseMetaGenerator metamodel
 ]
 
 { #category : #'add-select' }

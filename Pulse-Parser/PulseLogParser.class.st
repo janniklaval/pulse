@@ -45,8 +45,7 @@ PulseLogParser >> parse: aJSonFilePath [
 PulseLogParser >> populate: aModel withJson: aString [
 	| parser rmqObjects exchangeName |
 	model := aModel.
-	parser := PPParserResource current parserAt: PPJsonParser.
-	rmqObjects := parser parse: aString.
+	rmqObjects := STONJSON fromString: aString.
 	rmqObjects
 		do: [ :aRMQObject | 
 			| message connection queue user node exchange vhost channel routingKeys binding payload delivMode routedQueues messageType exchangeFormat publisherComponent consumerComponent tenantId queueName consumerComponentName |
@@ -246,8 +245,8 @@ PulseLogParser >> populate: aModel withJson: aString [
 							aQueue destinationBindings add: binding.
 							binding source: exchange.
 							exchange sourceBindings add: binding.
-							binding routingKey add: aRoutingKey.
-							aRoutingKey binding: binding.
+							binding routingKey: aRoutingKey.
+							aRoutingKey bindings add: binding.
 							aModel allPulseBindings
 								detect: [ :el | 
 									el source = binding source
