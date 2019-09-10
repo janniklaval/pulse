@@ -11,14 +11,13 @@ BaselineOfPulse >> baseline: spec [
 	spec for: #'common' do: [
 		
 		spec package: 'Pulse' with: [ spec requires: 'Voyage' ].
-		spec package: 'Pulse-Core-Model-Generator' with: [ spec requires: 'Pulse' ].
+		spec package: 'Pulse-Core-Model-Generator' with: [ spec requires: #('Pulse' 'Orion') ].
 		spec package: 'Pulse-Parser' with: [ spec requires: 'Pulse' ].
 		spec package: 'Pulse-Process' with: [ spec requires: 'Pulse' ].
 		spec package: 'Pulse-Visualization' with: [ spec requires: 'Pulse' ].
 		spec package: 'Pulse-Parser-Tests' with: [ spec requires: 'Pulse' ].
 		spec package: 'Pulse-Indicators' with: [ spec requires: 'Pulse' ].
-		spec package: 'OrionPulseCore' with: [ spec requires: #('Pulse' 'Orion') ].
-		spec package: 'OrionPulseTests' with: [ spec requires: #('OrionPulseCore') ].
+		spec package: 'OrionPulseTests' with: [ spec requires: #('Orion') ].
 		
 		spec package: 'Amqp'.
 		
@@ -35,6 +34,13 @@ BaselineOfPulse >> baseline: spec [
 					file: 'ConfigurationOfOrion';
 					repository: 'http://smalltalkhub.com/mc/Moose/Orion/main' ].
 		
+		spec configuration: 'OrionGenerator'
+			with: [ spec
+					className: 'ConfigurationOfOrionGenerator';
+					versionString: #development;
+					file: 'ConfigurationOfOrionGenerator';
+					repository: 'http://smalltalkhub.com/mc/Moose/Orion/main' ].
+
 		spec baseline: 'Voyage'
                             with: [ spec
                                 className: 'BaselineOfVoyage';
@@ -49,7 +55,7 @@ BaselineOfPulse >> baseline: spec [
                                 ].
 
 		spec
- 			group: 'default' with: #(  'Amqp' 'Moose' "'PetitParser'" 'Orion' 'Voyage' 'Cruiser' 'Pulse' 'Pulse-Core-Model-Generator' 'Pulse-Parser' 'Pulse-Process' 'Pulse-Visualization' 'Pulse-Parser-Tests' 'Pulse-Indicators' 'OrionPulseCore' 'OrionPulseTests').
+ 			group: 'default' with: #(  'Amqp' 'Moose' 'Orion' 'OrionGenerator' 'Voyage' 'Cruiser' 'Pulse' 'Pulse-Core-Model-Generator' 'Pulse-Parser' 'Pulse-Process' 'Pulse-Visualization' 'Pulse-Parser-Tests' 'Pulse-Indicators' 'OrionPulseTests').
 	].
 
 ]
