@@ -1879,10 +1879,9 @@ Class {
 
 { #category : #parsing }
 PulseRESTParserApiQueues >> populate: aModel withJson: aString [
-	| parser rmqObjects queueName queue vhost node |
-	parser := PPParserResource current parserAt: PPJsonParser.
+	|  rmqObjects queueName queue vhost node |
 	sourceName := aString.
-	rmqObjects := parser parse: aString.
+	rmqObjects := STONJSON fromString: aString.
 	rmqObjects
 		do: [ :anObject | 
 			queueName := anObject at: 'name'.
@@ -1902,7 +1901,7 @@ PulseRESTParserApiQueues >> populate: aModel withJson: aString [
 			vhost queues add: queue.
 			node := aModel
 				entityNamed: (anObject at: 'node')
-				withType: PulseNode
+				"withType: PulseNode"
 				ifAbsent: [ | newNode |
 					newNode := PulseNode new
 						pulseName: (anObject at: 'node');

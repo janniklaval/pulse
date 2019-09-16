@@ -74,9 +74,8 @@ Class {
 { #category : #parsing }
 PulseRESTParserApiConsumers >> populate: aModel withJson: aString [
 	| parser rmqObjects queueName queue vhost consumerTag component channelName channel user node connection |
-	parser := PPParserResource current parserAt: PPJsonParser.
 	sourceName := aString.
-	rmqObjects := parser parse: aString.
+	rmqObjects := STONJSON fromString: aString.
 	rmqObjects
 		do: [ :anObject | 
 			consumerTag := anObject at: 'consumer_tag'.
@@ -116,7 +115,7 @@ PulseRESTParserApiConsumers >> populate: aModel withJson: aString [
 			user usedChannels add: channel.
 			node := aModel
 				entityNamed: ((anObject at: 'channel_details') at: 'node')
-				withType: PulseNode
+				"withType: PulseNode"
 				ifAbsent: [ | newNode |
 					newNode := PulseNode new
 						pulseName: ((anObject at: 'channel_details') at: 'node');

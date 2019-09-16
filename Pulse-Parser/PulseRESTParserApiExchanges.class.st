@@ -114,9 +114,9 @@ Class {
 { #category : #parsing }
 PulseRESTParserApiExchanges >> populate: aModel withJson: aString [
 	| parser rmqObjects exchangeName exchange vhost user_who_performed_action |
-	parser := PPParserResource current parserAt: PPJsonParser.
+
 	sourceName := aString.
-	rmqObjects := parser parse: aString.
+	rmqObjects := STONJSON fromString: aString.
 	rmqObjects
 		do: [ :anObject | 
 			exchangeName := anObject at: 'name'.

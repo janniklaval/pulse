@@ -169,6 +169,12 @@ PulseModel >> allPulseVHosts [
 	^self allWithType: PulseVHost
 ]
 
+{ #category : #'add-select' }
+PulseModel >> entityNamed: aName withType: aType ifAbsent: aBlock [
+
+	^(self allWithType: aType) entityNamed: aName ifAbsent: aBlock
+]
+
 { #category : #'initialize-release' }
 PulseModel >> initialize [
 	
@@ -180,6 +186,7 @@ PulseModel >> initialize [
 { #category : #'add-select' }
 PulseModel >> selectOrAddEntityNamed: aName withType: aType sourceName: aSourceName [ 
 	| entity source |
+	"self haltIf: [ :i | aType = PulseUser  ]."
 	entity := self entityNamed: aName withType: aType 
 			ifAbsent:[ 
 				| newEntity |

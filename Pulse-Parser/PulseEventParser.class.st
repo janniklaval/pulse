@@ -195,7 +195,7 @@ aDictionnary (timestamp_in_ms:	1544196873787, pid:	<rabbit@fceed0d94b94.3.12113.
 	connectionType := aDictionnary at: 'type'.
 	connectionObject := aModel
 		entityNamed: connectionName
-		withType: PulseConnection
+		"withType: PulseConnection"
 		ifAbsent: [ | newConnection |
 			newConnection := PulseConnection new
 				pulseName: connectionName;
@@ -552,7 +552,7 @@ error:	117...   // the error is in ascii"
 		ifTrue: [ connectionName := aDictionnary at: 'connection_name'.
 			connection := aModel
 				entityNamed: connectionName
-				withType: PulseConnection
+				"withType: PulseConnection"
 				ifAbsent: [ | newConnection |
 					newConnection := PulseConnection new
 						pulseName: connectionName;
@@ -602,7 +602,7 @@ aDictionnary (connection_type:	direct, name:	admin, timestamp_in_ms:	15284543543
 		ifTrue: [ connectionName := aDictionnary at: 'connection_name'.
 			connection := aModel
 				entityNamed: connectionName
-				withType: PulseConnection
+				"withType: PulseConnection"
 				ifAbsent: [ | newConnection |
 					newConnection := PulseConnection new
 						pulseName: connectionName;
@@ -685,7 +685,7 @@ PulseEventParser >> populate: aModel withUserTagsSet: aDictionnary at: timestamp
 			| roleObject |
 			roleObject := aModel
 				entityNamed: aTagString
-				withType: PulseRole
+				"withType: PulseRole"
 				ifAbsent: [ | newRole |
 					newRole := PulseRole new
 						mooseModel: aModel;

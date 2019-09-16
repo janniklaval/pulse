@@ -208,10 +208,9 @@ Class {
 
 { #category : #parsing }
 PulseRESTParserApiChannels >> populate: aModel withJson: aString [
-	| parser rmqObjects user channel vhost user_who_performed_action channelName node connection |
-	parser := PPParserResource current parserAt: PPJsonParser.
+	|  rmqObjects user channel vhost user_who_performed_action channelName node connection |
 	sourceName := aString.
-	rmqObjects := parser parse: aString.
+	rmqObjects := STONJSON fromString: aString.
 	rmqObjects
 		do: [ :anObject | 
 			"(anObject at: 'consumer_count')."
@@ -256,7 +255,7 @@ PulseRESTParserApiChannels >> populate: aModel withJson: aString [
 			vhost channels add: channel.
 			node := aModel
 				entityNamed: (anObject at: 'node')
-				withType: PulseNode
+				"withType: PulseNode"
 				ifAbsent: [ | newNode |
 					newNode := PulseNode new
 						pulseName: (anObject at: 'node');

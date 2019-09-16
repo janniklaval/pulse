@@ -404,9 +404,8 @@ Class {
 { #category : #parsing }
 PulseRESTParserApiConnections >> populate: aModel withJson: aString [
 	| parser rmqObjects connectionName connection vhost node user user_who_performed_action |
-	parser := PPParserResource current parserAt: PPJsonParser.
 	sourceName := aString.
-	rmqObjects := parser parse: aString.
+	rmqObjects := STONJSON fromString: aString.
 	rmqObjects
 		do: [ :anObject | 
 			connectionName := anObject at: 'name'.
@@ -440,7 +439,7 @@ PulseRESTParserApiConnections >> populate: aModel withJson: aString [
 			"vhost connections add: connection."
 			node := aModel
 				entityNamed: (anObject at: 'node')
-				withType: PulseNode
+				"withType: PulseNode"
 				ifAbsent: [ | newNode |
 					newNode := PulseNode new
 						pulseName: (anObject at: 'node');

@@ -16,9 +16,7 @@ PulseRESTParserTestApiDefinitions >> data [
 { #category : #initialization }
 PulseRESTParserTestApiDefinitions >> setUp [
 
-	| parser |
-	parser := PPParserResource current parserAt: PPJsonParser.
-	objects := parser parse: self data.
+	objects := STONJSON fromString: self data.
 	
 	model := PulseModel new.
 	model name: 'test'.
