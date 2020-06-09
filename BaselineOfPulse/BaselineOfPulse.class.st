@@ -51,14 +51,14 @@ BaselineOfPulse >> baseline: spec [
                                 loads: #('mongo tests') ]";
                         import: 'Voyage'".
 
-	spec baseline: 'Cruiser'
+	"spec baseline: 'Cruiser'
                             with: [ spec
                                 className: 'BaselineOfCruiser';
                                 repository: 'github://VincentBlondeau/Cruiser'.
-                                ].
+                                ]."
 
 		spec
- 			group: 'default' with: #(  'Amqp' 'Moose' 'Orion' 'OrionGenerator' 'Voyage' 'Cruiser' 'Pulse' 'Pulse-Core-Model-Generator' 'Pulse-Parser' 'Pulse-Process' 'Pulse-Visualization' 'Pulse-Parser-Tests' 'Pulse-Indicators' 'OrionPulseEntities-Trait' 'OrionPulseEntities-Class' 'OrionPulseEntities-Action' 'OrionPulseTests').
+ 			group: 'default' with: #(  'Amqp' 'Moose' 'Orion' 'OrionGenerator' 'Voyage' "'Cruiser'" 'Pulse' 'Pulse-Core-Model-Generator' 'Pulse-Parser' 'Pulse-Process' 'Pulse-Visualization' 'Pulse-Parser-Tests' 'Pulse-Indicators' 'OrionPulseEntities-Trait' 'OrionPulseEntities-Class' 'OrionPulseEntities-Action' 'OrionPulseTests').
 	].
 
 ]
