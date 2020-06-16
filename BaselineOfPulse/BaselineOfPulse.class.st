@@ -35,14 +35,14 @@ BaselineOfPulse >> baseline: spec [
 					className: 'ConfigurationOfOrion';
 					versionString: #development;
 					file: 'ConfigurationOfOrion';
-					repository: 'http://smalltalkhub.com/mc/Moose/Orion/main' ].
+					repository: 'https://github.com/janniklaval/Orion/repository/ConfigurationOfOrion' "'http://smalltalkhub.com/mc/Moose/Orion/main'" ].
 		
 		spec configuration: 'OrionGenerator'
 			with: [ spec
 					className: 'ConfigurationOfOrionGenerator';
 					versionString: #development;
 					file: 'ConfigurationOfOrionGenerator';
-					repository: 'http://smalltalkhub.com/mc/Moose/Orion/main' ].
+					repository: 'https://github.com/janniklaval/Orion/repository/ConfigurationOfOrionGenerator'"'http://smalltalkhub.com/mc/Moose/Orion/main'" ].
 
 		spec baseline: 'Voyage'
                             with: [ spec
