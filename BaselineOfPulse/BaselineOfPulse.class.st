@@ -29,20 +29,31 @@ BaselineOfPulse >> baseline: spec [
                                 className: 'BaselineOfMoose';
                                 repository: "'github://moosetechnology/Moose:development/src' "'github://moosetechnology/Moose:v7.0.2/src'.
                                 ].
-		
-		spec configuration: 'Orion'
+		spec baseline: 'Orion' 
+                            with: [ spec
+                                className: 'BaselineOfOrion';
+                                repository: "'github://moosetechnology/Moose:development/src' "'github://janniklaval/Orion/src/repository'.
+                                ].
+		"spec configuration: 'Orion'
 			with: [ spec
 					className: 'ConfigurationOfOrion';
 					versionString: #development;
 					file: 'ConfigurationOfOrion';
-					repository: 'github://janniklaval/Orion:master/src/repository/ConfigurationOfOrion' "'http://smalltalkhub.com/mc/Moose/Orion/main'" ].
+					repository: 'github://janniklaval/Orion:master/src/repository/ConfigurationOfOrion' ]."
+				"'http://smalltalkhub.com/mc/Moose/Orion/main'" 
 		
-		spec configuration: 'OrionGenerator'
+		spec baseline: 'OrionGenerator' 
+                            with: [ spec
+                                className: 'BaselineOfOrionGenerator';
+                                repository: "'github://moosetechnology/Moose:development/src' "'github://janniklaval/Orion/src/repository'.
+ ].
+		"spec configuration: 'OrionGenerator'
 			with: [ spec
 					className: 'ConfigurationOfOrionGenerator';
 					versionString: #development;
 					file: 'ConfigurationOfOrionGenerator';
-					repository: 'github://janniklaval/Orion:master/src/repository/ConfigurationOfOrion'"'http://smalltalkhub.com/mc/Moose/Orion/main'" ].
+					repository: 'github://janniklaval/Orion:master/src/repository/ConfigurationOfOrion' ]."
+				"'http://smalltalkhub.com/mc/Moose/Orion/main'"
 
 		spec baseline: 'Voyage'
                             with: [ spec
@@ -60,5 +71,4 @@ BaselineOfPulse >> baseline: spec [
 		spec
  			group: 'default' with: #(  'Amqp' 'Moose' 'Orion' 'OrionGenerator' 'Voyage' "'Cruiser'" 'Pulse' 'Pulse-Core-Model-Generator' 'Pulse-Parser' 'Pulse-Process' 'Pulse-Visualization' 'Pulse-Parser-Tests' 'Pulse-Indicators' 'OrionPulseEntities-Trait' 'OrionPulseEntities-Class' 'OrionPulseEntities-Action' 'OrionPulseTests').
 	].
-
 ]
