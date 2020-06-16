@@ -32,7 +32,7 @@ BaselineOfPulse >> baseline: spec [
 		spec baseline: 'Orion' 
                             with: [ spec
                                 className: 'BaselineOfOrion';
-                                repository: "'github://moosetechnology/Moose:development/src' "'github://janniklaval/Orion/src/repository'.
+                                repository: "'github://moosetechnology/Moose:development/src' "'github://janniklaval/Orion/src/repository/BaselineOfOrion'.
                                 ].
 		"spec configuration: 'Orion'
 			with: [ spec
@@ -45,7 +45,7 @@ BaselineOfPulse >> baseline: spec [
 		spec baseline: 'OrionGenerator' 
                             with: [ spec
                                 className: 'BaselineOfOrionGenerator';
-                                repository: "'github://moosetechnology/Moose:development/src' "'github://janniklaval/Orion/src/repository'.
+                                repository: "'github://moosetechnology/Moose:development/src' "'github://janniklaval/Orion/src/repository/BaselineOfOrionGenerator'.
  ].
 		"spec configuration: 'OrionGenerator'
 			with: [ spec

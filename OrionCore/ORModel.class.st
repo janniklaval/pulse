@@ -33,11 +33,6 @@ ORModel class >> initialize [
 	self defaultState: MooseDevelopmentState
 ]
 
-{ #category : #persistence }
-ORModel class >> isVoyageRoot [
-	^ true
-]
-
 { #category : #'class initialization' }
 ORModel class >> withParent: aModel [
 
