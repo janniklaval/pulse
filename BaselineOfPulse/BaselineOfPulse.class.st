@@ -5,13 +5,13 @@ Class {
 }
 
 { #category : #baselines }
-BaselineOfPulse >> baseline: spec [
+BaselineOfPulse >> baseline: spec
 	<baseline>
 
 	spec for: #'common' do: [
 		
-		spec package: 'Pulse' with: [ spec requires: 'Voyage' ].
-		spec package: 'Pulse-Core-Model-Generator' with: [ spec requires: #('Pulse' 'Orion') ].
+		spec package: 'Pulse' "with: [ spec requires: 'Voyage' ]".
+		spec package: 'Pulse-Core-Model-Generator' with: [ spec requires: #('Pulse' "'Orion'") ].
 		spec package: 'Pulse-Parser' with: [ spec requires: 'Pulse' ].
 		spec package: 'Pulse-Process' with: [ spec requires: 'Pulse' ].
 		spec package: 'Pulse-Visualization' with: [ spec requires: 'Pulse' ].
@@ -69,6 +69,7 @@ BaselineOfPulse >> baseline: spec [
                                 ]."
 
 		spec
- 			group: 'default' with: #(  'Amqp' 'Moose' 'Orion' 'OrionGenerator' 'Voyage' "'Cruiser'" 'Pulse' 'Pulse-Core-Model-Generator' 'Pulse-Parser' 'Pulse-Process' 'Pulse-Visualization' 'Pulse-Parser-Tests' 'Pulse-Indicators' 'OrionPulseEntities-Trait' 'OrionPulseEntities-Class' 'OrionPulseEntities-Action' 'OrionPulseTests').
+ 			group: 'default' with: #(  'Amqp' 'Moose' 'Orion' 'OrionGenerator' 'Voyage' "'Cruiser'" 'Pulse' 'Pulse-Core-Model-Generator' 'Pulse-Parser' 'Pulse-Process' 'Pulse-Visualization' 'Pulse-Parser-Tests' 'Pulse-Indicators' 'OrionPulseEntities-Trait' 'OrionPulseEntities-Class' 'OrionPulseEntities-Action' 'OrionPulseTests');
+			group: 'minimal' with: #(  'Amqp' 'Pulse' 'Pulse-Core-Model-Generator' 'Pulse-Parser' 'Pulse-Process' 'Pulse-Visualization' 'Pulse-Parser-Tests' 'Pulse-Indicators').
 	].
 ]
