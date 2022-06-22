@@ -24,11 +24,11 @@ BaselineOfPulse >> baseline: spec [
 		
 		spec package: 'Amqp'.
 		
-	spec baseline: 'Moose' 
+	"spec baseline: 'Moose' 
                             with: [ spec
                                 className: 'BaselineOfMoose';
-                                repository: "'github://moosetechnology/Moose:development/src' "'github://moosetechnology/Moose:v7.0.2/src'.
-                                ].
+                                repository: 'github://moosetechnology/Moose:v7.0.2/src'.
+                                ]."
 		spec baseline: 'Orion' 
                             with: [ spec
                                 className: 'BaselineOfOrion';
