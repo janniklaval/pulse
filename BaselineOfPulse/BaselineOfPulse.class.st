@@ -11,7 +11,7 @@ BaselineOfPulse >> baseline: spec
 	spec for: #'common' do: [
 		
 		spec package: 'Pulse' "with: [ spec requires: 'Voyage' ]".
-		spec package: 'Pulse-Core-Model-Generator' with: [ spec requires: #('Pulse' "'Orion'") ].
+		spec package: 'Pulse-Core-Model-Generator' with: [ spec requires: 'Pulse' "'Orion'" ].
 		spec package: 'Pulse-Parser' with: [ spec requires: 'Pulse' ].
 		spec package: 'Pulse-Process' with: [ spec requires: 'Pulse' ].
 		spec package: 'Pulse-Visualization' with: [ spec requires: 'Pulse' ].
