@@ -5,7 +5,7 @@ Class {
 }
 
 { #category : #baselines }
-BaselineOfPulse >> baseline: spec
+BaselineOfPulse >> baseline: spec [
 	<baseline>
 
 	spec for: #'common' do: [
